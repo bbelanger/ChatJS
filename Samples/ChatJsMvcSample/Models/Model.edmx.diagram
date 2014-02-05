@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8495bfca1e4b415fb2978ea3829bb27f" Name="Diagram1">
+        <EntityTypeShape EntityType="chatjsModel.ChatConversation" Width="1.875" PointX="7.875" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="chatjsModel.ChatMessage" Width="1.5" PointX="3" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="chatjsModel.ChatRoom" Width="1.5" PointX="5.5" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="chatjsModel.ChatUserConversation" Width="2.375" PointX="3.875" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="chatjsModel.User" Width="1.5" PointX="0.75" PointY="4.375" IsExpanded="true" />
+        <AssociationConnector Association="chatjsModel.FK_ChatConversation_ChatRoom" ManuallyRouted="false" />
+        <AssociationConnector Association="chatjsModel.FK_ChatConversationUser_ChatConversation" ManuallyRouted="false" />
+        <AssociationConnector Association="chatjsModel.FK_ChatMessage_ChatRoom" ManuallyRouted="false" />
+        <AssociationConnector Association="chatjsModel.FK_Message_User" ManuallyRouted="false" />
+        <AssociationConnector Association="chatjsModel.FK_ChatConversationUser_User" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="chatjsModel.ChatRoomUser" Width="1.5" PointX="3.75" PointY="8.5" />
+        <AssociationConnector Association="chatjsModel.FK_RoomUsers_ChatRoom" />
+        <AssociationConnector Association="chatjsModel.FK_RoomUsers_User" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

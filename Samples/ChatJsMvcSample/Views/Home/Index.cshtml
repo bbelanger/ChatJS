@@ -1,0 +1,115 @@
+﻿@model ChatJsMvcSample.Models.IndexViewModel
+@{
+    this.Layout = "../_Layout.cshtml";
+}
+
+<div class="container">
+    
+    
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">ChatJS</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#"><i class="fa fa-tachometer"></i>Dashboard</a></li>
+                    <li><a href="#"><i class="fa fa-folder-o"></i>Rooms</a></li>
+                    <li><a href="#"><i class="fa fa-user"></i>Users</a></li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search icon-only"></i></button>
+                </form>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <h2>Users</h2>
+    @if (this.Model.Users.Any())
+    {
+        <table class="table">
+            <thead>
+                <th>id
+                </th>
+                <th>Display Name
+                </th>
+                <th>E-Mail
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                @foreach (var user in this.Model.Users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.DisplayName</td>
+                        <td>@user.EMail</td>
+                        <td><a href="@Url.Action("EditUser", new { id = user.Id })">Edit</a></td>
+                        <td><a href="@Url.Action("ChangePassword", new { id = user.Id })">Change Password</a></td>
+                        <td><a href="#">Delete</a></td>
+                    </tr> 
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="list-empty">Empty</div>
+    }
+
+    <p>
+        <a class="btn btn-large btn-success" href="@Url.Action("EditUser")">Create user</a>
+    </p>
+
+    <h2>Rooms</h2>
+    <h3>Make sure you created the users first. You need to assign existing users to rooms</h3>
+    @if (this.Model.Rooms.Any())
+    {
+        <table class="table">
+            <thead>
+                <th>id
+                </th>
+                <th>Name
+                </th>
+                <th>Description
+                </th>
+                <th>Users in room
+                </th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                @foreach (var room in this.Model.Rooms)
+                {
+                    <tr>
+                        <td>@room.Id</td>
+                        <td>@room.RoomName</td>
+                        <td>@room.Description</td>
+                        <td>@room.RoomUsersCount</td>
+                        <td><a href="@Url.Action("EditRoom", new { id = room.Id })">Edit</a></td>
+                        <td><a href="#">Delete</a></td>
+                    </tr>    
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="list-empty">Empty</div>
+    }
+
+    <p>
+        <a class="btn btn-large btn-success" href="@Url.Action("EditRoom")">Create room</a>
+    </p>
+
+
+</div>

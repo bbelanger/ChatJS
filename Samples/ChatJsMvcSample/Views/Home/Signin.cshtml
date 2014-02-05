@@ -1,0 +1,31 @@
+﻿@model ChatJsMvcSample.Models.SigninViewModel
+
+@{
+    this.Layout = "../_Layout.cshtml";
+}
+
+@section Header
+{
+    <link rel="stylesheet" type="text/css" href="/Content/Styles/signin.css" />
+}
+
+<div class="container">
+    @using (this.Html.BeginForm("Signin", "Home", FormMethod.Post))
+    {
+        <h2 class="form-heading">Sign in to a room</h2>
+        <p>
+            @Html.TextBoxFor(m => m.Email, new { placeHolder = "E-Mail", @class = "form-control" })
+        </p>
+        <p>
+            @Html.PasswordFor(m => m.Password, new { placeHolder = "Password", @class = "form-control" })
+        </p>
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            Remember me
+        </label>
+
+        @Html.ValidationSummary(false)
+
+        <button class="btn btn-large btn-primary btn-block" type="submit">Sign in</button>
+    }
+</div>

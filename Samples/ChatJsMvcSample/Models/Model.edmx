@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="chatjsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="chatjsModelStoreContainer">
+          <EntitySet Name="ChatConversation" EntityType="chatjsModel.Store.ChatConversation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChatMessage" EntityType="chatjsModel.Store.ChatMessage" store:Type="Tables" store:Schema="dbo" store:Name="ChatMessage">
+            <DefiningQuery>SELECT 
+      [ChatMessage].[Id] AS [Id], 
+      [ChatMessage].[RoomId] AS [RoomId], 
+      [ChatMessage].[ConversationId] AS [ConversationId], 
+      [ChatMessage].[UserFromId] AS [UserFromId], 
+      [ChatMessage].[Body] AS [Body], 
+      [ChatMessage].[DateTime] AS [DateTime]
+      FROM [dbo].[ChatMessage] AS [ChatMessage]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ChatRoom" EntityType="chatjsModel.Store.ChatRoom" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChatRoomUsers" EntityType="chatjsModel.Store.ChatRoomUsers" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChatUserConversations" EntityType="chatjsModel.Store.ChatUserConversations" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="User" EntityType="chatjsModel.Store.User" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_ChatConversation_ChatRoom" Association="chatjsModel.Store.FK_ChatConversation_ChatRoom">
+            <End Role="ChatRoom" EntitySet="ChatRoom" />
+            <End Role="ChatConversation" EntitySet="ChatConversation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatConversationUser_ChatConversation" Association="chatjsModel.Store.FK_ChatConversationUser_ChatConversation">
+            <End Role="ChatConversation" EntitySet="ChatConversation" />
+            <End Role="ChatUserConversations" EntitySet="ChatUserConversations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatConversationUser_User" Association="chatjsModel.Store.FK_ChatConversationUser_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChatUserConversations" EntitySet="ChatUserConversations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_ChatRoom" Association="chatjsModel.Store.FK_ChatMessage_ChatRoom">
+            <End Role="ChatRoom" EntitySet="ChatRoom" />
+            <End Role="ChatMessage" EntitySet="ChatMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_User" Association="chatjsModel.Store.FK_Message_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChatMessage" EntitySet="ChatMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoomUsers_ChatRoom" Association="chatjsModel.Store.FK_RoomUsers_ChatRoom">
+            <End Role="ChatRoom" EntitySet="ChatRoom" />
+            <End Role="ChatRoomUsers" EntitySet="ChatRoomUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoomUsers_User" Association="chatjsModel.Store.FK_RoomUsers_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ChatRoomUsers" EntitySet="ChatRoomUsers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ChatConversation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="StartDateTime" Type="datetime2" Nullable="false" />
+          <Property Name="RoomId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'chatjs.dbo.ChatMessage' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="ChatMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="RoomId" />
+            <PropertyRef Name="ConversationId" />
+            <PropertyRef Name="UserFromId" />
+            <PropertyRef Name="Body" />
+            <PropertyRef Name="DateTime" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="RoomId" Type="int" Nullable="false" />
+          <Property Name="ConversationId" Type="int" Nullable="false" />
+          <Property Name="UserFromId" Type="int" Nullable="false" />
+          <Property Name="Body" Type="varchar(max)" Nullable="false" />
+          <Property Name="DateTime" Type="datetime2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChatRoom">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="ChatRoomUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RoomId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChatUserConversations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ConversationId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="DisplayName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PasswordHash" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="PasswordSalt" Type="varchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <Association Name="FK_ChatConversation_ChatRoom">
+          <End Role="ChatRoom" Type="chatjsModel.Store.ChatRoom" Multiplicity="1" />
+          <End Role="ChatConversation" Type="chatjsModel.Store.ChatConversation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatRoom">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatConversation">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatConversationUser_ChatConversation">
+          <End Role="ChatConversation" Type="chatjsModel.Store.ChatConversation" Multiplicity="1" />
+          <End Role="ChatUserConversations" Type="chatjsModel.Store.ChatUserConversations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatConversation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatUserConversations">
+              <PropertyRef Name="ConversationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatConversationUser_User">
+          <End Role="User" Type="chatjsModel.Store.User" Multiplicity="1" />
+          <End Role="ChatUserConversations" Type="chatjsModel.Store.ChatUserConversations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatUserConversations">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_ChatRoom">
+          <End Role="ChatRoom" Type="chatjsModel.Store.ChatRoom" Multiplicity="1" />
+          <End Role="ChatMessage" Type="chatjsModel.Store.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatRoom">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_User">
+          <End Role="User" Type="chatjsModel.Store.User" Multiplicity="1" />
+          <End Role="ChatMessage" Type="chatjsModel.Store.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="UserFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoomUsers_ChatRoom">
+          <End Role="ChatRoom" Type="chatjsModel.Store.ChatRoom" Multiplicity="1" />
+          <End Role="ChatRoomUsers" Type="chatjsModel.Store.ChatRoomUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatRoom">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatRoomUsers">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoomUsers_User">
+          <End Role="User" Type="chatjsModel.Store.User" Multiplicity="1" />
+          <End Role="ChatRoomUsers" Type="chatjsModel.Store.ChatRoomUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatRoomUsers">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="chatjsModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ChatJsEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="ChatConversations" EntityType="chatjsModel.ChatConversation" />
+          <EntitySet Name="ChatMessages" EntityType="chatjsModel.ChatMessage" />
+          <EntitySet Name="ChatRooms" EntityType="chatjsModel.ChatRoom" />
+          <EntitySet Name="ChatUserConversations" EntityType="chatjsModel.ChatUserConversation" />
+          <EntitySet Name="Users" EntityType="chatjsModel.User" />
+          <AssociationSet Name="FK_ChatConversation_ChatRoom" Association="chatjsModel.FK_ChatConversation_ChatRoom">
+            <End Role="ChatRoom" EntitySet="ChatRooms" />
+            <End Role="ChatConversation" EntitySet="ChatConversations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatConversationUser_ChatConversation" Association="chatjsModel.FK_ChatConversationUser_ChatConversation">
+            <End Role="ChatConversation" EntitySet="ChatConversations" />
+            <End Role="ChatUserConversations" EntitySet="ChatUserConversations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatMessage_ChatRoom" Association="chatjsModel.FK_ChatMessage_ChatRoom">
+            <End Role="ChatRoom" EntitySet="ChatRooms" />
+            <End Role="ChatMessage" EntitySet="ChatMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_User" Association="chatjsModel.FK_Message_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChatMessage" EntitySet="ChatMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChatConversationUser_User" Association="chatjsModel.FK_ChatConversationUser_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChatUserConversations" EntitySet="ChatUserConversations" />
+          </AssociationSet>
+          <EntitySet Name="ChatRoomUsers" EntityType="chatjsModel.ChatRoomUser" />
+          <AssociationSet Name="FK_RoomUsers_ChatRoom" Association="chatjsModel.FK_RoomUsers_ChatRoom">
+            <End Role="ChatRoom" EntitySet="ChatRooms" />
+            <End Role="ChatRoomUser" EntitySet="ChatRoomUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoomUsers_User" Association="chatjsModel.FK_RoomUsers_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ChatRoomUser" EntitySet="ChatRoomUsers" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="ChatConversation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="StartDateTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="RoomId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ChatRoom" Relationship="chatjsModel.FK_ChatConversation_ChatRoom" FromRole="ChatConversation" ToRole="ChatRoom" />
+          <NavigationProperty Name="ChatUserConversations" Relationship="chatjsModel.FK_ChatConversationUser_ChatConversation" FromRole="ChatConversation" ToRole="ChatUserConversations" />
+        </EntityType>
+        <EntityType Name="ChatMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="RoomId" />
+            <PropertyRef Name="ConversationId" />
+            <PropertyRef Name="UserFromId" />
+            <PropertyRef Name="Body" />
+            <PropertyRef Name="DateTime" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="RoomId" Type="Int32" Nullable="false" />
+          <Property Name="ConversationId" Type="Int32" Nullable="false" />
+          <Property Name="UserFromId" Type="Int32" Nullable="false" />
+          <Property Name="Body" Type="String" Nullable="false" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="ChatRoom" Relationship="chatjsModel.FK_ChatMessage_ChatRoom" FromRole="ChatMessage" ToRole="ChatRoom" />
+          <NavigationProperty Name="User" Relationship="chatjsModel.FK_Message_User" FromRole="ChatMessage" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ChatRoom">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Description" Type="String" MaxLength="200" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="ChatConversations" Relationship="chatjsModel.FK_ChatConversation_ChatRoom" FromRole="ChatRoom" ToRole="ChatConversation" />
+          <NavigationProperty Name="ChatMessages" Relationship="chatjsModel.FK_ChatMessage_ChatRoom" FromRole="ChatRoom" ToRole="ChatMessage" />
+          <NavigationProperty Name="ChatRoomUsers" Relationship="chatjsModel.FK_RoomUsers_ChatRoom" FromRole="ChatRoom" ToRole="ChatRoomUser" />
+        </EntityType>
+        <EntityType Name="ChatUserConversation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ConversationId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ChatConversation" Relationship="chatjsModel.FK_ChatConversationUser_ChatConversation" FromRole="ChatUserConversations" ToRole="ChatConversation" />
+          <NavigationProperty Name="User" Relationship="chatjsModel.FK_ChatConversationUser_User" FromRole="ChatUserConversations" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="200" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="ChatMessages" Relationship="chatjsModel.FK_Message_User" FromRole="User" ToRole="ChatMessage" />
+          <NavigationProperty Name="ChatUserConversations" Relationship="chatjsModel.FK_ChatConversationUser_User" FromRole="User" ToRole="ChatUserConversations" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PasswordSalt" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DisplayName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ChatRoomUsers" Relationship="chatjsModel.FK_RoomUsers_User" FromRole="User" ToRole="ChatRoomUser" />
+        </EntityType>
+        <Association Name="FK_ChatConversation_ChatRoom">
+          <End Role="ChatRoom" Type="chatjsModel.ChatRoom" Multiplicity="1" />
+          <End Role="ChatConversation" Type="chatjsModel.ChatConversation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatRoom">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatConversation">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatConversationUser_ChatConversation">
+          <End Role="ChatConversation" Type="chatjsModel.ChatConversation" Multiplicity="1" />
+          <End Role="ChatUserConversations" Type="chatjsModel.ChatUserConversation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatConversation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatUserConversations">
+              <PropertyRef Name="ConversationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatMessage_ChatRoom">
+          <End Role="ChatRoom" Type="chatjsModel.ChatRoom" Multiplicity="1" />
+          <End Role="ChatMessage" Type="chatjsModel.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatRoom">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_User">
+          <End Role="User" Type="chatjsModel.User" Multiplicity="1" />
+          <End Role="ChatMessage" Type="chatjsModel.ChatMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatMessage">
+              <PropertyRef Name="UserFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChatConversationUser_User">
+          <End Role="User" Type="chatjsModel.User" Multiplicity="1" />
+          <End Role="ChatUserConversations" Type="chatjsModel.ChatUserConversation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatUserConversations">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChatRoomUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="RoomId" Nullable="false" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <NavigationProperty Name="ChatRoom" Relationship="chatjsModel.FK_RoomUsers_ChatRoom" FromRole="ChatRoomUser" ToRole="ChatRoom" />
+          <NavigationProperty Name="User" Relationship="chatjsModel.FK_RoomUsers_User" FromRole="ChatRoomUser" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_RoomUsers_ChatRoom">
+          <End Type="chatjsModel.ChatRoom" Role="ChatRoom" Multiplicity="1" />
+          <End Type="chatjsModel.ChatRoomUser" Role="ChatRoomUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatRoom">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatRoomUser">
+              <PropertyRef Name="RoomId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoomUsers_User">
+          <End Type="chatjsModel.User" Role="User" Multiplicity="1" />
+          <End Type="chatjsModel.ChatRoomUser" Role="ChatRoomUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChatRoomUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="chatjsModelStoreContainer" CdmEntityContainer="ChatJsEntities">
+          <EntitySetMapping Name="ChatConversations">
+            <EntityTypeMapping TypeName="chatjsModel.ChatConversation">
+              <MappingFragment StoreEntitySet="ChatConversation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatMessages">
+            <EntityTypeMapping TypeName="chatjsModel.ChatMessage">
+              <MappingFragment StoreEntitySet="ChatMessage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+                <ScalarProperty Name="ConversationId" ColumnName="ConversationId" />
+                <ScalarProperty Name="UserFromId" ColumnName="UserFromId" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatRooms">
+            <EntityTypeMapping TypeName="chatjsModel.ChatRoom">
+              <MappingFragment StoreEntitySet="ChatRoom">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatUserConversations">
+            <EntityTypeMapping TypeName="chatjsModel.ChatUserConversation">
+              <MappingFragment StoreEntitySet="ChatUserConversations">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ConversationId" ColumnName="ConversationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="chatjsModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatRoomUsers">
+            <EntityTypeMapping TypeName="chatjsModel.ChatRoomUser">
+              <MappingFragment StoreEntitySet="ChatRoomUsers">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
