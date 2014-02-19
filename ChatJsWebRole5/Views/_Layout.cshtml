@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatJS - Facebook style chat for your Web App</title>
+    <!--Scripts-->
+    <script src="/Scripts/jquery-1.8.1.min.js" type="text/javascript"></script>
+    <script src="/Bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- IF SignalR -->
+    @*<script src="/Scripts/jquery.signalR-2.0.0.min.js"></script>
+        <script src="/signalr/hubs" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.signalradapter.js" type="text/javascript"></script>*@
+    <!-- ENDIF -->
+
+    <!-- IF LongPolling -->
+    <script src="/ChatJs/Scripts/jquery.chatjs.longpollingadapter.js" type="text/javascript"></script>
+    <!-- ENDIF -->
+
+    <!-- ChatJS and dependencies -->
+    <script src="/ChatJs/Scripts/jquery.autosize.min.js" type="text/javascript"></script>
+    <script src="/ChatJs/Scripts/jquery.chatjs.js" type="text/javascript"></script>
+
+    <script src="/Scripts/scripts.js" type="text/javascript"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <!--Styles-->
+    <link rel="stylesheet" type="text/css" href="/Content/Styles/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/ChatJs/Styles/jquery.chatjs.css" />
+    <link rel="stylesheet" type="text/css" href="/Bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Bootstrap/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Bootstrap/css/jumbotron-narrow.css" />
+    
+    <link href="/Content/font-awesome-4.0.3/css/font-awesome.min.css" rel="stylesheet" />
+    
+    @RenderSection("Header", false)
+</head>
+<body>
+    @RenderBody()
+    <footer><a href="http://www.chatjs.net">ChatJS</a> - &copy;2014 All rights reserved.</footer>
+</body>
+</html>

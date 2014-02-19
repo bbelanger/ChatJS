@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace ChatJs.Net
+namespace ChatJs.Lib
 {
     public class ChatMessage
     {
         /// <summary>
         /// The user that sent the message
         /// </summary>
-        public int UserFromId { get; set; }
+        public string UserFromId { get; set; }
 
         /// <summary>
         /// The user to whom the message is to
         /// </summary>
-        public int UserToId { get; set; }
+        public string UserToId { get; set; }
 
         /// <summary>
         /// Message timestamp

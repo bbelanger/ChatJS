@@ -2,12 +2,12 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ChatJs.Net
+namespace ChatJs.Lib
 {
     public class GravatarHelper
     {
-        public const string Ampersand = "&";
-        public const string BadgeSymbol = "&#9679;";
+        public const string AMPERSAND = "&";
+        public const string BADGE_SYMBOL = "&#9679;";
 
         public static String GetGravatarUrl(String gravatarEMailHash, Size size)
         {
@@ -15,26 +15,26 @@ namespace ChatJs.Net
             // this code CAN BE BETTER. I'm jot not feeling like fixing it right now
             switch (size)
             {
-                case Size.s16:
+                case Size.S16:
                     sizeAsString = "16";
                     break;
-                case Size.s24:
+                case Size.S24:
                     sizeAsString = "24";
                     break;
-                case Size.s32:
+                case Size.S32:
                     sizeAsString = "32";
                     break;
-                case Size.s64:
+                case Size.S64:
                     sizeAsString = "64";
                     break;
-                case Size.s128:
+                case Size.S128:
                     sizeAsString = "128";
                     break;
                 default:
                     throw new Exception("Size not supported");
             }
 
-            return "https://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + GravatarHelper.Ampersand + "r=PG&d=mm";
+            return "https://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + GravatarHelper.AMPERSAND + "r=PG&d=mm";
         }
 
         // Create an md5 sum string of this string
@@ -66,11 +66,11 @@ namespace ChatJs.Net
         /// </summary>
         public enum Size
         {
-            s16,
-            s24,
-            s32,
-            s64,
-            s128
+            S16,
+            S24,
+            S32,
+            S64,
+            S128
         }
     }
 

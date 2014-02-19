@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChatJs.Net
+namespace ChatJs.Lib
 {
     /// <summary>
     /// Information about a chat user
@@ -24,7 +24,7 @@ namespace ChatJs.Net
         /// <summary>
         /// User Id (preferebly the same as database user Id)
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// User display name

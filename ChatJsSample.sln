@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Net", "ChatJs.Net\ChatJs.Net.csproj", "{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}"
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Lib", "ChatJs.Net\ChatJs.Lib.csproj", "{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B562265D-7B2F-4954-98A6-2E93B33B2BE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Admin", "ChatJsWebRole5\ChatJs.Admin.csproj", "{5865DB2F-9B58-4772-AF98-B260DD982C89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJsWebRole", "Samples\ChatJsMvcSample\ChatJsWebRole.csproj", "{2FDF28CD-0E74-4A96-851D-269E68B3026D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Model", "ChatJs.Model\ChatJs.Model.csproj", "{354854C8-753A-4C86-9B88-63151A50A9F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,15 +19,16 @@ Global
 		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FDF28CD-0E74-4A96-851D-269E68B3026D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FDF28CD-0E74-4A96-851D-269E68B3026D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FDF28CD-0E74-4A96-851D-269E68B3026D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FDF28CD-0E74-4A96-851D-269E68B3026D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{354854C8-753A-4C86-9B88-63151A50A9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{354854C8-753A-4C86-9B88-63151A50A9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{354854C8-753A-4C86-9B88-63151A50A9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{354854C8-753A-4C86-9B88-63151A50A9F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{2FDF28CD-0E74-4A96-851D-269E68B3026D} = {B562265D-7B2F-4954-98A6-2E93B33B2BE0}
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,16 @@
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\ChatJs.Model.dll.config
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\ChatJs.Model.dll
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\ChatJs.Model.pdb
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\EntityFramework.dll
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\EntityFramework.SqlServer.dll
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\EntityFramework.xml
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\EntityFramework.SqlServer.xml
+C:\Projetos\ChatJS-2.0\ChatJs.Model\obj\Debug\ChatJs.Model.csprojResolveAssemblyReference.cache
+C:\Projetos\ChatJS-2.0\ChatJs.Model\obj\Debug\ChatJs.Model.dll
+C:\Projetos\ChatJS-2.0\ChatJs.Model\obj\Debug\ChatJs.Model.pdb
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\Projetos\ChatJS-2.0\ChatJs.Model\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\Projetos\ChatJS-2.0\ChatJs.Model\obj\Debug\ChatJs.Model.Migrations.Initial.resources
+C:\Projetos\ChatJS-2.0\ChatJs.Model\obj\Debug\ChatJs.Model.csproj.GenerateResource.Cache
