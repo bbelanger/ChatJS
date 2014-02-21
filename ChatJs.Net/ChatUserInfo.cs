@@ -5,7 +5,7 @@ namespace ChatJs.Lib
     /// <summary>
     /// Information about a chat user
     /// </summary>
-    public class ChatUser
+    public class ChatUserInfo
     {
         /// <summary>
         /// User chat status. For now, it only supports online and offline
@@ -16,7 +16,7 @@ namespace ChatJs.Lib
             Online = 1
         }
 
-        public ChatUser()
+        public ChatUserInfo()
         {
             this.Status = StatusType.Offline;
         }
@@ -24,7 +24,7 @@ namespace ChatJs.Lib
         /// <summary>
         /// User Id (preferebly the same as database user Id)
         /// </summary>
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// User display name

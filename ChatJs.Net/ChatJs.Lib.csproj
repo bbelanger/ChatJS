@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatMessage.cs" />
-    <Compile Include="ChatUser.cs" />
+    <Compile Include="ChatMessageInfo.cs" />
+    <Compile Include="ChatUserInfo.cs" />
     <Compile Include="GravatarHelper.cs" />
     <Compile Include="IChatHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

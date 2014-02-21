@@ -1,118 +1,100 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using ChatJs.Lib;
+using ChatJs.Model;
+using ChatJs.Model.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
+
+#endregion
 
 namespace ChatJs.Admin.Code.SignalR
 {
     public class ChatHub : Hub, IChatHub
     {
         /// <summary>
-        /// This STUB. In a normal situation, there would be multiple rooms and the user room would have to be 
-        /// determined by the user profile
+        ///     This STUB. In a normal situation, there would be multiple rooms and the user room would have to be
+        ///     determined by the user profile
         /// </summary>
         public const string ROOM_ID_STUB = "chatjs-room";
 
         /// <summary>
-        /// Current connections
-        /// 1 room has many users that have many connections (2 open browsers from the same user represents 2 connections)
+        ///     Current connections
+        ///     1 room has many users that have many connections (2 open browsers from the same user represents 2 connections)
         /// </summary>
-        private static readonly Dictionary<string, Dictionary<string, List<string>>> connections = new Dictionary<string, Dictionary<string, List<string>>>();
+        private static readonly Dictionary<string, Dictionary<int, List<string>>> connections =
+            new Dictionary<string, Dictionary<int, List<string>>>();
 
-        /// <summary>
-        /// This is STUB. This will SIMULATE a database of chat messages
-        /// </summary>
-        private static readonly List<ChatMessage> chatMessages = new List<ChatMessage>();
-
-        /// <summary>
-        /// This method is STUB. This will SIMULATE a database of users
-        /// </summary>
-        private static readonly List<ChatUser> chatUsers = new List<ChatUser>();
-        
-        /// <summary>
-        /// This method is STUB. In a normal situation, the user info would come from the database so this method wouldn't be necessary.
-        /// It's only necessary because this class is simulating the database
-        /// </summary>
-        /// <param name="newUser"></param>
-        public static void RegisterNewUser(ChatUser newUser)
+        public ChatHub()
         {
-            if (newUser == null) throw new ArgumentNullException("newUser");
-            chatUsers.Add(newUser);
+            this.Db = new ChatjsContext();
+            this.UserManager = new ChatJsUserManager(new ChatJsUserStore(this.Db));
         }
 
-        /// <summary>
-        /// This method is STUB. Returns if a user is registered in the FAKE DB.
-        /// Normally this wouldn't be necessary.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="eMail"></param>
-        /// <returns></returns>
-        public static bool IsUserRegistered(string id, string eMail)
-        {
-            return chatUsers.Any(u => u.Id == id && u.Email == eMail);
-        }
+        public ChatJsUserManager UserManager { get; set; }
+
+        public ChatjsContext Db { get; set; }
 
         /// <summary>
-        /// Tries to find a user with the provided e-mail
+        ///     If the specified user is connected, return information about the user
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        public static ChatUser FindUserByEmail(string email)
+        public ChatUserInfo GetUserInfo(int id)
         {
-            return string.IsNullOrEmpty(email) ? null : chatUsers.FirstOrDefault(u => u.Email == email);
+            var user = this.UserManager.FindById(id);
+            return user == null ? null : this.GetUserInfo(user);
         }
 
-        /// <summary>
-        /// If the specified user is connected, return information about the user
-        /// </summary>
-        public ChatUser GetUserInfo(string userId)
+        private ChatUserInfo GetUserInfo(User user)
         {
-            var user = chatUsers.FirstOrDefault(u => u.Id == userId);
-            return user == null ? null : this.GetUserById(userId);
-        }
-
-        private ChatUser GetUserById(string id)
-        {
+            if (user == null) throw new ArgumentNullException("user");
             var myRoomId = this.GetMyRoomId();
 
-            // this is STUB. Normally you would go to the database get the real user
-            var dbUser = chatUsers.First(u => u.Id == id);
-
-            ChatUser.StatusType userStatus;
+            ChatUserInfo.StatusType userStatus;
             lock (connections)
             {
                 userStatus = connections.ContainsKey(myRoomId)
-                                 ? (connections[myRoomId].ContainsKey(dbUser.Id)
-                                        ? ChatUser.StatusType.Online
-                                        : ChatUser.StatusType.Offline)
-                                 : ChatUser.StatusType.Offline;
+                    ? (connections[myRoomId].ContainsKey(user.Id)
+                        ? ChatUserInfo.StatusType.Online
+                        : ChatUserInfo.StatusType.Offline)
+                    : ChatUserInfo.StatusType.Offline;
             }
-            return new ChatUser()
+            return new ChatUserInfo
             {
-                Id = dbUser.Id,
-                Name = dbUser.Name,
+                Id = user.Id,
+                Name = user.DisplayName,
                 Status = userStatus,
-                ProfilePictureUrl = GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(dbUser.Email), GravatarHelper.Size.S32)
+                ProfilePictureUrl =
+                    GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(user.Email),
+                        GravatarHelper.Size.S32)
+            };
+        }
+
+        private ChatMessageInfo GetChatMessageInfo(ChatMessage chatMessage, string clientGuid)
+        {
+            if (chatMessage == null) throw new ArgumentNullException("chatMessage");
+            return new ChatMessageInfo
+            {
+                Message = chatMessage.Message,
+                UserFromId = chatMessage.UserFromId,
+                UserToId = chatMessage.User.Id,
+                ClientGuid = clientGuid
             };
         }
 
         /// <summary>
-        /// Returns my user id
+        ///     Returns my user id, or null if there's no logged user
         /// </summary>
         /// <returns></returns>
-        private string GetMyUserId()
+        private int GetMyUserId()
         {
-            var userPrincipal = this.Context.User as ClaimsPrincipal;
-            if (userPrincipal == null)
-                throw new NotAuthorizedException();
-            var userId = userPrincipal.Identity.GetUserId();
-            return userId;
+            if (this.Context.User == null)
+                throw new Exception("User is not logged in");
+            return int.Parse(this.Context.User.Identity.GetUserId());
         }
 
         private string GetMyRoomId()
@@ -130,17 +112,12 @@ namespace ChatJs.Admin.Code.SignalR
         }
 
         /// <summary>
-        /// Broadcasts to all users in the same room the new users list
+        ///     Broadcasts to all users in the same room the new users list
         /// </summary>
-        /// <param name="myUserId">
-        /// user Id that has to be excluded in the broadcast. That is, all users
-        /// should receive the message, except this.
-        /// </param>
         private void NotifyUsersChanged()
         {
             var myRoomId = this.GetMyRoomId();
             var myUserId = this.GetMyUserId();
-
 
             if (connections.ContainsKey(myRoomId))
             {
@@ -155,85 +132,67 @@ namespace ChatJs.Admin.Code.SignalR
                     // creates a list of users that contains all users with the exception of the user to which 
                     // the list will be sent
                     // every user will receive a list of user that exclude him/hearself
-                    var usersList = chatUsers.Where(u => u.Id != userIdClusure);
+                    var usersList = this.Db.Users.Where(u => u.Id != userIdClusure);
 
                     if (connections[myRoomId][userId] != null)
                         foreach (var connectionId in connections[myRoomId][userId])
                             this.Clients.Client(connectionId).usersListChanged(usersList);
                 }
             }
-
         }
 
-        private ChatMessage PersistMessage(string otherUserId, string message, string clientGuid)
+        /// <summary>
+        ///     Returns the message history
+        /// </summary>
+        public List<ChatUserInfo> GetUsersList()
         {
             var myUserId = this.GetMyUserId();
 
-            // this is STUB. Normally you would go to the real database to get the my user and the other user
-            var myUser = chatUsers.FirstOrDefault(u => u.Id == myUserId);
-            var otherUser = chatUsers.FirstOrDefault(u => u.Id == otherUserId);
+            var roomUsers = this.Db.Users.Where(u => u.Id != myUserId).OrderBy(u => u.DisplayName).ToList();
 
-            if (myUser == null || otherUser == null)
-                return null;
+            // now we have to see the users who are online and those who are not
+            return roomUsers.Select(this.GetUserInfo).ToList();
+        }
 
-            var chatMessage = new ChatMessage
-            {
-                DateTime = DateTime.UtcNow,
-                Message = message,
-                ClientGuid = clientGuid,
-                UserFromId = myUserId,
-                UserToId = otherUserId,
-            };
+        /// <summary>
+        ///     Returns the message history
+        /// </summary>
+        public List<ChatMessageInfo> GetMessageHistory(int otherUserId)
+        {
+            var myUserId = this.GetMyUserId();
+            // this is STUB. Normally you would go to the real database to get the messages
+            var messages = Db.ChatMessages
+                .Where(
+                    m =>
+                        (m.User.Id == myUserId && m.UserFromId == otherUserId) ||
+                        (m.User.Id == otherUserId && m.UserFromId == myUserId))
+                .OrderByDescending(m => m.DateTime).Take(30).ToList();
 
-            // this is STUB. Normally you would add the dbMessage to the real database
-            chatMessages.Add(chatMessage);
-
-            // normally you would save the database changes
-            //this.db.SaveChanges();
-
-            return chatMessage;
+            messages.Reverse();
+            return messages.Select(m => this.GetChatMessageInfo(m, null)).ToList(); ;
         }
 
         #region IChatHub
 
         /// <summary>
-        /// Returns the message history
+        ///     Sends a message to a particular user
         /// </summary>
-        public List<ChatMessage> GetMessageHistory(string otherUserId)
-        {
-            var myUserId = this.GetMyUserId();
-            // this is STUB. Normally you would go to the real database to get the messages
-            var messages = chatMessages
-                               .Where(
-                                   m =>
-                                   (m.UserToId == myUserId && m.UserFromId == otherUserId) ||
-                                   (m.UserToId == otherUserId && m.UserFromId == myUserId))
-                               .OrderByDescending(m => m.Timestamp).Take(30).ToList();
-
-            messages.Reverse();
-            return messages;
-        }
-
-        /// <summary>
-        /// Returns the message history
-        /// </summary>
-        public List<ChatUser> GetUsersList()
-        {
-            var myUserId = this.GetMyUserId();
-            var myRoomId = this.GetMyRoomId();
-            var roomUsers = chatUsers.Where(u => u.RoomId == myRoomId && u.Id != myUserId).OrderBy(u => u.Name).ToList();
-            return roomUsers;
-        }
-
-        /// <summary>
-        /// Sends a message to a particular user
-        /// </summary>
-        public void SendMessage(string otherUserId, string message, string clientGuid)
+        public void SendMessage(int otherUserId, string message, string clientGuid)
         {
             var myUserId = this.GetMyUserId();
             var myRoomId = this.GetMyRoomId();
 
-            var dbChatMessage = this.PersistMessage(otherUserId, message, clientGuid);
+            var dbChatMessage = new ChatMessage()
+            {
+                DateTime = DateTime.UtcNow,
+                Message = message,
+                UserFromId = myUserId,
+                UserId = otherUserId
+            };
+
+            this.Db.ChatMessages.Add(dbChatMessage);
+            this.Db.SaveChanges();
+
             var connectionIds = new List<string>();
             lock (connections)
             {
@@ -247,9 +206,9 @@ namespace ChatJs.Admin.Code.SignalR
         }
 
         /// <summary>
-        /// Sends a typing signal to a particular user
+        ///     Sends a typing signal to a particular user
         /// </summary>
-        public void SendTypingSignal(string otherUserId)
+        public void SendTypingSignal(int otherUserId)
         {
             var myUserId = this.GetMyUserId();
             var myRoomId = this.GetMyRoomId();
@@ -265,18 +224,19 @@ namespace ChatJs.Admin.Code.SignalR
         }
 
         /// <summary>
-        /// Triggered when the user opens a new browser window
+        ///     Triggered when the user opens a new browser window
         /// </summary>
         /// <returns></returns>
         public override Task OnConnected()
         {
             var myRoomId = this.GetMyRoomId();
+
             var myUserId = this.GetMyUserId();
 
             lock (connections)
             {
                 if (!connections.ContainsKey(myRoomId))
-                    connections[myRoomId] = new Dictionary<string, List<string>>();
+                    connections[myRoomId] = new Dictionary<int, List<string>>();
 
                 if (!connections[myRoomId].ContainsKey(myUserId))
                 {
@@ -292,7 +252,7 @@ namespace ChatJs.Admin.Code.SignalR
         }
 
         /// <summary>
-        /// Triggered when the user closes the browser window
+        ///     Triggered when the user closes the browser window
         /// </summary>
         /// <returns></returns>
         public override Task OnDisconnected()
@@ -311,29 +271,31 @@ namespace ChatJs.Admin.Code.SignalR
                             {
                                 connections[myRoomId].Remove(myUserId);
                                 Task.Run(() =>
+                                {
+                                    // this will run in separate thread.
+                                    // If the user is away for more than 10 seconds it will be removed from 
+                                    // the room.
+                                    // In a normal situation this wouldn't be done because normally the users in a
+                                    // chat room are fixed, like when you have 1 chat room for each tenancy
+                                    Thread.Sleep(10000);
+                                    if (!connections[myRoomId].ContainsKey(myUserId))
                                     {
-                                        // this will run in separate thread.
-                                        // If the user is away for more than 10 seconds it will be removed from 
-                                        // the room.
-                                        // In a normal situation this wouldn't be done because normally the users in a
-                                        // chat room are fixed, like when you have 1 chat room for each tenancy
-                                        Thread.Sleep(10000);
-                                        if (!connections[myRoomId].ContainsKey(myUserId))
+                                        var myDbUser = this.Db.Users.FirstOrDefault(u => u.Id == myUserId);
+                                        if (myDbUser != null)
                                         {
-                                            var myDbUser = chatUsers.FirstOrDefault(u => u.Id == myUserId);
-                                            if (myDbUser != null)
-                                            {
-                                                chatUsers.Remove(myDbUser);
-                                                this.NotifyUsersChanged();
-                                            }
+                                            this.Db.Users.Remove(myDbUser);
+                                            this.NotifyUsersChanged();
                                         }
-                                    });
+                                    }
+                                });
                             }
                         }
             }
 
             return base.OnDisconnected();
         }
+
+
 
         #endregion
     }

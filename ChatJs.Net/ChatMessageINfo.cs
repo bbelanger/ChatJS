@@ -2,17 +2,17 @@
 
 namespace ChatJs.Lib
 {
-    public class ChatMessage
+    public class ChatMessageInfo
     {
         /// <summary>
         /// The user that sent the message
         /// </summary>
-        public string UserFromId { get; set; }
+        public int UserFromId { get; set; }
 
         /// <summary>
         /// The user to whom the message is to
         /// </summary>
-        public string UserToId { get; set; }
+        public int UserToId { get; set; }
 
         /// <summary>
         /// Message timestamp

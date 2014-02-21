@@ -1,8 +1,13 @@
-﻿using ChatJs.Admin;
+﻿#region
+
+using ChatJs.Admin;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(Startup))]
+#endregion
+
+[assembly: OwinStartup(typeof (Startup))]
+
 namespace ChatJs.Admin
 {
     public partial class Startup
@@ -10,6 +15,7 @@ namespace ChatJs.Admin
         public void Configuration(IAppBuilder app)
         {
             this.ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }

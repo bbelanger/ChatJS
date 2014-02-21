@@ -8,22 +8,9 @@ namespace ChatJs.Model.Models.Mapping
         public ChatMessageMap()
         {
             // Primary Key
-            this.HasKey(t => new { t.Id, t.RoomId, t.ConversationId, t.UserFromId, t.Body, t.DateTime });
+            this.HasKey(t => t.Id);
 
-            // Properties
-            this.Property(t => t.Id)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
-            this.Property(t => t.RoomId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
-            this.Property(t => t.ConversationId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
-            this.Property(t => t.UserFromId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-
-            this.Property(t => t.Body)
+            this.Property(t => t.Message)
                 .IsRequired();
 
             // Table & Column Mappings
@@ -31,18 +18,21 @@ namespace ChatJs.Model.Models.Mapping
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.RoomId).HasColumnName("RoomId");
             this.Property(t => t.ConversationId).HasColumnName("ConversationId");
-            this.Property(t => t.UserFromId).HasColumnName("UserFromId");
-            this.Property(t => t.Body).HasColumnName("Body");
+            this.Property(t => t.Message).HasColumnName("Body");
             this.Property(t => t.DateTime).HasColumnName("DateTime");
 
             // Relationships
             this.HasRequired(t => t.ChatRoom)
                 .WithMany(t => t.ChatMessages)
                 .HasForeignKey(d => d.RoomId);
-            this.HasRequired(t => t.User)
-                .WithMany(t => t.ChatMessages)
-                .HasForeignKey(d => d.UserFromId);
 
+            this.HasRequired(t => t.User)
+                .WithMany(t => t.ChatMessagesImUserTo)
+                .HasForeignKey(d => d.UserId);
+
+            this.HasRequired(t => t.UserFrom)
+                .WithMany(t => t.ChatMessagesImUserFrom)
+                .HasForeignKey(d => d.UserFromId);
         }
     }
 }

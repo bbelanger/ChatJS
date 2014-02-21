@@ -1,6 +1,5 @@
 #region
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
@@ -16,14 +15,18 @@ namespace ChatJs.Model.Models
         {
             this.ChatUserConversations = new List<ChatUserConversation>();
             this.ChatRoomUsers = new Collection<ChatRoomUser>();
-            this.ChatMessages = new Collection<ChatMessage>();
+            this.ChatMessagesImUserTo = new Collection<ChatMessage>();
+            this.ChatMessagesImUserFrom = new Collection<ChatMessage>();
         }
 
         public string DisplayName { get; set; }
         public ICollection<ChatUserConversation> ChatUserConversations { get; set; }
 
         public ICollection<ChatRoomUser> ChatRoomUsers { get; set; }
-        public ICollection<ChatMessage> ChatMessages { get; set; }
+
+        public ICollection<ChatMessage> ChatMessagesImUserTo { get; set; }
+
+        public ICollection<ChatMessage> ChatMessagesImUserFrom { get; set; }
     }
 
 
@@ -52,7 +55,7 @@ namespace ChatJs.Model.Models
     {
         public int Id { get; set; }
     }
-    
+
     public class UserStore : UserStore<User, IdentityRole, int, UserLogin, UserRole, UserClaim>
     {
         public UserStore(DbContext context)

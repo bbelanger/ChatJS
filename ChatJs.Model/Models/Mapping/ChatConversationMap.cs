@@ -13,6 +13,7 @@ namespace ChatJs.Model.Models.Mapping
             // Properties
             // Table & Column Mappings
             this.ToTable("ChatConversation");
+
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.StartDateTime).HasColumnName("StartDateTime");
             this.Property(t => t.RoomId).HasColumnName("RoomId");
