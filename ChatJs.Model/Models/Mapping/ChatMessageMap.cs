@@ -15,6 +15,7 @@ namespace ChatJs.Model.Models.Mapping
 
             // Table & Column Mappings
             this.ToTable("ChatMessage");
+
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.RoomId).HasColumnName("RoomId");
             this.Property(t => t.ConversationId).HasColumnName("ConversationId");
@@ -32,7 +33,8 @@ namespace ChatJs.Model.Models.Mapping
 
             this.HasRequired(t => t.UserFrom)
                 .WithMany(t => t.ChatMessagesImUserFrom)
-                .HasForeignKey(d => d.UserFromId);
+                .HasForeignKey(d => d.UserFromId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

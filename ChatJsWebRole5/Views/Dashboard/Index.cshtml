@@ -95,7 +95,7 @@
                         <td>@room.RoomName</td>
                         <td>@room.Description</td>
                         <td>@room.RoomUsersCount</td>
-                        <td><a href="@Url.Action("EditRoom", new {id = room.Id})"><i class="fa fa-pencil-square-o"></i>Edit</a></td>
+                        <td><a href="@Url.Action("EditRoom", "Rooms", new {id = room.Id})"><i class="fa fa-pencil-square-o"></i>Edit</a></td>
                         <td><a href="#"><i class="fa fa-eraser"></i>Delete</a></td>
                     </tr>
                 }

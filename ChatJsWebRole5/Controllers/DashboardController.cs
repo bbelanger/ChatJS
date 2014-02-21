@@ -21,14 +21,6 @@ namespace ChatJs.Admin.Controllers
     [Authorize]
     public class DashboardController : ChatJsController
     {
-        public DashboardController()
-        {
-            this.UserManager = new ChatJsUserManager(new ChatJsUserStore(this.Db));
-        }
-
-        public ChatJsUserManager UserManager { get; private set; }
-
-
         public ActionResult Index()
         {
             var viewModel = new IndexViewModel

@@ -19,17 +19,6 @@ namespace ChatJs.Admin.Controllers
     [Authorize]
     public class UsersController : ChatJsController
     {
-        public UsersController()
-        {
-            this.UserManager = new ChatJsUserManager(new ChatJsUserStore(this.Db));
-        }
-
-        public ChatJsUserManager UserManager { get; private set; }
-        private IAuthenticationManager AuthenticationManager
-        {
-            get { return this.HttpContext.GetOwinContext().Authentication; }
-        }
-
         [AllowAnonymous]
         [HttpGet]
         public ActionResult Signin()
@@ -73,6 +62,13 @@ namespace ChatJs.Admin.Controllers
         {
             this.AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             return this.RedirectToAction("Index", "Dashboard");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> Signon()
+        {
+            return this.View("EditUser");
         }
 
 
