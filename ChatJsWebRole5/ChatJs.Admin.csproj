@@ -180,6 +180,8 @@
     <Compile Include="Code\ChatJsUserManager.cs" />
     <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
     <Compile Include="Code\SignalR\ChatHub.cs" />
+    <Compile Include="Code\SignalR\ChatHubCache.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChatJsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
@@ -216,9 +218,16 @@
     <Content Include="ChatJs\Images\Emoticons\smile-5.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-6.png" />
     <Content Include="ChatJs\Scripts\jquery.activity-indicator-1.0.0.min.js" />
+    <Content Include="ChatJs\Scripts\jquery.autosize.js" />
     <Content Include="ChatJs\Scripts\jquery.autosize.min.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.longpollingadapter.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.messageboard.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.horizontaltabs.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.userlist.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.window.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.room.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.pmwindow.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.rooms.js" />
+    <Content Include="ChatJs\Scripts\jquery.chatjs.controller.js" />
     <Content Include="ChatJs\Scripts\jquery.chatjs.signalradapter.js" />
     <Content Include="ChatJs\Sounds\chat.mp3" />
     <Content Include="ChatJs\Sounds\chat.ogg" />
@@ -296,9 +305,10 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Rooms\EditRoom.cshtml" />
     <Content Include="Views\Users\EditUser.cshtml" />
-    <Content Include="Views\Users\Signin.cshtml" />
     <Content Include="Views\_Layout.cshtml" />
     <Content Include="Scripts\jquery-2.1.0.min.map" />
+    <Content Include="Views\Account\Signin.cshtml" />
+    <Content Include="Views\Account\Signon.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,12 +16,32 @@
  *       end user at any plan. Otherwise a commercial license is required.
  **/
 
+.chat-window-tray {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.3);
+    border-image: none;
+    border-style: solid;
+    border-width: 0 1px;
+    bottom: 0;
+    font-family: Arial, Helvetica;
+    font-size: 12px;
+    height: 20px;
+    line-height: 14.4px;
+    position: fixed;
+    width: 40px;
+    z-index: 10001;
+}
+
 .chat-window {
     background-color: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.3);
     bottom: 0;
     box-shadow: 0 0 10px #D5D5D5;
-    font-family: Arial,Helvetica;
+    font-family: Arial, Helvetica;
     font-size: 12px;
     line-height: 14.4px;
     position: fixed;
@@ -29,16 +49,19 @@
     z-index: 10000;
 }
 
+    .chat-window.expansible {
+        margin-bottom: 19px;
+    }
+
     .chat-window .temp-message {
         color: rgb(176, 176, 176);
     }
 
 .chat-window-title {
-    background: none repeat scroll 0 0 #6D84B4;
-    border-bottom: 1px solid #D7D7D7;
-    color: #FFFFFF;
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #7E7E7E;
     cursor: pointer;
-    font-weight: bold;
+    height: 28px;
     overflow: hidden;
     padding: 6px;
 }
@@ -51,8 +74,8 @@
         background-image: url("/ChatJs/Images/clear.png");
         float: right;
         height: 16px;
-        width: 16px;
         opacity: 0.7;
+        width: 16px;
     }
 
         .chat-window-title .close:hover {
@@ -84,24 +107,25 @@
 }
 
     .chat-window-inner-content .loading-box {
-        padding: 30px;
         background-image: url("../Images/ajax-loader.gif");
-        background-repeat: no-repeat;
         background-position: center center;
+        background-repeat: no-repeat;
+        padding: 30px;
     }
 
 textarea.chat-window-text-box {
-    width: 100%;
-    overflow: hidden;
-    resize: none;
-    margin: 0;
-    border-radius: 0;
-    font-size: 12px;
-    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    padding: 5px;
+    border: 1px solid #BBBBBB;
+    border-radius: 0;
+    box-sizing: border-box;
+    font-size: 12px;
     line-height: 1.2em;
+    margin: 0;
+    overflow: hidden;
+    padding: 3px;
+    resize: none;
+    width: 100%;
 }
 
 .user-list-item {
@@ -115,15 +139,15 @@ textarea.chat-window-text-box {
     .user-list-item .profile-picture {
         display: block;
         float: left;
-        height: 25px;
-        width: 25px;
+        height: 22px;
+        width: 22px;
     }
 
     .user-list-item .profile-status {
         display: block;
         float: right;
         height: 7px;
-        margin: 10px 6px 0;
+        margin: 8px 4px 0;
         width: 7px;
     }
 
@@ -138,7 +162,7 @@ textarea.chat-window-text-box {
         }
 
     .user-list-item .content {
-        margin: 7px 22px 0 35px;
+        margin: 4px 22px 0 30px;
     }
 
     .user-list-item.offline {
@@ -176,15 +200,14 @@ textarea.chat-window-text-box {
 
     .chat-message .chat-text-wrapper {
         line-height: 1.2em;
-        margin-left: 40px;
+        margin-left: 30px;
     }
 
     .chat-message p {
         margin: 0;
     }
 
-.chat-window-content {
-    /*min-height: 100px;*/
+.chat-window-content { /*min-height: 100px;*/
 }
 
     .chat-window-content .message-warning {
@@ -197,63 +220,143 @@ textarea.chat-window-text-box {
     }
 
     .chat-window-content input[type=text] {
-        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
         -moz-box-sizing: border-box; /* Firefox, other Gecko */
-        box-sizing: border-box; /* Opera/IE 8+ */
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-        margin: 0;
-        transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
         border-radius: 0;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        box-sizing: border-box; /* Opera/IE 8+ */
+        height: auto;
+        margin: 0;
         margin: 0;
         transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
-        height: auto;
+        transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
     }
 
 .happy {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
     background-image: url("/ChatJs/Images/Emoticons/smile-2.png");
+    display: inline-block;
+    height: 16px;
     vertical-align: top;
+    width: 16px;
 }
 
 .very-happy {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
     background-image: url("/ChatJs/Images/Emoticons/smile-1.png");
+    display: inline-block;
+    height: 16px;
     vertical-align: top;
+    width: 16px;
 }
 
 .sad {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
     background-image: url("/ChatJs/Images/Emoticons/smile-3.png");
+    display: inline-block;
+    height: 16px;
     vertical-align: top;
+    width: 16px;
 }
 
 .wary {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
     background-image: url("/ChatJs/Images/Emoticons/smile-4.png");
+    display: inline-block;
+    height: 16px;
     vertical-align: top;
+    width: 16px;
 }
 
 .astonished {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
     background-image: url("/ChatJs/Images/Emoticons/smile-5.png");
+    display: inline-block;
+    height: 16px;
     vertical-align: top;
+    width: 16px;
 }
 
 .tongue {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
     background-image: url("/ChatJs/Images/Emoticons/smile-6.png");
+    display: inline-block;
+    height: 16px;
     vertical-align: top;
+    width: 16px;
 }
+
+ul.horizontal-tab {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    list-style: none outside none;
+    margin-bottom: 4px;
+    margin-top: 2px;
+    padding: 0 8px;
+}
+
+    ul.horizontal-tab li {
+        cursor: pointer;
+        display: inline-block;
+        margin: 0 6px;
+        position: relative;
+        top: 1px;
+    }
+
+        ul.horizontal-tab li.selected {
+            background-color: #FFFFFF;
+            border-color: rgba(0, 0, 0, 0.3);
+            border-style: solid;
+            border-width: 1px 1px 0;
+            margin: 0 2px;
+            padding: 4px 6px;
+        }
+
+.rooms-list-item {
+    cursor: pointer;
+    overflow: hidden;
+    padding: 5px 0;
+}
+
+    .rooms-list-item.hover {
+        background-color: #F0F3F5;
+    }
+
+    .rooms-list-item .room-name {
+        margin: 0 10px;
+    }
+
+    .rooms-list-item .users-online {
+        float: right;
+        font-weight: bold;
+        margin: 0 10px;
+    }
+
+.tab-content {
+    display: none;
+    overflow: hidden;
+}
+
+    .tab-content.selected-tab {
+        display: block;
+    }
+
+    .tab-content .content-wrapper {
+        border-top: 1px solid #E8E8E8;
+    }
+
+    .tab-content .left-panel {
+        border-right: 1px solid #E8E8E8;
+        margin-right: 162px;
+        min-height: 200px;
+    }
+
+    .tab-content .left-panel .messages-wrapper {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+        .tab-content .left-panel .messages-wrapper .profile-picture {
+            height: 22px;
+            width: 22px;
+        }
+
+    .tab-content .right-panel {
+        float: right;
+        height: 20px;
+        width: 160px;
+    }

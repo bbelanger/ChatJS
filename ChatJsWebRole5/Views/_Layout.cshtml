@@ -15,8 +15,15 @@
         <script src="/ChatJs/Scripts/jquery.chatjs.signalradapter.js" type="text/javascript"></script>
 
         <!-- ChatJS and dependencies -->
-        <script src="/ChatJs/Scripts/jquery.autosize.min.js" type="text/javascript"></script>
-        <script src="/ChatJs/Scripts/jquery.chatjs.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.autosize.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.horizontaltabs.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.window.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.messageboard.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.userlist.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.rooms.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.room.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.pmwindow.js" type="text/javascript"></script>
+        <script src="/ChatJs/Scripts/jquery.chatjs.controller.js" type="text/javascript"></script>
 
         <script src="/Scripts/scripts.js" type="text/javascript"></script>
         <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
@@ -37,11 +44,7 @@
                 $(function() {
                     $.chat({
                         // your user information
-                        user: {
-                            Id: @currentUser.Id,
-                            Name: '@currentUser.DisplayName',
-                            ProfilePictureUrl: '@currentUser.ProfilePictureUrl'
-                        },
+                        userId: @currentUser.Id,
                         // text displayed when the other user is typing
                         typingText: ' is typing...',
                         // the title for the user's list window

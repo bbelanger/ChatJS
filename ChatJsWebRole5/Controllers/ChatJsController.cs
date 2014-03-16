@@ -52,7 +52,7 @@ namespace ChatJs.Admin.Controllers
                     EMail = currentUser.DisplayName,
                     ProfilePictureUrl =
                         GravatarHelper.GetGravatarUrl(GravatarHelper.GetGravatarHash(currentUser.Email),
-                            GravatarHelper.Size.S16)
+                            GravatarHelper.Size.S32)
                 };
             }
         }

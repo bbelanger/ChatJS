@@ -27,9 +27,9 @@ namespace ChatJs.Model.Models.Mapping
                 .WithMany(t => t.ChatMessages)
                 .HasForeignKey(d => d.RoomId);
 
-            this.HasRequired(t => t.User)
+            this.HasRequired(t => t.UserTo)
                 .WithMany(t => t.ChatMessagesImUserTo)
-                .HasForeignKey(d => d.UserId);
+                .HasForeignKey(d => d.UserToId);
 
             this.HasRequired(t => t.UserFrom)
                 .WithMany(t => t.ChatMessagesImUserFrom)

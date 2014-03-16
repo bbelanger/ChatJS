@@ -12,7 +12,17 @@ namespace ChatJs.Lib
         /// <summary>
         /// The user to whom the message is to
         /// </summary>
-        public int UserToId { get; set; }
+        public int? UserToId { get; set; }
+
+        /// <summary>
+        /// The conversation to which the message is being sent
+        /// </summary>
+        public int? ConversationId { get; set; }
+
+        /// <summary>
+        /// The room to which the message is being sent
+        /// </summary>
+        public int? RoomId { get; set; }
 
         /// <summary>
         /// Message timestamp

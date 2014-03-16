@@ -1,13 +1,8 @@
 ﻿#region
 
-using System;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using ChatJs.Admin.Code;
 using ChatJs.Admin.Models;
-using ChatJs.Model;
 using ChatJs.Model.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -16,36 +11,59 @@ using Microsoft.Owin.Security;
 
 namespace ChatJs.Admin.Controllers
 {
-    [Authorize]
-    public class UsersController : ChatJsController
+    public class AccountController : ChatJsController
     {
         [HttpGet]
-        public async Task<ActionResult> EditUser(int? id)
+        public ActionResult Signin()
         {
-            UserViewModel viewModel;
-            if (id.HasValue)
+            return this.View();
+        }
+
+        /// <summary>
+        ///     Joins the chat
+        /// </summary>
+        [HttpPost]
+        public async Task<ActionResult> Signin(SigninViewModel model)
+        {
+            if (this.ModelState.IsValid)
             {
-                var existingUser = await this.UserManager.FindByIdAsync(id.Value);
-                if (existingUser == null)
-                    throw new Exception("Cannot edit user. User not found. User id: " + id);
+                var user = await this.UserManager.FindAsync(model.UserName, model.Password);
 
-                viewModel = new UserViewModel
+                if (user != null)
                 {
-                    Id = existingUser.Id,
-                    UserName = existingUser.UserName,
-                    DisplayName = existingUser.DisplayName,
-                    EMail = existingUser.Email,
-                    // it's impossible to retrieve the actual password as it's hashed and salted
-                };
+                    await this.SignInAsync(user, model.RememberMe);
+                    return this.RedirectToAction("Index", "Dashboard");
+                }
+                this.ModelState.AddModelError("EmailAddress", "Could not find a user with the given credentials");
             }
-            else
-                viewModel = null;
+            return this.View(model);
+        }
 
-            return this.View(viewModel);
+        private async Task SignInAsync(User user, bool isPersistent)
+        {
+            this.AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            var identity =
+                await this.UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            this.AuthenticationManager.SignIn(new AuthenticationProperties {IsPersistent = isPersistent}, identity);
+        }
+
+        /// <summary>
+        ///     Leaves the chat
+        /// </summary>
+        public ActionResult Signout(string userName, string email)
+        {
+            this.AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            return this.RedirectToAction("Index", "Dashboard");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Signon()
+        {
+            return this.View();
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditUser(UserViewModel model)
+        public async Task<ActionResult> Signon(UserViewModel model)
         {
             if (model.Id.HasValue)
             {

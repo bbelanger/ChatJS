@@ -1,4 +1,6 @@
-﻿footer { text-align: center; }
+﻿footer {
+    text-align: center;
+}
 
 .list-empty {
     background-color: #FFFFEB;
@@ -16,18 +18,32 @@
     padding: 12px;
 }
 
-.validation-summary-errors ul {
-    margin: 0;
-    padding: 0;
+    .validation-summary-errors ul {
+        margin: 0;
+        padding: 0;
+    }
+
+        .validation-summary-errors ul li {
+            list-style: none;
+        }
+
+.fa {
+    margin-right: 5px;
 }
 
-.validation-summary-errors ul li { list-style: none; }
-
-.fa { margin-right: 5px; }
-
-.fa.icon-only { margin-right: 0; }
+    .fa.icon-only {
+        margin-right: 0;
+    }
 
 .table-icon {
+    margin-right: 8px;
+    position: relative;
+    top: -2px;
+}
+
+.user-icon {
+    height: 16px;
+    width: 16px;
     margin-right: 8px;
     position: relative;
     top: -2px;
