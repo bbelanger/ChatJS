@@ -13,7 +13,7 @@ namespace ChatJs.Lib
         /// <summary>
         ///     Returns the message history between the current user and another user
         /// </summary>
-        List<ChatMessageInfo> GetMessageHistory(int otherUserId);
+        List<ChatMessageInfo> GetMessageHistory(int? roomId, int? conversationId, int? otherUserId);
 
         /// <summary>
         ///     Sends a message to a another user

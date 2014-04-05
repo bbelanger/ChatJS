@@ -1,5 +1,5 @@
 ﻿// CHAT CONTAINER
-(function($) {
+(function ($) {
 
     function ChatWindow(options) {
         /// <summary>This is a window container, responsible for hosting both the users list and the chat window </summary>
@@ -10,18 +10,17 @@
             title: null,
             canExpand: true,
             canClose: true,
-            showTextBox: true,
             width: null,
             height: null,
             initialToggleState: "maximized",
-            onCreated: function(chatContainer) {},
-            onClose: function(chatContainer) {},
+            onCreated: function (chatContainer) { },
+            onClose: function (chatContainer) { },
             // triggers when the window changes it's state: minimized or maximized
-            onToggleStateChanged: function(currentState) {}
+            onToggleStateChanged: function (currentState) { }
         };
 
         //Extending options:
-        this.opts = $.extend({}, this.defaults, options);
+        this.options = $.extend({}, this.defaults, options);
 
         //Privates:
         this.$el = null;
@@ -29,32 +28,31 @@
         this.$windowTitle = null;
         this.$windowContent = null;
         this.$windowInnerContent = null;
-        this.$textBox = null;
     }
 
     // Separate functionality from object creation
     ChatWindow.prototype = {
-        init: function() {
+        init: function () {
             var _this = this;
 
-            if (_this.opts.canExpand) {
+            if (_this.options.canExpand) {
                 _this.$windowTray = $("<div/>").addClass("chat-window-tray").appendTo($("body"));
             }
 
             // window
             _this.$window = $("<div/>").addClass("chat-window").appendTo($("body"));
-            if (_this.opts.canExpand)
+            if (_this.options.canExpand)
                 _this.$window.addClass("expansible");
-            if (_this.opts.width)
-                _this.$window.css("width", _this.opts.width);
-            if (_this.opts.height)
-                _this.$window.css("height", _this.opts.height);
+            if (_this.options.width)
+                _this.$window.css("width", _this.options.width);
+            if (_this.options.height)
+                _this.$window.css("height", _this.options.height);
 
             // title
             _this.$windowTitle = $("<div/>").addClass("chat-window-title").appendTo(_this.$window);
-            if (_this.opts.canClose) {
+            if (_this.options.canClose) {
                 var $closeButton = $("<div/>").addClass("close").appendTo(_this.$windowTitle);
-                $closeButton.click(function(e) {
+                $closeButton.click(function (e) {
                     e.stopPropagation();
 
                     // removes this item from the collection
@@ -69,33 +67,29 @@
                     _this.$window.remove();
 
                     // triggers the event
-                    _this.opts.onClose(_this);
+                    _this.options.onClose(_this);
                 });
 
             }
 
-            $("<div/>").addClass("text").text(_this.opts.title).appendTo(_this.$windowTitle);
+            $("<div/>").addClass("text").text(_this.options.title).appendTo(_this.$windowTitle);
 
             // content
             _this.$windowContent = $("<div/>").addClass("chat-window-content").appendTo(_this.$window);
-            if (_this.opts.initialToggleState == "minimized")
+            if (_this.options.initialToggleState == "minimized")
                 _this.$windowContent.hide();
 
             _this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo(_this.$windowContent);
 
-            // text-box-wrapper
-            if (_this.opts.showTextBox) {
-                var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(_this.$windowContent);
-                _this.$textBox = $("<textarea />").attr("rows", "1").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
-                _this.$textBox.autosize();
-            }
-
             // wire everything up
-            _this.$windowTitle.click(function() {
+            _this.$windowTitle.click(function () {
                 _this.$windowContent.toggle();
-                if (_this.$windowContent.is(":visible") && _this.opts.showTextBox)
-                    _this.$textBox.focus();
-                _this.opts.onToggleStateChanged(_this.$windowContent.is(":visible") ? "maximized" : "minimized");
+                if (!_this.$windowContent.is(":visible"))
+                    _this.$window.addClass("collapsed");
+                else
+                    _this.$window.removeClass("collapsed");
+                
+                _this.options.onToggleStateChanged(_this.$windowContent.is(":visible") ? "maximized" : "minimized");
             });
 
             // enlists this container in the containers
@@ -105,34 +99,34 @@
 
             $.organizeChatContainers();
 
-            _this.opts.onCreated(_this);
+            _this.options.onCreated(_this);
         },
 
-        getTrayWidth: function() {
+        getTrayWidth: function () {
             var _this = this;
-            return _this.opts.canExpand ? _this.$windowTray.outerWidth() : _this.$window.outerWidth();
+            return _this.options.canExpand ? _this.$windowTray.outerWidth() : _this.$window.outerWidth();
         },
 
         setRightOffset: function (offset) {
             var _this = this;
             _this.$window.css("right", offset);
-            if (_this.opts.canExpand)
+            if (_this.options.canExpand)
                 _this.$windowTray.css("right", offset);
         },
 
-        getContent: function() {
+        getContent: function () {
             /// <summary>Gets the content of the chat window. This HTML element is the container for any chat window content</summary>
             /// <returns type="Object"></returns>
             var _this = this;
             return _this.$windowInnerContent;
         },
 
-        setTitle: function(title) {
+        setTitle: function (title) {
             var _this = this;
             $("div[class=text]", _this.$windowTitle).text(title);
         },
 
-        setVisible: function(visible) {
+        setVisible: function (visible) {
             /// <summary>Sets the window visible or not</summary>
             /// <param FullName="visible" type="Boolean">Whether it's visible</param>
             var _this = this;
@@ -142,12 +136,12 @@
                 _this.$window.hide();
         },
 
-        getToggleState: function() {
+        getToggleState: function () {
             var _this = this;
             return _this.$windowContent.is(":visible") ? "maximized" : "minimized";
         },
 
-        setToggleState: function(state) {
+        setToggleState: function (state) {
             var _this = this;
             if (state == "minimized")
                 _this.$windowContent.hide();
@@ -157,14 +151,14 @@
     };
 
     // The actual plugin
-    $.chatWindow = function(options) {
+    $.chatWindow = function (options) {
         var chatContainer = new ChatWindow(options);
         chatContainer.init();
 
         return chatContainer;
     };
 
-    $.organizeChatContainers = function() {
+    $.organizeChatContainers = function () {
         // this is the initial right offset
         var rightOffset = 10;
         var deltaOffset = 2;

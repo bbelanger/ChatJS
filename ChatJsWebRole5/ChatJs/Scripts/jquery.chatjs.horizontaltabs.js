@@ -6,7 +6,7 @@
     this.$el = $(el);
 
     //Extending options:
-    this.opts = $.extend({}, this.defaults, options);
+    this.options = $.extend({}, this.defaults, options);
 }
 
 HorizontalTabs.prototype = {
@@ -18,8 +18,10 @@ HorizontalTabs.prototype = {
     },
     addTab: function (id, displayName, selected, contentBuilder, onFocus) {
         var _this = this;
-        var $li = $("<li/>").appendTo(_this.$el);
-        $li.text(displayName);
+        var $li = $("<li/>").attr("data-val-id", id).appendTo(_this.$el);
+
+        _this.$titleText = $("<span/>").addClass("text").appendTo($li);
+        _this.$titleText.text(displayName);
 
         var $content = $("<div/>").addClass("tab-content").appendTo(_this.$contentWrapper);
         if (contentBuilder)
@@ -51,9 +53,40 @@ HorizontalTabs.prototype = {
         }
     },
 
+    getFucusedTabId: function() {
+        /// <summary>Gets the focused tab id, or null if no tab is currently focused</summary>
+        var _this = this;
+        var $selectedTab = $("li.selected", _this.$el);
+        if ($selectedTab.length)
+            return $selectedTab.attr("data-val-id");
+        return null;
+    },
+
     hasTab: function (tabId) {
         var _this = this;
         return _this.tabs[tabId];
+    },
+
+    addEventMark: function(tabId) {
+        /// <summary>Adds an event mark to the tab</summary>
+        /// <param name="tabId" type="Number">Tab id</param>
+
+        var _this = this;
+        var $eventMark = $(".event-mark", _this.$titleText);
+        if (!$eventMark.length)
+            $eventMark = $("<span/>").addClass("event-mark").appendTo(_this.$titleText);
+        var currentEventCount = $eventMark.text() == "" ? 0 : parseInt($eventMark.text());
+        currentEventCount++;
+        $eventMark.text(currentEventCount);
+    },
+
+    clearEventMarks: function(tabId) {
+        /// <summary>Removes all event marks from the tab</summary>
+        /// <param name="tabId" type="Number">Tab id</param>
+
+        var _this = this;
+        var $eventMark = $(".event-mark", _this.$titleText);
+        $eventMark.remove();
     }
 };
 

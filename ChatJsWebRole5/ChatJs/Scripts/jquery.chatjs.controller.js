@@ -28,17 +28,13 @@
         };
 
         //Extending options:
-        _this.opts = $.extend({}, _this.defaults, options);
+        _this.options = $.extend({}, _this.defaults, options);
 
         //Privates:
         _this.$el = null;
 
-        // there will be one property on this object for each user in the chat
-        // the property FullName is the other user id (toStringed)
-        _this.chatWindows = new Object();
-        _this.lastMessageCheckTimeStamp = null;
-        _this.chatRoom = null;
-        _this.usersById = {};
+        _this.pmWindows = new Object();
+        _this.conversationWindows = new Object();
     }
 
     // Separate functionality from object creation
@@ -46,164 +42,55 @@
         init: function() {
             var _this = this;
 
-            // the client functions are functions that must be called by the chat-adapter to interact
-            // with the chat
-            //_this.client = {
-            //    sendMessage: function (message) {
-            //        /// <summary>Called by the adapter when the OTHER user sends a message to the current user</summary>
-            //        /// <param FullName="message" type="Object">Message object</param>
-                    
-            //        if (message.UserFromId != _this.opts.user.Id) {
-            //            // in this case this message did not came from myself
-            //            if (!_this.chatWindows[message.UserFromId])
-            //                _this.createNewChatWindow(message.UserFromId);
-            //            else
-            //                _this.chatWindows[message.UserFromId].addMessage(message);
-            //            if (_this.opts.playSound)
-            //                _this.playSound("/chatjs/sounds/chat");
-
-            //            // play sound here
-            //        } else {
-            //            if (_this.chatWindows[message.UserToId]) {
-            //                _this.chatWindows[message.UserToId].addMessage(message);
-            //            }
-            //        }
-            //    },
-
-            //    sendTypingSignal: function(otherUserId) {
-            //        /// <summary>Called by the adapter when the OTHER user is sending a typing signal to the current user</summary>
-            //        /// <param FullName="otherUser" type="Object">User object (the other sending the typing signal)</param>
-            //        if (_this.chatWindows[otherUserId]) {
-            //            var otherUser = _this.usersById[otherUserId];
-            //            _this.chatWindows[otherUserId].showTypingSignal(otherUser);
-            //        }
-            //    },
-
-            //    userListChanged: function(usersList) {
-
-            //        _this.usersById = {};
-            //        _this.usersById[_this.opts.user.Id] = _this.opts.user;
-            //        for (var i = 0; i < usersList.length; i++)
-            //            _this.usersById[usersList[i].Id] = usersList[i];
-
-            //        if (_this.chatRoom)
-            //            _this.chatRoom.userListChanged(usersList);
-            //    },
-
-            //    showError: function(errorMessage) {
-            //        // todo
-            //    }
-            //};
-
-            // STUB: I'm creating a single chat room to keep background compatibility
-            //_this.chatRoom = $.chatRoom({
-            //    adapter: _this.opts.adapter,
-            //    chatController: _this,
-            //    user : _this.opts.user
-            //});
-
+            
             // getting the adapter started. You cannot call the adapter BEFORE this is done.
-            _this.opts.adapter.init(_this, function() {
+            _this.options.adapter.init(_this, function() {
                 /// <summary>Called by the adapter when all the adapter initialization is done already</summary>
                 /// <param FullName="usersList" type=""></param>
-                
-                // assign handlers
-                _this.opts.adapter.client.on("")
+
+                // the controller must have a listener to the "messages-changed" event because it has to create
+                // new PM windows when the user receives it
+                _this.options.adapter.client.on("messages-changed", function (message) {
+                    if (message.UserToId && message.UserToId == _this.options.userId && !_this.pmWindows[message.UserFromId]) {
+                        _this.pmWindows[message.UserFromId] = $.chatPmWindow({
+                            userId: _this.options.userId,
+                            otherUserId: message.UserFromId,
+                            adapter: _this.options.adapter,
+                            typingText: _this.options.typingText
+                        });
+                    } else if (message.ConversationId && message.ConversationId == _this.options.conversationId && !_this.conversationWindows[message.ConversationId]) {
+                        _this.pmWindows[message.ConversationId] = $.chatPmWindow({
+                            userId: _this.options.userId,
+                            conversationId: message.ConversationId,
+                            adapter: _this.options.adapter,
+                            typingText: _this.options.typingText
+                        });
+                    }
+                });
 
                 _this.chatRooms = $.chatRooms({
-                    adapter: _this.opts.adapter,
-                    userId: _this.opts.userId
-                });
-
-                
-            });
-
-            
-        },
-
-        createNewChatWindow: function(otherUserId, initialToggleState, initialFocusState) {
-
-            if (!initialToggleState)
-                initialToggleState = "maximized";
-
-            if (!initialFocusState)
-                initialFocusState = "focused";
-
-            var _this = this;
-
-            var otherUser = _this.usersById[otherUserId];
-            if (!otherUser)
-                throw "Cannot find the other user in the list";
-
-            // if this particular chat-window does not exist yet, create it
-            var newChatWindow = $.chatPmWindow({
-                chat: _this,
-                myUser: _this.opts.user,
-                otherUser: otherUser,
-                newMessageUrl: _this.opts.newMessageUrl,
-                messageHistoryUrl: _this.opts.messageHistoryUrl,
-                initialToggleState: initialToggleState,
-                initialFocusState: initialFocusState,
-                userIsOnline: otherUser.Status == 1,
-                adapter: _this.opts.adapter,
-                typingText: _this.opts.typingText,
-                onClose: function() {
-                    delete _this.chatWindows[otherUser.Id];
-                    $.organizeChatContainers();
-                    _this.saveWindows();
-                },
-                onToggleStateChanged: function(toggleState) {
-                    _this.saveWindows();
-                }
-            });
-
-            // this cannot be in t
-            _this.chatWindows[otherUser.Id.toString()] = newChatWindow;
-            _this.saveWindows();
-        },
-
-        playSound: function(filename) {
-            /// <summary>Plays a notification sound</summary>
-            /// <param FullName="fileFullName" type="String">The file path without extension</param>
-            var $soundContainer = $("#soundContainer");
-            if (!$soundContainer.length)
-                $soundContainer = $("<div>").attr("id", "soundContainer").appendTo($("body"));
-            $soundContainer.html('<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename + '.mp3" /></audio>');
-        },
-
-        loadWindows: function() {
-            var _this = this;
-            var cookie = _this.readCookie("chat_state");
-            if (cookie) {
-                var openedChatWindows = JSON.parse(cookie);
-                for (var i = 0; i < openedChatWindows.length; i++) {
-                    var otherUserId = openedChatWindows[i].userId;
-                    _this.opts.adapter.server.getUserInfo(otherUserId, function(user) {
-                        if (user) {
-                            if (!_this.chatWindows[otherUserId])
-                                _this.createNewChatWindow(otherUserId, null, "blured");
-                        } else {
-                            // when an error occur, the state of this cookie invalid
-                            // it must be destroyed
-                            _this.eraseCookie("chat_state");
+                    adapter: _this.options.adapter,
+                    userId: _this.options.userId,
+                    userClicked: function(userId) {
+                        if (userId != _this.options.userId) {
+                            // verify whether there's already a PM window for this user
+                            if (_this.pmWindows[userId])
+                                _this.pmWindows[userId].focus();
+                            else
+                                _this.pmWindows[userId] = $.chatPmWindow({
+                                    userId: _this.options.userId,
+                                    otherUserId: userId,
+                                    adapter: _this.options.adapter,
+                                    typingText: _this.options.typingText
+                                });
                         }
-                    });
-                }
-            }
-        },
-
-        saveWindows: function() {
-            var _this = this;
-            var openedChatWindows = new Array();
-            for (var otherUserId in _this.chatWindows) {
-                openedChatWindows.push({
-                    userId: otherUserId,
-                    toggleState: _this.chatWindows[otherUserId].getToggleState()
+                    }
                 });
-            }
-            _this.createCookie("chat_state", JSON.stringify(openedChatWindows), 365);
-        },
+            });
 
+
+        },
+        
         eraseCookie: function(name) {
             var _this = this;
             _this.createCookie(name, "", -1);

@@ -9,13 +9,14 @@
             titleText: "Rooms",
             noRoomsText: "There's no rooms",
             windowToggleState: null,
+            userClicked: function (userId) { }
         };
 
         this.chatWindow = null;
         this.tabs = null;
 
         //Extending options:
-        this.opts = $.extend({}, this.defaults, options);
+        this.options = $.extend({}, this.defaults, options);
     }
 
     ChatRooms.prototype = {
@@ -24,22 +25,22 @@
 
             // will create user list chat container
             _this.chatWindow = $.chatWindow({
-                title: _this.opts.titleText,
+                title: _this.options.titleText,
                 showTextBox: false,
                 canClose: false,
                 width: 400,
                 height: 300,
-                initialToggleState: _this.opts.windowToggleState,
+                initialToggleState: _this.options.windowToggleState,
                 onCreated: function (window) {
                     var $ul = $("<ul/>").appendTo(window.$windowInnerContent);
                     _this.tabs = $ul.horizontalTabs().data("horizontalTabs");
 
                     // adds the available rooms tab
                     _this.tabs.addTab("available-rooms", "Available rooms", true, function ($content) {
-                        _this.opts.adapter.server.getRoomsList(function (roomsList) {
+                        _this.options.adapter.server.getRoomsList(function (roomsList) {
                             $content.html('');
                             if (roomsList.length == 0) {
-                                $("<div/>").addClass("user-list-empty").text(_this.opts.noRoomsText).appendTo($content);
+                                $("<div/>").addClass("user-list-empty").text(_this.options.noRoomsText).appendTo($content);
                             } else {
                                 for (var i = 0; i < roomsList.length; i++) {
                                     var $roomListItem = $("<div/>")
@@ -103,17 +104,22 @@
                 var $leftPanel = $("<div/>").addClass("left-panel").appendTo($contentWrapper);
 
                 $messageBoard = $leftPanel.messageBoard({
-                    adapter: _this.opts.adapter,
-                    userId: _this.opts.userId,
-                    roomId: roomId
+                    adapter: _this.options.adapter,
+                    userId: _this.options.userId,
+                    roomId: roomId,
+                    newMessage: function (message) {
+                        var focusedTabId = _this.tabs.getFucusedTabId();
+                        if (focusedTabId && focusedTabId != roomId && message.UserFromId != _this.options.userId)
+                            _this.tabs.addEventMark(roomId);
+                    }
                 });
 
-                _this.opts.adapter.server.enterRoom(roomId, function () {
+                _this.options.adapter.server.enterRoom(roomId, function () {
                     // loads the user list
                     $users.userList({
-                        adapter: _this.opts.adapter,
+                        adapter: _this.options.adapter,
                         roomId: roomId,
-                        userClick: function (userId) { }
+                        userClicked: _this.options.userClicked
                     });
                 });
 
@@ -122,16 +128,18 @@
                 // happens when the user focuses the tab
                 if ($messageBoard && $messageBoard.data("messageBoard"))
                     $messageBoard.data("messageBoard").focus();
+                var focusedTabId = _this.tabs.getFucusedTabId();
+                if (focusedTabId)
+                    _this.tabs.clearEventMarks(focusedTabId);
             });
         }
     };
 
     // The actual plugin
     $.chatRooms = function (options) {
-
-        var chat = new ChatRooms(options);
-        chat.init();
-        return chat;
+        var chatRooms = new ChatRooms(options);
+        chatRooms.init();
+        return chatRooms;
     };
 
 })(jQuery);

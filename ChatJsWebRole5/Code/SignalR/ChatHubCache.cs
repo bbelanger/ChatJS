@@ -124,22 +124,21 @@ namespace ChatJs.Admin.Code.SignalR
         {
             lock (connectionsLockObject)
             {
-                return roomToUsers.ContainsKey(roomId) ? roomToUsers[roomId].ToArray() : new int[] {};
+                return roomToUsers.ContainsKey(roomId) ? roomToUsers[roomId].ToArray() : new int[] { };
             }
         }
 
         /// <summary>
         ///     Returns all connections from users inside the given room
         /// </summary>
-        /// <param name="roomId"></param>
         /// <returns></returns>
-        public static string[] GetRoomConnections(int roomId)
+        public static string[] GetRoomConnections(int roomId, int[] exceptUsers = null)
         {
             lock (connectionsLockObject)
             {
                 var result = new List<string>();
                 if (roomToUsers.ContainsKey(roomId))
-                    foreach (var userId in roomToUsers[roomId].Where(userId => userToConnections.ContainsKey(userId)))
+                    foreach (var userId in roomToUsers[roomId].Where(userId => (exceptUsers == null || !exceptUsers.Contains(userId)) && userToConnections.ContainsKey(userId)))
                         result.AddRange(userToConnections[userId]);
 
                 return result.ToArray();
@@ -157,14 +156,65 @@ namespace ChatJs.Admin.Code.SignalR
         /// <returns></returns>
         public static string[] GetConnectionsToTarget(int myUserId, int? roomId, int? conversationId, int? userToId)
         {
-            var connectionIds = new List<string>();
-            if (userToId.HasValue)
-                connectionIds.AddRange(GetUsersConnections(new[] {myUserId, userToId.Value}));
-            else if (conversationId.HasValue)
-                throw new NotImplementedException("Conversations support is not finished yet");
-            else if (roomId.HasValue)
-                connectionIds.AddRange(GetRoomConnections(roomId.Value));
-            return connectionIds.ToArray();
+            lock (connectionsLockObject)
+            {
+                var connectionIds = new List<string>();
+                if (userToId.HasValue)
+                    connectionIds.AddRange(GetUsersConnections(new[] {myUserId, userToId.Value}));
+                else if (conversationId.HasValue)
+                    throw new NotImplementedException("Conversations support is not finished yet");
+                else if (roomId.HasValue)
+                    connectionIds.AddRange(GetRoomConnections(roomId.Value));
+                return connectionIds.Distinct().ToArray();
+            }
+        }
+
+        public static int? GetUserIdFromConnection(string connectionId)
+        {
+            lock (connectionsLockObject)
+            {
+                if (connectionToUser.ContainsKey(connectionId))
+                    return connectionToUser[connectionId];
+                return null;
+            }
+        }
+
+        public static int[] RoomsFromUser(int userId)
+        {
+            lock (connectionsLockObject)
+            {
+                return userToRooms.ContainsKey(userId) ? userToRooms[userId].ToArray() : new int[0];
+            }
+        }
+
+        /// <summary>
+        /// Eliminates the given user from the cache
+        /// </summary>
+        /// <param name="userId"></param>
+        public static void DropUser(int userId)
+        {
+            lock (connectionsLockObject)
+            {
+                if (userToConnections.ContainsKey(userId))
+                {
+                    var userConnections = userToConnections[userId].ToArray();
+                    var userRooms = new int[0];
+
+                    // remove user from connections index
+                    userToConnections.Remove(userId);
+                    foreach (var connection in userConnections.Where(connection => connectionToUser.ContainsKey(connection)))
+                        connectionToUser.Remove(connection);
+
+                    // remove user from rooms index
+                    if (userToRooms.ContainsKey(userId))
+                    {
+                        userRooms = userToRooms[userId].ToArray();
+                        userToRooms.Remove(userId);
+                    }
+                    foreach (var roomId in userRooms.Where(roomId => roomToUsers[roomId].Contains(userId)))
+                        roomToUsers[roomId].Remove(userId);
+                }
+            }
         }
     }
 }

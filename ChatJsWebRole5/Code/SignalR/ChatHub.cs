@@ -17,12 +17,6 @@ namespace ChatJs.Admin.Code.SignalR
 {
     public class ChatHub : Hub, IChatHub
     {
-        /// <summary>
-        ///     This STUB. In a normal situation, there would be multiple rooms and the user room would have to be
-        ///     determined by the user profile
-        /// </summary>
-        public const string ROOM_ID_STUB = "chatjs-default-room";
-        
         public ChatHub()
         {
             this.Db = new ChatjsContext();
@@ -37,18 +31,25 @@ namespace ChatJs.Admin.Code.SignalR
         /// <summary>
         ///     Returns the message history
         /// </summary>
-        public List<ChatMessageInfo> GetMessageHistory(int otherUserId)
+        public List<ChatMessageInfo> GetMessageHistory(int? roomId, int? conversationId, int? otherUserId)
         {
             var myUserId = this.GetMyUserId();
-            var messages = this.Db.ChatMessages
-                .Where(
-                    m =>
-                        (m.UserTo.Id == myUserId && m.UserFromId == otherUserId) ||
-                        (m.UserTo.Id == otherUserId && m.UserFromId == myUserId))
-                .OrderByDescending(m => m.DateTime).Take(30).ToList();
 
-            messages.Reverse();
-            return messages.Select(m => this.GetChatMessageInfo(m, null)).ToList();
+            IQueryable<ChatMessage> messages = null;
+            if (roomId.HasValue)
+                messages = this.Db.ChatMessages.Where(m => m.RoomId == roomId.Value);
+            else if (conversationId.HasValue)
+                messages = this.Db.ChatMessages.Where(m => m.ConversationId == conversationId.Value);
+            else if (otherUserId.HasValue)
+                messages = this.Db.ChatMessages.Where(m => (m.UserTo.Id == myUserId && m.UserFromId == otherUserId) || (m.UserTo.Id == otherUserId && m.UserFromId == myUserId));
+
+            if(messages == null)
+                throw new Exception("Could not get messages");
+
+            var messagesList = messages.OrderByDescending(m => m.DateTime).Take(30).ToList();
+
+            messagesList.Reverse();
+            return messagesList.Select(m => this.GetChatMessageInfo(m, null)).ToList();
         }
 
         public void LeaveRoom(int roomId)
@@ -70,10 +71,10 @@ namespace ChatJs.Admin.Code.SignalR
                 var dbUsers = this.Db.Users.Where(u => usersInRoom.Contains(u.Id)).ToList();
                 return dbUsers.Select(u => this.GetUserInfo(u, ChatUserInfo.StatusType.Online)).ToList();
             }
-            
+
             throw new NotImplementedException("Conversations are not supported yet");
         }
-        
+
         #region IChatHub
 
         /// <summary>
@@ -113,13 +114,20 @@ namespace ChatJs.Admin.Code.SignalR
 
             var connectionIds = ChatHubCache.GetConnectionsToTarget(myUserId, roomId, conversationId, userToId);
             foreach (var connectionId in connectionIds)
-                this.Clients.Client(connectionId).sendTypingSignal(GetUserInfo(myUserId));
+                this.Clients.Client(connectionId).sendTypingSignal(new ChatTypingSignalInfo
+                {
+                    RoomId = roomId,
+                    ConversationId = conversationId,
+                    UserToId = userToId,
+                    UserFrom = GetUserInfo(myUserId)
+                });
         }
 
         public void EnterRoom(int roomId)
         {
             var myUserId = this.GetMyUserId();
             ChatHubCache.AddUserToRoom(myUserId, roomId);
+            this.BroadcastUserList(roomId, new[] { myUserId });
         }
 
         /// <summary>
@@ -150,7 +158,33 @@ namespace ChatJs.Admin.Code.SignalR
         /// <returns></returns>
         public override Task OnDisconnected()
         {
+            //ChatHubCache.RemoveUserConnection(this.Context.ConnectionId);
+            var disconnectedUserId = ChatHubCache.GetUserIdFromConnection(this.Context.ConnectionId);
             ChatHubCache.RemoveUserConnection(this.Context.ConnectionId);
+            var roomsId = new int[0];
+            if (disconnectedUserId.HasValue)
+            {
+                if (!ChatHubCache.GetUsersConnections(new[] { disconnectedUserId.Value }).Any())
+                {
+                    // in this case, the user DID NOT connect back after the disconnect.
+                    // This user now should be removed from all rooms and conversations he/she is in
+                    roomsId = ChatHubCache.RoomsFromUser(disconnectedUserId.Value);
+                    // drops the user from the cache
+                    ChatHubCache.DropUser(disconnectedUserId.Value);
+                }
+
+                if (roomsId.Any())
+                    Task.Run(() =>
+                    {
+                        Thread.Sleep(2000);
+                        if (!ChatHubCache.GetUsersConnections(new[] { disconnectedUserId.Value }).Any())
+                        {
+                            foreach (var roomId in roomsId)
+                                this.BroadcastUserList(roomId);
+                        }
+                    });
+            }
+
             return base.OnDisconnected();
         }
 
@@ -216,35 +250,20 @@ namespace ChatJs.Admin.Code.SignalR
         }
 
 
-        ///// <summary>
-        /////     Broadcasts to all users in the same room the new users list
-        ///// </summary>
-        //private void NotifyUserListChanged()
-        //{
-        //    var myRoomId = this.GetMyRoomName();
-        //    var myUserId = this.GetMyUserId();
-
-        //    if (connections.ContainsKey(myRoomId))
-        //    {
-        //        foreach (var userId in connections[myRoomId].Keys)
-        //        {
-        //            // we don't want to broadcast to the current user
-        //            if (userId == myUserId)
-        //                continue;
-
-        //            var userIdClusure = userId;
-
-        //            // creates a list of users that contains all users with the exception of the user to which 
-        //            // the list will be sent
-        //            // every user will receive a list of user that exclude him/hearself
-        //            var usersList =
-        //                this.Db.Users.Where(u => u.Id != userIdClusure).ToList().Select(GetUserInfo).ToList();
-
-        //            if (connections[myRoomId][userId] != null)
-        //                foreach (var connectionId in connections[myRoomId][userId])
-        //                    this.Clients.Client(connectionId).userListChanged(usersList);
-        //        }
-        //    }
-        //}
+        /// <summary>
+        ///     Broadcasts to all users in the same room the new users list
+        /// </summary>
+        private void BroadcastUserList(int roomId, int[] exceptUsers = null)
+        {
+            var connectionsToNotify = ChatHubCache.GetRoomConnections(roomId, exceptUsers);
+            var usersInRoom = this.GetUserList(roomId, null);
+            foreach (var connectionId in connectionsToNotify)
+                this.Clients.Client(connectionId).userListChanged(new ChatUserListChangedInfo()
+                {
+                    RoomId = roomId,
+                    ConversationId = null,
+                    UserList = usersInRoom
+                });
+        }
     }
 }

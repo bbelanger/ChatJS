@@ -32,12 +32,21 @@ SignalRAdapter.prototype = {
             _this.client.trigger("messages-changed", message);
         };
 
-        _this.hub.client.sendTypingSignal = function (user) {
-            _this.client.trigger("typing-signal-received", user);
+        _this.hub.client.sendTypingSignal = function (roomId, conversationId, userToId, user) {
+            _this.client.trigger("typing-signal-received", {
+                roomId: roomId,
+                conversationId: conversationId,
+                userToId: userToId,
+                userFrom: user
+            });
         };
 
         _this.hub.client.userListChanged = function (roomId, conversationId, userList) {
-            _this.client.trigger("user-list-changed", roomId, conversationId, userList);
+            _this.client.trigger("user-list-changed", {
+                roomId: roomId,
+                conversationId: conversationId,
+                userList: userList
+            });
         };
 
         if (!window.hubReady)
@@ -66,13 +75,13 @@ SignalRAdapter.prototype = {
                 _this.eventHandlers[eventName].push(handler);
                 var a = 2;
             },
-            trigger: function(eventName, data) {
+            trigger: function (eventName, data) {
                 var _this = this;
                 if (_this.eventHandlers[eventName])
                     _this.eventHandlers[eventName].trigger(data);
             }
         };
-        
+
 
         // These are the methods that ARE CALLED BY THE CLIENT
         // Client functions should call these functions
@@ -100,11 +109,11 @@ SignalRAdapter.prototype = {
             });
         };
 
-        _this.server.getMessageHistory = function (otherUserId, done) {
+        _this.server.getMessageHistory = function (roomId, conversationId, otherUserId, done) {
             /// <summary>Gets message history from the server</summary>
             /// <param FullName="otherUserId" type="Number">The id of the user from which you want the history</param>
             /// <param FullName="done" type="Number">Function to be called when this method completes</param>
-            _this.hub.server.getMessageHistory(otherUserId).done(function (result) {
+            _this.hub.server.getMessageHistory(roomId, conversationId, otherUserId).done(function (result) {
                 if (done)
                     done(result);
             });
@@ -119,7 +128,7 @@ SignalRAdapter.prototype = {
                     done(result);
             });
         };
-        
+
         _this.server.getUserList = function (params, done) {
             /// <summary>Gets the list of the users in the current room</summary>
             /// <param FullName="otherUserId" type="Number">The id of the user from which you want the information</param>
