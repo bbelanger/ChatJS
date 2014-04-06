@@ -64,6 +64,7 @@ class ChatController {
             var chatRoomOptions = new ChatRoomsOptions();
             chatRoomOptions.adapter = this.options.adapter;
             chatRoomOptions.userId = this.options.userId;
+            chatRoomOptions.offsetRight = this.options.offsetRight;
             chatRoomOptions.userClicked = userId => {
                 if (userId != this.options.userId) {
                     // verify whether there's already a PM window for this user

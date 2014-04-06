@@ -23,7 +23,6 @@ namespace ChatJs.Admin.Code.SignalR
             this.UserManager = new ChatJsUserManager(new ChatJsUserStore(this.Db));
         }
 
-
         public ChatJsUserManager UserManager { get; set; }
 
         public ChatjsContext Db { get; set; }

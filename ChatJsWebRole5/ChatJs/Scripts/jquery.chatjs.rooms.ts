@@ -8,6 +8,7 @@ class ChatRoomsOptions {
     noRoomsText: string;
     userClicked: (userId: number) => void;
     userId: number;
+    offsetRight: number;
 }
 
 class ChatRooms {

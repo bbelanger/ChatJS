@@ -51,6 +51,7 @@ var ChatController = (function () {
             var chatRoomOptions = new ChatRoomsOptions();
             chatRoomOptions.adapter = _this.options.adapter;
             chatRoomOptions.userId = _this.options.userId;
+            chatRoomOptions.offsetRight = _this.options.offsetRight;
             chatRoomOptions.userClicked = function (userId) {
                 if (userId != _this.options.userId) {
                     // verify whether there's already a PM window for this user

@@ -1,7 +1,6 @@
 ﻿#region
 
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 #endregion
@@ -26,17 +25,15 @@ namespace ChatJs.Lib
         void SendTypingSignal(int? roomId, int? conversationId, int? userToId);
 
         /// <summary>
-        /// Sends a message indicating the given user is entering the given room
+        ///     Sends a message indicating the given user is entering the given room
         /// </summary>
         /// <param name="roomId"></param>
-        /// <param name="userId"></param>
         void EnterRoom(int roomId);
 
         /// <summary>
-        /// Sends a message indicating the given user is leaving the given room
+        ///     Sends a message indicating the given user is leaving the given room
         /// </summary>
         /// <param name="roomId"></param>
-        /// <param name="userId"></param>
         void LeaveRoom(int roomId);
 
         /// <summary>
@@ -63,5 +60,10 @@ namespace ChatJs.Lib
         ///     When a client disconnects
         /// </summary>
         Task OnDisconnected();
+
+        /// <summary>
+        ///     If the specified user is connected, return information about the user
+        /// </summary>
+        ChatUserInfo GetUserInfo(int id);
     }
 }

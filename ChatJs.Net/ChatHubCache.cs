@@ -6,7 +6,7 @@ using System.Linq;
 
 #endregion
 
-namespace ChatJs.Admin.Code.SignalR
+namespace ChatJs.Lib
 {
     /// <summary>
     ///     Data structure to represent the currently connected users as well as which rooms and conversation they are in now
