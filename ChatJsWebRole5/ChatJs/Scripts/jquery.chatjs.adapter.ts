@@ -38,7 +38,7 @@ interface IClientAdapter {
 
 interface IAdapter {
 
-    init: (chat: any, done: () => void) => void;
+    init: (done: () => void) => void;
 
     // functions called by the server, to contact the client
     client: IClientAdapter;

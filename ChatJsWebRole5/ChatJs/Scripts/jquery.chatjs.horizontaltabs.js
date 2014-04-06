@@ -1,102 +1,86 @@
-﻿function HorizontalTabs(el, options) {
+﻿var HorizontalTab = (function () {
+    function HorizontalTab($li, $content, onFocus) {
+        this.$li = $li;
+        this.$content = $content;
+        this.onFocus = onFocus;
+    }
+    return HorizontalTab;
+})();
 
-    this.defaults = {
-    };
-
-    this.$el = $(el);
-
-    //Extending options:
-    this.options = $.extend({}, this.defaults, options);
-}
-
-HorizontalTabs.prototype = {
-    tabs: new Object(),
-    init: function () {
+var HorizontalTabs = (function () {
+    function HorizontalTabs($el) {
+        this.$el = $el;
+        this.$el.addClass("horizontal-tab");
+        this.$contentWrapper = $("<div/>").addClass("tab-content-holder").insertAfter(this.$el);
+        this.tabs = {};
+    }
+    HorizontalTabs.prototype.addTab = function (id, displayName, selected, contentBuilder, onFocus) {
         var _this = this;
-        _this.$el.addClass("horizontal-tab");
-        _this.$contentWrapper = $("<div/>").addClass("tab-content-holder").insertAfter(_this.$el);
-    },
-    addTab: function (id, displayName, selected, contentBuilder, onFocus) {
-        var _this = this;
-        var $li = $("<li/>").attr("data-val-id", id).appendTo(_this.$el);
+        if (typeof selected === "undefined") { selected = false; }
+        if (typeof contentBuilder === "undefined") { contentBuilder = null; }
+        if (typeof onFocus === "undefined") { onFocus = null; }
+        var $li = $("<li/>").attr("data-val-id", id).appendTo(this.$el);
 
-        _this.$titleText = $("<span/>").addClass("text").appendTo($li);
-        _this.$titleText.text(displayName);
+        this.$titleText = $("<span/>").addClass("text").appendTo($li);
+        this.$titleText.text(displayName);
 
-        var $content = $("<div/>").addClass("tab-content").appendTo(_this.$contentWrapper);
+        var $content = $("<div/>").addClass("tab-content").appendTo(this.$contentWrapper);
         if (contentBuilder)
             contentBuilder($content);
 
-        _this.tabs[id] = {
-            $li: $li,
-            $content: $content,
-            onFocus: onFocus
-        };
+        this.tabs[id] = new HorizontalTab($li, $content, onFocus);
 
         $li.click(function () {
             _this.focusTab(id);
         });
 
         if (selected)
-            _this.focusTab(id);
-    },
+            this.focusTab(id);
+    };
 
-    focusTab: function (tabId) {
-        var _this = this;
-        if (_this.tabs[tabId]) {
-            $("li", _this.$el).removeClass("selected");
-            _this.tabs[tabId].$li.addClass("selected");
-            $(".tab-content", _this.$contentWrapper).removeClass("selected-tab");
-            _this.tabs[tabId].$content.addClass("selected-tab");
-            if (_this.tabs[tabId].onFocus)
-                _this.tabs[tabId].onFocus();
+    HorizontalTabs.prototype.focusTab = function (tabId) {
+        if (this.tabs[tabId]) {
+            $("li", this.$el).removeClass("selected");
+            this.tabs[tabId].$li.addClass("selected");
+            $(".tab-content", this.$contentWrapper).removeClass("selected-tab");
+            this.tabs[tabId].$content.addClass("selected-tab");
+            if (this.tabs[tabId].onFocus)
+                this.tabs[tabId].onFocus();
         }
-    },
+    };
 
-    getFucusedTabId: function() {
-        /// <summary>Gets the focused tab id, or null if no tab is currently focused</summary>
-        var _this = this;
-        var $selectedTab = $("li.selected", _this.$el);
-        if ($selectedTab.length)
-            return $selectedTab.attr("data-val-id");
-        return null;
-    },
+    HorizontalTabs.prototype.getFucusedTabId = function () {
+        var $selectedTab = $("li.selected", this.$el);
+        return $selectedTab.length ? $selectedTab.attr("data-val-id") : null;
+    };
 
-    hasTab: function (tabId) {
-        var _this = this;
-        return _this.tabs[tabId];
-    },
+    HorizontalTabs.prototype.hasTab = function (tabId) {
+        return this.tabs[tabId];
+    };
 
-    addEventMark: function(tabId) {
-        /// <summary>Adds an event mark to the tab</summary>
-        /// <param name="tabId" type="Number">Tab id</param>
-
-        var _this = this;
-        var $eventMark = $(".event-mark", _this.$titleText);
+    HorizontalTabs.prototype.addEventMark = function (tabId) {
+        var $eventMark = $(".event-mark", this.$titleText);
         if (!$eventMark.length)
-            $eventMark = $("<span/>").addClass("event-mark").appendTo(_this.$titleText);
+            $eventMark = $("<span/>").addClass("event-mark").appendTo(this.$titleText);
         var currentEventCount = $eventMark.text() == "" ? 0 : parseInt($eventMark.text());
         currentEventCount++;
         $eventMark.text(currentEventCount);
-    },
+    };
 
-    clearEventMarks: function(tabId) {
-        /// <summary>Removes all event marks from the tab</summary>
-        /// <param name="tabId" type="Number">Tab id</param>
-
-        var _this = this;
-        var $eventMark = $(".event-mark", _this.$titleText);
+    HorizontalTabs.prototype.clearEventMarks = function (tabId) {
+        var $eventMark = $(".event-mark", this.$titleText);
         $eventMark.remove();
-    }
-};
+    };
+    return HorizontalTabs;
+})();
 
-$.fn.horizontalTabs = function (options) {
+$.fn.horizontalTabs = function () {
     if (this.length) {
         this.each(function () {
-            var data = new HorizontalTabs(this, options);
-            data.init();
+            var data = new HorizontalTabs($(this));
             $(this).data('horizontalTabs', data);
         });
     }
     return this;
 };
+//# sourceMappingURL=jquery.chatjs.horizontaltabs.js.map

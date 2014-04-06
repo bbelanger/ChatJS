@@ -3,11 +3,6 @@
 }
 
 class ChatRoomsOptions {
-    constructor() {
-        this.titleText = "Rooms";
-        this.noRoomsText = "There's no rooms";
-    }
-
     titleText: string;
     adapter: IAdapter;
     noRoomsText: string;
@@ -17,10 +12,15 @@ class ChatRoomsOptions {
 
 class ChatRooms {
     constructor(options: ChatRoomsOptions) {
-        this.options = options;
-    }
 
-    init() {
+        var defaultOptions = new ChatRoomsOptions();
+        defaultOptions.titleText = "Rooms";
+        defaultOptions.noRoomsText = "There's no rooms";
+        defaultOptions.userClicked = (userId: number) => { };
+        defaultOptions.offsetRight = 10;
+
+        this.options = $.extend({}, defaultOptions, options);
+
         // will create user list chat container
         this.chatWindow = $.chatWindow(<ChatWindowOptions> {
             title: this.options.titleText,
@@ -43,7 +43,7 @@ class ChatRooms {
                             for (var i = 0; i < roomsList.length; i++) {
                                 var $roomListItem = $("<div/>")
                                     .addClass("rooms-list-item")
-                                    .attr("data-val-id", roomsList[i].id)
+                                    .attr("data-val-id", roomsList[i].Id)
                                     .appendTo($content);
 
                                 $roomListItem.hover(function () {
@@ -54,12 +54,12 @@ class ChatRooms {
 
                                 $("<span/>")
                                     .addClass("room-name")
-                                    .text(roomsList[i].name)
+                                    .text(roomsList[i].Name)
                                     .appendTo($roomListItem);
 
                                 $("<span/>")
                                     .addClass("users-online")
-                                    .text(roomsList[i].usersOnline + " online")
+                                    .text(roomsList[i].UsersOnline + " online")
                                     .appendTo($roomListItem);
 
                                 $roomListItem.hover(function () {
@@ -70,10 +70,10 @@ class ChatRooms {
 
                                 (roomIndex => {
                                     $roomListItem.click(() => {
-                                        if (this.tabs.hasTab(roomsList[roomIndex].id))
-                                            this.tabs.focusTab(roomsList[roomIndex].id.toString());
+                                        if (this.tabs.hasTab(roomsList[roomIndex].Id))
+                                            this.tabs.focusTab(roomsList[roomIndex].Id.toString());
                                         else
-                                            this.enterRoom(roomsList[roomIndex].id, roomsList[roomIndex].name);
+                                            this.enterRoom(roomsList[roomIndex].Id, roomsList[roomIndex].Name);
                                     });
                                 })(i);
 
@@ -86,6 +86,8 @@ class ChatRooms {
                 this.createCookie("main_window_chat_state", toggleState);
             }
         });
+
+        this.chatWindow.setRightOffset(this.options.offsetRight);
     }
 
     enterRoom(roomId, roomName): void {
@@ -101,10 +103,11 @@ class ChatRooms {
             var messageBoardOptions = new MessageBoardOptions();
             messageBoardOptions.adapter = this.options.adapter;
             messageBoardOptions.userId = this.options.userId;
-            messageBoardOptions.roomId = this.options.roomId;
+            messageBoardOptions.roomId = roomId;
+
             messageBoardOptions.newMessage = (message) => {
                 var focusedTabId = this.tabs.getFucusedTabId();
-                if (focusedTabId && focusedTabId != roomId && message.userFromId != this.options.userId)
+                if (focusedTabId && focusedTabId != roomId && message.UserFromId != this.options.userId)
                     this.tabs.addEventMark(roomId);
             }
 
@@ -132,6 +135,10 @@ class ChatRooms {
             });
     }
 
+    getWidth(): number {
+        return this.chatWindow.getWidth();
+    }
+
     options: ChatRoomsOptions;
     chatWindow: ChatWindow;
     tabs: HorizontalTabs;
@@ -140,6 +147,5 @@ class ChatRooms {
 // The actual plugin
 $.chatRooms = options => {
     var chatRooms = new ChatRooms(options);
-    chatRooms.init();
     return chatRooms;
 };

@@ -1,4 +1,6 @@
-﻿/// <reference path="../jquery/jquery.d.ts"/>
+﻿interface JQuery {
+    horizontalTabs(): JQuery;
+}
 
 class HorizontalTab {
     constructor($li: JQuery, $content: JQuery, onFocus: () => void) {
@@ -17,6 +19,7 @@ class HorizontalTabs
         this.$el = $el;
         this.$el.addClass("horizontal-tab");
         this.$contentWrapper = $("<div/>").addClass("tab-content-holder").insertAfter(this.$el);
+        this.tabs = {};
     }
 
     addTab(id: string, displayName: string, selected: boolean = false, contentBuilder: (jQuery) => void = null, onFocus: () => void = null) {
@@ -52,9 +55,7 @@ class HorizontalTabs
 
     getFucusedTabId() {
         var $selectedTab = $("li.selected", this.$el);
-        if ($selectedTab.length)
-            return $selectedTab.attr("data-val-id");
-        return null;
+        return $selectedTab.length ? $selectedTab.attr("data-val-id") : null;
     }
 
     hasTab(tabId) {
@@ -93,6 +94,3 @@ $.fn.horizontalTabs = function () {
     return this;
 };
 
-interface JQuery {
-    horizontalTabs(): JQuery;
-}

@@ -79,7 +79,7 @@ var SignalRClientAdapter = (function () {
         };
 
         this.hubClient.userListChanged = function (userListChangedInfo) {
-            for (var i = 0; i < _this.typingSignalReceivedHandlers.length; i++)
+            for (var i = 0; i < _this.userListChangedHandlers.length; i++)
                 _this.userListChangedHandlers[i](userListChangedInfo);
         };
     }
@@ -100,11 +100,20 @@ var SignalRClientAdapter = (function () {
     return SignalRClientAdapter;
 })();
 
-var SignalRAdapter = (function () {
-    function SignalRAdapter() {
+var SignalRAdapterOptions = (function () {
+    function SignalRAdapterOptions() {
     }
-    SignalRAdapter.prototype.init = function (chat, done) {
-        this.hub = $.connection.chatHub;
+    return SignalRAdapterOptions;
+})();
+
+var SignalRAdapter = (function () {
+    function SignalRAdapter(options) {
+        var defaultOptions = new SignalRAdapterOptions();
+        defaultOptions.chatHubName = "chatHub";
+        this.options = $.extend({}, defaultOptions, options);
+    }
+    SignalRAdapter.prototype.init = function (done) {
+        this.hub = $.connection[this.options.chatHubName];
         this.client = new SignalRClientAdapter(this.hub.client);
         this.server = new SignalRServerAdapter(this.hub.server);
 

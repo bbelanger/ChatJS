@@ -113,7 +113,7 @@ class SignalRClientAdapter implements IClientAdapter {
         };
 
         this.hubClient.userListChanged = (userListChangedInfo: ChatUserListChangedInfo) => {
-            for (var i = 0; i < this.typingSignalReceivedHandlers.length; i++)
+            for (var i = 0; i < this.userListChangedHandlers.length; i++)
                 this.userListChangedHandlers[i](userListChangedInfo);
         };
     }
@@ -139,10 +139,21 @@ class SignalRClientAdapter implements IClientAdapter {
     hubClient: IChatJsHubProxyClient;
 }
 
+class SignalRAdapterOptions {
+    // the name of the ChatJS SignalR hub in the server. Default is chatHub
+    chatHubName: string;
+}
+
 class SignalRAdapter implements IAdapter {
 
-    init(chat: any, done: () => void) {
-        this.hub = $.connection.chatHub;
+    constructor(options: SignalRAdapterOptions) {
+        var defaultOptions = new SignalRAdapterOptions();
+        defaultOptions.chatHubName = "chatHub";
+        this.options = $.extend({}, defaultOptions, options);
+    }
+
+    init(done: () => void) {
+        this.hub = <IChatJsHubProxy> $.connection[this.options.chatHubName];
         this.client = new SignalRClientAdapter(this.hub.client);
         this.server = new SignalRServerAdapter(this.hub.server);
 
@@ -161,4 +172,5 @@ class SignalRAdapter implements IAdapter {
     // functions called by the client, to contact the server
     server: IServerAdapter;
     hub: IChatJsHubProxy;
+    options: SignalRAdapterOptions;
 }

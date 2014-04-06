@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="ChatMessageInfo.cs" />
     <Compile Include="ChatRoomInfo.cs" />
+    <Compile Include="ChatTypingSignalInfo.cs" />
     <Compile Include="ChatUserInfo.cs" />
+    <Compile Include="ChatUserListChangedInfo.cs" />
     <Compile Include="GravatarHelper.cs" />
     <Compile Include="IChatHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

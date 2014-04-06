@@ -3,29 +3,29 @@
 }
 
 class ChatPmWindowOptions {
-    constructor() {
-        this.typingText = " is typing...";
-        this.onClose = () => {};
-    }
-
     userId: number;
     otherUserId: number;
     conversationId: number;
     typingText: string;
     adapter: IAdapter;
+    onCreated: (pmWindow: ChatPmWindow) => void;
     onClose: () => void;
 }
 
 class ChatPmWindow {
     constructor(options: ChatPmWindowOptions) {
-        this.options = options;
-    }
 
-    init() {
+        var defaultOptions = new ChatPmWindowOptions();
+        defaultOptions.typingText = " is typing...";
+        defaultOptions.onCreated = () => { };
+        defaultOptions.onClose = () => { };
+
+        this.options = $.extend({}, defaultOptions, options);
+
         this.options.adapter.server.getUserInfo(this.options.otherUserId, (userInfo: ChatUserInfo) => {
 
             var chatWindowOptions = new ChatWindowOptions();
-            chatWindowOptions.title = userInfo.name;
+            chatWindowOptions.title = userInfo.Name;
             chatWindowOptions.canClose = true;
             chatWindowOptions.canExpand = false;
             chatWindowOptions.onCreated = (window: ChatWindow) => {
@@ -37,7 +37,19 @@ class ChatPmWindow {
             }
 
             this.chatWindow = $.chatWindow(chatWindowOptions);
+            this.options.onCreated(this);
         });
+    }
+
+    focus() {
+    }
+
+    setRightOffset(offset: number): void {
+        this.chatWindow.setRightOffset(offset);
+    }
+
+    getWidth(): number {
+        return this.chatWindow.getWidth();
     }
 
     options: ChatPmWindowOptions;
@@ -46,6 +58,5 @@ class ChatPmWindow {
 
 $.chatPmWindow = options => {
     var pmWindow = new ChatPmWindow(options);
-    pmWindow.init();
     return pmWindow;
 };

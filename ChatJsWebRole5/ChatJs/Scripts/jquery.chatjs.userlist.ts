@@ -3,11 +3,6 @@
 }
 
 class UserListOptions {
-    constructor() {
-        this.emptyListText = "No users";
-        this.userClicked = (userId: number) => {}
-    }
-
     adapter: IAdapter;
     conversationId: number;
     roomId: number;
@@ -18,15 +13,18 @@ class UserListOptions {
 class UserList {
     constructor(jQuery: JQuery, options: UserListOptions) {
         this.$el = jQuery;
-        this.options = options;
-    }
 
-    init(): void {
+        var defaultOptions = new UserListOptions();
+        defaultOptions.emptyListText = "No users";
+        defaultOptions.userClicked = (userId: number) => {};
+
+        this.options = $.extend({}, defaultOptions, options);
+
         // when the user list changed, this list must be updated
         this.options.adapter.client.onUserListChanged((userListData: ChatUserListChangedInfo) => {
-            if ((this.options.roomId && userListData.roomId == this.options.roomId) ||
-                (this.options.conversationId && this.options.conversationId == userListData.conversationId))
-                this.populateList(userListData.userList);
+            if ((this.options.roomId && userListData.RoomId == this.options.roomId) ||
+                (this.options.conversationId && this.options.conversationId == userListData.ConversationId))
+                this.populateList(userListData.UserList);
         });
 
         // loads the list now
@@ -79,11 +77,11 @@ class UserList {
     options: UserListOptions;
 }
 
+
 $.fn.userList = function (options: UserListOptions) {
     if (this.length) {
         this.each(function () {
-            var data = new UserList(this, options);
-            data.init();
+            var data = new UserList($(this), options);
             $(this).data('userList', data);
         });
     }

@@ -18,7 +18,7 @@ $(document).ready(function () {
         if (!$userName.val() || $userName.val() == $userName.attr("placeHolder"))
             $userName.closest(".control-group").addClass("error");
         else {
-            window.location = "/Home/JoinChat?userName=" + $userName.val() + "&email=" + $email.val();
+            pmWindow.location = "/Home/JoinChat?userName=" + $userName.val() + "&email=" + $email.val();
         }
     });
     

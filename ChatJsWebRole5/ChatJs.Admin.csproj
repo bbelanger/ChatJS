@@ -219,17 +219,8 @@
     <Content Include="ChatJs\Images\Emoticons\smile-4.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-5.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-6.png" />
-    <Content Include="ChatJs\Scripts\jquery.activity-indicator-1.0.0.min.js" />
     <Content Include="ChatJs\Scripts\jquery.autosize.js" />
     <Content Include="ChatJs\Scripts\jquery.autosize.min.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.messageboard.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.horizontaltabs.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.userlist.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.window.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.pmwindow.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.rooms.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.controller.js" />
-    <Content Include="ChatJs\Scripts\jquery.chatjs.signalradapter.js" />
     <Content Include="ChatJs\Sounds\chat.mp3" />
     <Content Include="ChatJs\Sounds\chat.ogg" />
     <Content Include="ChatJs\Sounds\chat.wav" />
@@ -287,10 +278,16 @@
     <Content Include="Scripts\jquery.signalR-2.0.2.min.js" />
     <Content Include="Scripts\prettify.js" />
     <Content Include="Scripts\scripts.js" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.adapter.servertypes.ts" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.adapter.signalr.ts" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.adapter.ts" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.messageboard.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.adapter.servertypes.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.adapter.signalr.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.adapter.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.controller.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.horizontaltabs.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.messageboard.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.pmwindow.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.rooms.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.userlist.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.window.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -338,9 +335,6 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Typings\jquery.autosize\jquery.autosize.d.ts" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.horizontaltabs.ts" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.rooms.ts" />
-    <TypeScriptCompile Include="Scripts\Typings\jquery.chatjs\jquery.chatjs.window.ts" />
     <TypeScriptCompile Include="Scripts\Typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <PropertyGroup>

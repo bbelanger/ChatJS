@@ -1,18 +1,30 @@
-﻿var ChatControllerOptions = (function () {
-    function ChatControllerOptions() {
-    }
-    return ChatControllerOptions;
-})();
+﻿interface JQueryStatic {
+    chat: (options: ChatControllerOptions) => ChatController;
+}
 
-var PmWindowInfo = (function () {
-    function PmWindowInfo() {
-    }
-    return PmWindowInfo;
-})();
+class ChatControllerOptions {
+    userId: number;
+    adapter: IAdapter;
+    emptyRoomText: string;
+    typingText: string;
+    allowRoomSelection: boolean;
+    roomId: number;
+    enableSound: boolean;
+    // offset in the right for all windows in pixels. All windows will start at this offset from the right.
+    offsetRight: number;
+    // spacing between windows in pixels.
+    windowsSpacing: number;
+}
 
-var ChatController = (function () {
-    function ChatController(options) {
-        var _this = this;
+class PmWindowInfo {
+    otherUserId: number;
+    conversationId: number;
+    pmWindow: ChatPmWindow;
+}
+
+class ChatController {
+    constructor(options: ChatControllerOptions) {
+
         var defaultOptions = new ChatControllerOptions();
         defaultOptions.emptyRoomText = "There's no other users";
         defaultOptions.typingText = " is typing...";
@@ -26,21 +38,22 @@ var ChatController = (function () {
         this.pmWindows = [];
 
         // getting the adapter started. You cannot call the adapter BEFORE this is done.
-        this.options.adapter.init(function () {
+        this.options.adapter.init(() => {
             // the controller must have a listener to the "messages-changed" event because it has to create
             // new PM windows when the user receives it
-            _this.options.adapter.client.onMessagesChanged(function (message) {
-                if (message.UserToId && message.UserToId == _this.options.userId && !_this.findPmWindowByOtherUserId(message.UserFromId)) {
-                    var chatPmOptions = new ChatPmWindowOptions();
-                    chatPmOptions.userId = _this.options.userId;
-                    chatPmOptions.otherUserId = message.UserFromId;
-                    chatPmOptions.adapter = _this.options.adapter;
-                    chatPmOptions.typingText = _this.options.typingText;
-                    chatPmOptions.onCreated = function () {
-                        _this.organizePmWindows();
-                    };
+            this.options.adapter.client.onMessagesChanged((message: ChatMessageInfo) => {
+                if (message.UserToId && message.UserToId == this.options.userId && !this.findPmWindowByOtherUserId(message.UserFromId)) {
 
-                    _this.pmWindows.push({
+                    var chatPmOptions = new ChatPmWindowOptions();
+                    chatPmOptions.userId = this.options.userId;
+                    chatPmOptions.otherUserId = message.UserFromId;
+                    chatPmOptions.adapter = this.options.adapter;
+                    chatPmOptions.typingText = this.options.typingText;
+                    chatPmOptions.onCreated = () => {
+                        this.organizePmWindows();
+                    }
+
+                    this.pmWindows.push({
                         otherUserId: message.UserFromId,
                         conversationId: null,
                         pmWindow: $.chatPmWindow(chatPmOptions)
@@ -49,25 +62,25 @@ var ChatController = (function () {
             });
 
             var chatRoomOptions = new ChatRoomsOptions();
-            chatRoomOptions.adapter = _this.options.adapter;
-            chatRoomOptions.userId = _this.options.userId;
-            chatRoomOptions.userClicked = function (userId) {
-                if (userId != _this.options.userId) {
+            chatRoomOptions.adapter = this.options.adapter;
+            chatRoomOptions.userId = this.options.userId;
+            chatRoomOptions.userClicked = userId => {
+                if (userId != this.options.userId) {
                     // verify whether there's already a PM window for this user
-                    var existingPmWindow = _this.findPmWindowByOtherUserId(userId);
+                    var existingPmWindow = this.findPmWindowByOtherUserId(userId);
                     if (existingPmWindow)
                         existingPmWindow.focus();
                     else {
                         var chatPmOptions = new ChatPmWindowOptions();
-                        chatPmOptions.userId = _this.options.userId;
+                        chatPmOptions.userId = this.options.userId;
                         chatPmOptions.otherUserId = userId;
-                        chatPmOptions.adapter = _this.options.adapter;
-                        chatPmOptions.typingText = _this.options.typingText;
-                        chatPmOptions.onCreated = function () {
-                            _this.organizePmWindows();
-                        };
+                        chatPmOptions.adapter = this.options.adapter;
+                        chatPmOptions.typingText = this.options.typingText;
+                        chatPmOptions.onCreated = () => {
+                            this.organizePmWindows();
+                        }
 
-                        _this.pmWindows.push({
+                        this.pmWindows.push({
                             otherUserId: userId,
                             conversationId: null,
                             pmWindow: $.chatPmWindow(chatPmOptions)
@@ -75,27 +88,26 @@ var ChatController = (function () {
                     }
                 }
             };
-            _this.chatRooms = $.chatRooms(chatRoomOptions);
+            this.chatRooms = $.chatRooms(chatRoomOptions);
         });
     }
-    ChatController.prototype.eraseCookie = function (name) {
-        this.createCookie(name, "", -1);
-    };
 
-    ChatController.prototype.readCookie = function (name) {
+    eraseCookie(name) {
+        this.createCookie(name, "", -1);
+    }
+
+    readCookie(name) {
         var nameEq = name + "=";
         var ca = document.cookie.split(';');
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0) == ' ')
-                c = c.substring(1, c.length);
-            if (c.indexOf(nameEq) == 0)
-                return c.substring(nameEq.length, c.length);
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEq) == 0) return c.substring(nameEq.length, c.length);
         }
         return null;
-    };
+    }
 
-    ChatController.prototype.createCookie = function (name, value, days) {
+    createCookie(name, value, days) {
         var expires;
         if (days) {
             var date = new Date();
@@ -105,31 +117,34 @@ var ChatController = (function () {
             expires = "";
         }
         document.cookie = name + "=" + value + expires + "; path=/";
-    };
+    }
 
-    ChatController.prototype.organizeWindows = function () {
-    };
+    organizeWindows() {
 
-    ChatController.prototype.findPmWindowByOtherUserId = function (otherUserId) {
+    }
+
+    private findPmWindowByOtherUserId(otherUserId: number): ChatPmWindow {
         for (var i = 0; i < this.pmWindows.length; i++)
             if (this.pmWindows[i].otherUserId == otherUserId)
                 return this.pmWindows[i].pmWindow;
         return null;
-    };
+    }
 
-    ChatController.prototype.organizePmWindows = function () {
+    private organizePmWindows() {
         // this is the initial right offset
-        var rightOffset = +this.options.offsetRight + this.chatRooms.getWidth() + this.options.windowsSpacing;
+        var rightOffset = + this.options.offsetRight + this.chatRooms.getWidth() + this.options.windowsSpacing;
         for (var i = 0; i < this.pmWindows.length; i++) {
             this.pmWindows[i].pmWindow.setRightOffset(rightOffset);
             rightOffset += this.pmWindows[i].pmWindow.getWidth() + this.options.windowsSpacing;
         }
-    };
-    return ChatController;
-})();
+    }
 
-$.chat = function (options) {
+    options: ChatControllerOptions;
+    chatRooms: ChatRooms;
+    pmWindows: Array<PmWindowInfo>;
+}
+
+$.chat = options => {
     var chat = new ChatController(options);
     return chat;
 };
-//# sourceMappingURL=jquery.chatjs.controller.js.map

@@ -1,19 +1,25 @@
-﻿/// <reference path="../jquery/jquery.d.ts" />
+﻿interface JQueryStatic {
+    chatWindow(options: ChatWindowOptions): ChatWindow;
+}
 
-var ChatWindowOptions = (function () {
-    function ChatWindowOptions() {
-        this.canExpand = true;
-        this.canClose = true;
-    }
-    return ChatWindowOptions;
-})();
+class ChatWindowOptions {
+    canExpand: boolean;
+    width: number;
+    height: number;
+    canClose: boolean;
+    title: string;
+    onCreated: (chatWindow: ChatWindow) => void;
+}
 
-var ChatWindow = (function () {
-    function ChatWindow(options) {
-        this.options = options;
-    }
-    ChatWindow.prototype.init = function () {
-        var _this = this;
+class ChatWindow {
+    constructor(options: ChatWindowOptions) {
+
+        var defaultOptions = new ChatWindowOptions();
+        defaultOptions.canExpand = true;
+        defaultOptions.canClose = true;
+
+        this.options = $.extend({}, defaultOptions, options);
+
         if (this.options.canExpand) {
             this.$windowTray = $("<div/>").addClass("chat-window-tray").appendTo($("body"));
         }
@@ -31,7 +37,7 @@ var ChatWindow = (function () {
         this.$windowTitle = $("<div/>").addClass("chat-window-title").appendTo(this.$window);
         if (this.options.canClose) {
             var $closeButton = $("<div/>").addClass("close").appendTo(this.$windowTitle);
-            $closeButton.click(function (e) {
+            $closeButton.click(e => {
                 e.stopPropagation();
             });
         }
@@ -42,48 +48,53 @@ var ChatWindow = (function () {
         this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo(this.$windowContent);
 
         // wire everything up
-        this.$windowTitle.click(function () {
-            _this.$windowContent.toggle();
-            if (!_this.$windowContent.is(":visible"))
-                _this.$window.addClass("collapsed");
+        this.$windowTitle.click(() => {
+            this.$windowContent.toggle();
+            if (!this.$windowContent.is(":visible"))
+                this.$window.addClass("collapsed");
             else
-                _this.$window.removeClass("collapsed");
+                this.$window.removeClass("collapsed");
         });
 
         this.options.onCreated(this);
-    };
+    }
 
-    ChatWindow.prototype.getTrayWidth = function () {
+    getWidth() {
         return this.options.canExpand ? this.$windowTray.outerWidth() : this.$window.outerWidth();
-    };
+    }
 
-    ChatWindow.prototype.setRightOffset = function (offset) {
+    setRightOffset(offset: number) {
         this.$window.css("right", offset);
         if (this.options.canExpand)
             this.$windowTray.css("right", offset);
-    };
+    }
 
-    ChatWindow.prototype.setTitle = function (title) {
+    setTitle(title: string) {
         $("div[class=text]", this.$windowTitle).text(title);
-    };
+    }
 
-    ChatWindow.prototype.setVisible = function (visible) {
+    setVisible(visible: boolean) {
         if (visible)
             this.$window.show();
         else
             this.$window.hide();
-    };
+    }
 
-    ChatWindow.prototype.getToggleState = function () {
+    getToggleState() {
         return this.$windowContent.is(":visible") ? "maximized" : "minimized";
-    };
-    return ChatWindow;
-})();
+    }
+
+    defaults: ChatWindowOptions;
+    options: ChatWindowOptions;
+    $windowTray: JQuery;
+    $window: JQuery;
+    $windowTitle: JQuery;
+    $windowContent: JQuery;
+    $windowInnerContent: JQuery;
+}
 
 // The actual plugin
-$.chatWindow = function (options) {
+$.chatWindow = (options: ChatWindowOptions) => {
     var chatWindow = new ChatWindow(options);
-    chatWindow.init();
     return chatWindow;
 };
-//# sourceMappingURL=jquery.chatjs.window.js.map

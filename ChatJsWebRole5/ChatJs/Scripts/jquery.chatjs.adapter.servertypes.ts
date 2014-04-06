@@ -1,31 +1,31 @@
 ﻿class ChatMessageInfo {
     /// The user that sent the message
-    userFromId: number;
+    UserFromId: number;
 
     /// The user to whom the message is to
-    userToId: number;
+    UserToId: number;
 
     /// The conversation to which the message is being sent
-    conversationId: number;
+    ConversationId: number;
 
     /// The room to which the message is being sent
-    roomId: number;
+    RoomId: number;
 
     /// <summary>
     /// Message timestamp
     /// </summary>
-    timestamp: number;
+    Timestamp: number;
 
     /// <summary>
     /// Message text
     /// </summary>
-    message: string;
+    Message: string;
 
     /// Client GUID
-    clientGuid: string
+    ClientGuid: string
 
     /// Still verifying whether this is necessary
-    dateTime: Date
+    DateTime: Date
 }
 
 enum UserStatusType {
@@ -43,64 +43,64 @@ class ChatUserInfo {
     }
 
     /// User Id (preferebly the same as database user Id)
-    id: number;
+    Id: number;
 
     /// User display name
-    name: string;
+    Name: string;
 
     /// Profile Url
-    url: string
+    Url: string
 
     /// User profile picture URL (Gravatar, for instance)
-    profilePictureUrl: string
+    ProfilePictureUrl: string
 
     /// User's status
-    status: UserStatusType;
+    Status: UserStatusType;
 
     /// Last time this user has been active
-    lastActiveOn: Date;
+    LastActiveOn: Date;
 
     /// User e-mail
-    email: string;
+    Email: string;
 
     /// User room id
-    roomId: number
+    RoomId: number
 }
 
 class ChatRoomInfo {
     /// The room id
-    id: number
+    Id: number
 
     /// The room display name
-    name: string
+    Name: string
 
     /// Number of online users right now
-    usersOnline: number;
+    UsersOnline: number;
 }
 
 class ChatTypingSignalInfo {
 
     // room to send the typing signal to
-    roomId: number;
+    RoomId: number;
 
     // conversation to send the typing signal to
-    conversationId: number;
+    ConversationId: number;
 
     // user to send the typing signal to
-    userToId: number;
+    UserToId: number;
 
     // user that originated the typing signal
-    userFrom: ChatUserInfo;
+    UserFrom: ChatUserInfo;
 }
 
 class ChatUserListChangedInfo {
     
     // room from which the users changed
-    roomId: number;
+    RoomId: number;
 
     // conversation from which the users changed
-    conversationId: number;
+    ConversationId: number;
 
     // list of users
-    userList : Array<ChatUserInfo>;
+    UserList : Array<ChatUserInfo>;
 }
