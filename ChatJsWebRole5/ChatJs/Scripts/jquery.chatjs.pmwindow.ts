@@ -8,8 +8,10 @@ class ChatPmWindowOptions {
     conversationId: number;
     typingText: string;
     adapter: IAdapter;
+    isMaximized: boolean;
     onCreated: (pmWindow: ChatPmWindow) => void;
-    onClose: () => void;
+    onClose: (pmWindow: ChatPmWindow) => void;
+    onMaximizedStateChanged: (pmWindow: ChatPmWindow, isMaximized: boolean) => void;
 }
 
 class ChatPmWindow {
@@ -17,8 +19,9 @@ class ChatPmWindow {
 
         var defaultOptions = new ChatPmWindowOptions();
         defaultOptions.typingText = " is typing...";
-        defaultOptions.onCreated = () => { };
-        defaultOptions.onClose = () => { };
+        defaultOptions.isMaximized = true;
+        defaultOptions.onCreated = () => {};
+        defaultOptions.onClose = () => {};
 
         this.options = $.extend({}, defaultOptions, options);
 
@@ -28,14 +31,20 @@ class ChatPmWindow {
             chatWindowOptions.title = userInfo.Name;
             chatWindowOptions.canClose = true;
             chatWindowOptions.canExpand = false;
+            chatWindowOptions.isMaximized = this.options.isMaximized;
             chatWindowOptions.onCreated = (window: ChatWindow) => {
                 var messageBoardOptions = new MessageBoardOptions();
                 messageBoardOptions.adapter = this.options.adapter;
                 messageBoardOptions.userId = this.options.userId;
                 messageBoardOptions.otherUserId = this.options.otherUserId;
                 window.$windowInnerContent.messageBoard(messageBoardOptions);
+            };
+            chatWindowOptions.onClose = () => {
+                this.options.onClose(this);
             }
-
+            chatWindowOptions.onMaximizedStateChanged = (chatPmWindow, isMaximized) => {
+                this.options.onMaximizedStateChanged(this, isMaximized);
+            }
             this.chatWindow = $.chatWindow(chatWindowOptions);
             this.options.onCreated(this);
         });
@@ -50,6 +59,10 @@ class ChatPmWindow {
 
     getWidth(): number {
         return this.chatWindow.getWidth();
+    }
+
+    isMaximized(): boolean {
+        return this.chatWindow.isMaximized();
     }
 
     options: ChatPmWindowOptions;

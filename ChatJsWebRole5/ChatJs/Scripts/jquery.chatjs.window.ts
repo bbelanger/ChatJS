@@ -8,15 +8,22 @@ class ChatWindowOptions {
     height: number;
     canClose: boolean;
     title: string;
+    isMaximized: boolean;
     onCreated: (chatWindow: ChatWindow) => void;
+    onClose: (chatWindow: ChatWindow) => void;
+    onMaximizedStateChanged: (chatWindow: ChatWindow, isMaximized: boolean) => void;
 }
 
 class ChatWindow {
     constructor(options: ChatWindowOptions) {
 
         var defaultOptions = new ChatWindowOptions();
+        defaultOptions.isMaximized = true;
         defaultOptions.canExpand = true;
         defaultOptions.canClose = true;
+        defaultOptions.onCreated = () => {};
+        defaultOptions.onClose = () => {};
+        defaultOptions.onMaximizedStateChanged = () => {};
 
         this.options = $.extend({}, defaultOptions, options);
 
@@ -39,21 +46,30 @@ class ChatWindow {
             var $closeButton = $("<div/>").addClass("close").appendTo(this.$windowTitle);
             $closeButton.click(e => {
                 e.stopPropagation();
+                // removes the window
+                this.$window.remove();
+                // triggers the event
+                this.options.onClose(this);
             });
         }
         $("<div/>").addClass("text").text(this.options.title).appendTo(this.$windowTitle);
 
         // content
         this.$windowContent = $("<div/>").addClass("chat-window-content").appendTo(this.$window);
+        if (!this.options.isMaximized)
+            this.$windowContent.hide();
+
         this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo(this.$windowContent);
 
         // wire everything up
         this.$windowTitle.click(() => {
+            // windows are maximized if the this.$windowContent is visible
             this.$windowContent.toggle();
             if (!this.$windowContent.is(":visible"))
                 this.$window.addClass("collapsed");
             else
                 this.$window.removeClass("collapsed");
+            this.options.onMaximizedStateChanged(this, this.isMaximized());
         });
 
         this.options.onCreated(this);
@@ -80,8 +96,9 @@ class ChatWindow {
             this.$window.hide();
     }
 
-    getToggleState() {
-        return this.$windowContent.is(":visible") ? "maximized" : "minimized";
+    // returns whether the window is maximized
+    isMaximized(): boolean {
+        return this.$windowContent.is(":visible");
     }
 
     defaults: ChatWindowOptions;

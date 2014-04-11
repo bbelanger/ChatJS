@@ -94,7 +94,7 @@ class ChatTypingSignalInfo {
 }
 
 class ChatUserListChangedInfo {
-    
+
     // room from which the users changed
     RoomId: number;
 
@@ -102,5 +102,5 @@ class ChatUserListChangedInfo {
     ConversationId: number;
 
     // list of users
-    UserList : Array<ChatUserInfo>;
+    UserList: Array<ChatUserInfo>;
 }

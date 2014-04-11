@@ -12,7 +12,7 @@ namespace ChatJs.Admin.Code.Filters
             var uriBuilder = new UriBuilder(request.Url);
 
             var isNotCanonical = !request.IsAjaxRequest() && request.Url != null && !request.Url.IsLoopback &&
-                                  request.Url.Host != ConfigurationManager.AppSettings["CanonicalUrlHost"];
+                                 request.Url.Host != ConfigurationManager.AppSettings["CanonicalUrlHost"];
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext)

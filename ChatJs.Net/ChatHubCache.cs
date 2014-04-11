@@ -124,7 +124,7 @@ namespace ChatJs.Lib
         {
             lock (connectionsLockObject)
             {
-                return roomToUsers.ContainsKey(roomId) ? roomToUsers[roomId].ToArray() : new int[] { };
+                return roomToUsers.ContainsKey(roomId) ? roomToUsers[roomId].ToArray() : new int[] {};
             }
         }
 
@@ -138,7 +138,12 @@ namespace ChatJs.Lib
             {
                 var result = new List<string>();
                 if (roomToUsers.ContainsKey(roomId))
-                    foreach (var userId in roomToUsers[roomId].Where(userId => (exceptUsers == null || !exceptUsers.Contains(userId)) && userToConnections.ContainsKey(userId)))
+                    foreach (
+                        var userId in
+                            roomToUsers[roomId].Where(
+                                userId =>
+                                    (exceptUsers == null || !exceptUsers.Contains(userId)) &&
+                                    userToConnections.ContainsKey(userId)))
                         result.AddRange(userToConnections[userId]);
 
                 return result.ToArray();
@@ -188,7 +193,7 @@ namespace ChatJs.Lib
         }
 
         /// <summary>
-        /// Eliminates the given user from the cache
+        ///     Eliminates the given user from the cache
         /// </summary>
         /// <param name="userId"></param>
         public static void DropUser(int userId)
@@ -202,7 +207,9 @@ namespace ChatJs.Lib
 
                     // remove user from connections index
                     userToConnections.Remove(userId);
-                    foreach (var connection in userConnections.Where(connection => connectionToUser.ContainsKey(connection)))
+                    foreach (
+                        var connection in
+                            userConnections.Where(connection => connectionToUser.ContainsKey(connection)))
                         connectionToUser.Remove(connection);
 
                     // remove user from rooms index

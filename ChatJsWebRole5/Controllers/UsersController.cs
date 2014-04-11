@@ -2,15 +2,9 @@
 
 using System;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using ChatJs.Admin.Code;
 using ChatJs.Admin.Models;
-using ChatJs.Model;
 using ChatJs.Model.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 
 #endregion
 

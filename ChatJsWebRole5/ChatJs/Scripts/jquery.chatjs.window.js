@@ -8,8 +8,15 @@ var ChatWindow = (function () {
     function ChatWindow(options) {
         var _this = this;
         var defaultOptions = new ChatWindowOptions();
+        defaultOptions.isMaximized = true;
         defaultOptions.canExpand = true;
         defaultOptions.canClose = true;
+        defaultOptions.onCreated = function () {
+        };
+        defaultOptions.onClose = function () {
+        };
+        defaultOptions.onMaximizedStateChanged = function () {
+        };
 
         this.options = $.extend({}, defaultOptions, options);
 
@@ -32,21 +39,32 @@ var ChatWindow = (function () {
             var $closeButton = $("<div/>").addClass("close").appendTo(this.$windowTitle);
             $closeButton.click(function (e) {
                 e.stopPropagation();
+
+                // removes the window
+                _this.$window.remove();
+
+                // triggers the event
+                _this.options.onClose(_this);
             });
         }
         $("<div/>").addClass("text").text(this.options.title).appendTo(this.$windowTitle);
 
         // content
         this.$windowContent = $("<div/>").addClass("chat-window-content").appendTo(this.$window);
+        if (!this.options.isMaximized)
+            this.$windowContent.hide();
+
         this.$windowInnerContent = $("<div/>").addClass("chat-window-inner-content").appendTo(this.$windowContent);
 
         // wire everything up
         this.$windowTitle.click(function () {
+            // windows are maximized if the this.$windowContent is visible
             _this.$windowContent.toggle();
             if (!_this.$windowContent.is(":visible"))
                 _this.$window.addClass("collapsed");
             else
                 _this.$window.removeClass("collapsed");
+            _this.options.onMaximizedStateChanged(_this, _this.isMaximized());
         });
 
         this.options.onCreated(this);
@@ -72,8 +90,9 @@ var ChatWindow = (function () {
             this.$window.hide();
     };
 
-    ChatWindow.prototype.getToggleState = function () {
-        return this.$windowContent.is(":visible") ? "maximized" : "minimized";
+    // returns whether the window is maximized
+    ChatWindow.prototype.isMaximized = function () {
+        return this.$windowContent.is(":visible");
     };
     return ChatWindow;
 })();

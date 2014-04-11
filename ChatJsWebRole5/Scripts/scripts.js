@@ -1,15 +1,15 @@
 ﻿
 
-$(document).ready(function () {
-    $("#joinChatButton").click(function (e) {
+$(document).ready(function() {
+    $("#joinChatButton").click(function(e) {
         e.preventDefault();
         $("#loginModal").modal('show');
-        $("#loginModal").on('shown', function () {
+        $("#loginModal").on('shown', function() {
             $("#userName").focus();
         });
     });
-    
-    $("#joinChatConclusionButton").click(function (e) {
+
+    $("#joinChatConclusionButton").click(function(e) {
         e.preventDefault();
         var $userName = $("#userName");
         var $email = $("#email");
@@ -21,7 +21,7 @@ $(document).ready(function () {
             pmWindow.location = "/Home/JoinChat?userName=" + $userName.val() + "&email=" + $email.val();
         }
     });
-    
+
     // if the user presses anything, remove the validation error
     $("#userName").keypress(function() {
         $(this).closest(".control-group").removeClass("error");

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
 
 namespace ChatJs.Model.Models.Mapping
@@ -24,7 +23,6 @@ namespace ChatJs.Model.Models.Mapping
             this.HasRequired(t => t.User)
                 .WithMany(t => t.ChatRoomUsers)
                 .HasForeignKey(d => d.UserId);
-
         }
     }
 }

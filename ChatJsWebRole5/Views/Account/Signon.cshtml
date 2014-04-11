@@ -16,21 +16,21 @@
 
         @Html.HiddenFor(m => m.Id)
         <p>
-            @Html.TextBoxFor(m => m.UserName, new { placeHolder = "User name", @class = "form-control" })
+            @Html.TextBoxFor(m => m.UserName, new {placeHolder = "User name", @class = "form-control"})
         </p>
         <p>
-            @Html.TextBoxFor(m => m.EMail, new { placeHolder = "E-Mail", @class = "form-control" })
+            @Html.TextBoxFor(m => m.EMail, new {placeHolder = "E-Mail", @class = "form-control"})
         </p>
         <p>
-            @Html.TextBoxFor(m => m.DisplayName, new { placeHolder = "Display name", @class = "form-control" })
+            @Html.TextBoxFor(m => m.DisplayName, new {placeHolder = "Display name", @class = "form-control"})
         </p>
         if (Model == null || !Model.Id.HasValue)
         {
             <p>
-                @Html.PasswordFor(m => m.Password, new { placeHolder = "Password", @class = "form-control" })
+                @Html.PasswordFor(m => m.Password, new {placeHolder = "Password", @class = "form-control"})
             </p>
             <p>
-                @Html.PasswordFor(m => m.ConfirmPassword, new { placeHolder = "Confirm password", @class = "form-control" })
+                @Html.PasswordFor(m => m.ConfirmPassword, new {placeHolder = "Confirm password", @class = "form-control"})
             </p>
         }
 

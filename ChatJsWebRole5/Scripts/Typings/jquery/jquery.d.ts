@@ -34,7 +34,7 @@ interface JQueryAjaxSettings {
     /**
      * A pre-request callback function that can be used to modify the jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object before it is sent. Use this to set custom headers, etc. The jqXHR and settings objects are passed as arguments. This is an Ajax Event. Returning false in the beforeSend function will cancel the request. As of jQuery 1.5, the beforeSend option will be called regardless of the type of request.
      */
-    beforeSend? (jqXHR: JQueryXHR, settings: JQueryAjaxSettings): any;
+    beforeSend?(jqXHR: JQueryXHR, settings: JQueryAjaxSettings): any;
     /**
      * If set to false, it will force requested pages not to be cached by the browser. Note: Setting cache to false will only work correctly with HEAD and GET requests. It works by appending "_={timestamp}" to the GET parameters. The parameter is not needed for other types of requests, except in IE8 when a POST is made to a URL that has already been requested by a GET.
      */
@@ -42,7 +42,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called when the request finishes (after success and error callbacks are executed). The function gets passed two arguments: The jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object and a string categorizing the status of the request ("success", "notmodified", "error", "timeout", "abort", or "parsererror"). As of jQuery 1.5, the complete setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
-    complete? (jqXHR: JQueryXHR, textStatus: string): any;
+    complete?(jqXHR: JQueryXHR, textStatus: string): any;
     /**
      * An object of string/regular-expression pairs that determine how jQuery will parse the response, given its content type. (version added: 1.5)
      */
@@ -72,7 +72,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be used to handle the raw response data of XMLHttpRequest.This is a pre-filtering function to sanitize the response. You should return the sanitized data. The function accepts two arguments: The raw data returned from the server and the 'dataType' parameter.
      */
-    dataFilter? (data: any, ty: any): any;
+    dataFilter?(data: any, ty: any): any;
     /**
      * The type of data that you're expecting back from the server. If none is specified, jQuery will try to infer it based on the MIME type of the response (an XML MIME type will yield XML, in 1.4 JSON will yield a JavaScript object, in 1.4 script will execute the script, and anything else will be returned as a string). 
      */
@@ -80,7 +80,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called if the request fails. The function receives three arguments: The jqXHR (in jQuery 1.4.x, XMLHttpRequest) object, a string describing the type of error that occurred and an optional exception object, if one occurred. Possible values for the second argument (besides null) are "timeout", "error", "abort", and "parsererror". When an HTTP error occurs, errorThrown receives the textual portion of the HTTP status, such as "Not Found" or "Internal Server Error." As of jQuery 1.5, the error setting can accept an array of functions. Each function will be called in turn. Note: This handler is not called for cross-domain script and cross-domain JSONP requests. This is an Ajax Event.
      */
-    error? (jqXHR: JQueryXHR, textStatus: string, errorThrow: string): any;
+    error?(jqXHR: JQueryXHR, textStatus: string, errorThrow: string): any;
     /**
      * Whether to trigger global Ajax event handlers for this request. The default is true. Set to false to prevent the global handlers like ajaxStart or ajaxStop from being triggered. This can be used to control various Ajax Events.
      */
@@ -128,7 +128,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called if the request succeeds. The function gets passed three arguments: The data returned from the server, formatted according to the dataType parameter; a string describing the status; and the jqXHR (in jQuery 1.4.x, XMLHttpRequest) object. As of jQuery 1.5, the success setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
-    success? (data: any, textStatus: string, jqXHR: JQueryXHR): any;
+    success?(data: any, textStatus: string, jqXHR: JQueryXHR): any;
     /**
      * Set a timeout (in milliseconds) for the request. This will override any global timeout set with $.ajaxSetup(). The timeout period starts at the point the $.ajax call is made; if several other requests are in progress and the browser has no connections available, it is possible for a request to time out before it can be sent. In jQuery 1.4.x and below, the XMLHttpRequest object will be in an invalid state if the request times out; accessing any object members may throw an exception. In Firefox 3.0+ only, script and JSONP requests cannot be cancelled by a timeout; the script will run even if it arrives after the timeout period.
      */
@@ -578,7 +578,7 @@ interface JQuerySupport {
     opacity?: boolean;
     optDisabled?: boolean;
     optSelected?: boolean;
-    scriptEval? (): boolean;
+    scriptEval?(): boolean;
     style?: boolean;
     submitBubbles?: boolean;
     tbody?: boolean;
@@ -609,7 +609,7 @@ interface JQueryParam {
  */
 interface JQueryEventConstructor {
     (name: string, eventProperties?: any): JQueryEventObject;
-    new (name: string, eventProperties?: any): JQueryEventObject;
+    new(name: string, eventProperties?: any): JQueryEventObject;
 }
 
 /**
@@ -620,47 +620,47 @@ interface JQueryCoordinates {
     top: number;
 }
 
-interface JQueryAnimationOptions { 
+interface JQueryAnimationOptions {
     /**
      * A string or number determining how long the animation will run.
      */
-    duration?: any; 
+    duration?: any;
     /**
      * A string indicating which easing function to use for the transition.
      */
-    easing?: string; 
+    easing?: string;
     /**
      * A function to call once the animation is complete.
      */
-    complete?: Function; 
+    complete?: Function;
     /**
      * A function to be called for each animated property of each animated element. This function provides an opportunity to modify the Tween object to change the value of the property before it is set.
      */
-    step?: (now: number, tween: any) => any; 
+    step?: (now: number, tween: any) => any;
     /**
      * A function to be called after each step of the animation, only once per animated element regardless of the number of animated properties. (version added: 1.8)
      */
-    progress?: (animation: JQueryPromise<any>, progress: number, remainingMs: number) => any; 
+    progress?: (animation: JQueryPromise<any>, progress: number, remainingMs: number) => any;
     /**
      * A function to call when the animation begins. (version added: 1.8)
      */
-    start?: (animation: JQueryPromise<any>) => any; 
+    start?: (animation: JQueryPromise<any>) => any;
     /**
      * A function to be called when the animation completes (its Promise object is resolved). (version added: 1.8)
      */
-    done?: (animation: JQueryPromise<any>, jumpedToEnd: boolean) => any; 
+    done?: (animation: JQueryPromise<any>, jumpedToEnd: boolean) => any;
     /**
      * A function to be called when the animation fails to complete (its Promise object is rejected). (version added: 1.8)
      */
-    fail?: (animation: JQueryPromise<any>, jumpedToEnd: boolean) => any; 
+    fail?: (animation: JQueryPromise<any>, jumpedToEnd: boolean) => any;
     /**
      * A function to be called when the animation completes or stops without completing (its Promise object is either resolved or rejected). (version added: 1.8)
      */
-    always?: (animation: JQueryPromise<any>, jumpedToEnd: boolean) => any; 
+    always?: (animation: JQueryPromise<any>, jumpedToEnd: boolean) => any;
     /**
      * A Boolean indicating whether to place the animation in the effects queue. If false, the animation will begin immediately. As of jQuery 1.7, the queue option can also accept a string, in which case the animation is added to the queue represented by that string. When a custom queue name is used the animation does not automatically start; you must call .dequeue("queuename") to start it.
      */
-    queue?: any; 
+    queue?: any;
     /**
      * A map of one or more of the CSS properties defined by the properties argument and their corresponding easing functions. (version added: 1.4)
      */
@@ -702,7 +702,7 @@ interface JQueryStatic {
 
     ajaxSettings: JQueryAjaxSettings;
 
-     /**
+    /**
       * Set default values for future Ajax requests. Its use is not recommended.
       *
       * @param options A set of key/value pairs that configure the default Ajax request. All options are optional.
@@ -1030,7 +1030,7 @@ interface JQueryStatic {
     error(message: any): JQuery;
 
     expr: any;
-    fn: any;  //TODO: Decide how we want to type this
+    fn: any; //TODO: Decide how we want to type this
 
     isReady: boolean;
 
@@ -1054,7 +1054,7 @@ interface JQueryStatic {
     each<T>(
         collection: T[],
         callback: (indexInArray: number, valueOfElement: T) => any
-        ): any;
+    ): any;
 
     /**
      * A generic iterator function, which can be used to seamlessly iterate over both objects and arrays. Arrays and array-like objects with a length property (such as a function's arguments object) are iterated by numeric index, from 0 to length-1. Other objects are iterated via their named properties.
@@ -1065,7 +1065,7 @@ interface JQueryStatic {
     each(
         collection: any,
         callback: (indexInArray: any, valueOfElement: any) => any
-        ): any;
+    ): any;
 
     /**
      * Merge the contents of two or more objects together into the first object.
@@ -1356,7 +1356,7 @@ interface JQuery {
      * @param attributes An object of attribute-value pairs to set.
      */
     attr(attributes: Object): JQuery;
-    
+
     /**
      * Determine whether any of the matched elements are assigned the given class.
      *
@@ -1612,7 +1612,7 @@ interface JQuery {
      * @param value An integer representing the number of pixels, or an integer along with an optional unit of measure appended (as a string).
      */
     innerHeight(height: string): JQuery;
-    
+
     /**
      * Get the current computed width for the first element in the set of matched elements, including padding but not border.
      */
@@ -1631,7 +1631,7 @@ interface JQuery {
      * @param value An integer representing the number of pixels, or an integer along with an optional unit of measure appended (as a string).
      */
     innerWidth(width: string): JQuery;
-    
+
     /**
      * Get the current coordinates of the first element in the set of matched elements, relative to the document.
      */
@@ -1656,12 +1656,12 @@ interface JQuery {
      */
     outerHeight(includeMargin?: boolean): number;
 
-   /**
+    /**
     * Sets the outer height on elements in the set of matched elements, including padding and border.
     *
     * @param value An integer representing the number of pixels, or an integer along with an optional unit of measure appended (as a string).
     */
-   outerHeight(height: number): JQuery;
+    outerHeight(height: number): JQuery;
 
     /**
      * Sets the outer height on elements in the set of matched elements, including padding and border.
@@ -1669,7 +1669,7 @@ interface JQuery {
      * @param value An integer representing the number of pixels, or an integer along with an optional unit of measure appended (as a string).
      */
     outerHeight(height: string): JQuery;
-    
+
     /**
      * Get the current computed width for the first element in the set of matched elements, including padding and border.
      *
@@ -3847,8 +3847,10 @@ interface JQuery {
      */
     queue(queueName: string, callback: Function): JQuery;
 }
+
 declare module "jquery" {
     export = $;
 }
+
 declare var jQuery: JQueryStatic;
 declare var $: JQueryStatic;

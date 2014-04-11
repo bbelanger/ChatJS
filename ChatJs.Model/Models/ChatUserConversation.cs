@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-
 namespace ChatJs.Model.Models
 {
-    public partial class ChatUserConversation
+    public class ChatUserConversation
     {
         public int Id { get; set; }
         public int UserId { get; set; }

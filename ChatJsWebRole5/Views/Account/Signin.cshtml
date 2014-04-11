@@ -1,7 +1,7 @@
 ﻿﻿@model ChatJs.Admin.Models.SigninViewModel
 
 @{
-    this.Layout = "../_Layout.cshtml";
+    Layout = "../_Layout.cshtml";
 }
 
 @section Header
@@ -10,14 +10,14 @@
 }
 
 <div class="container">
-    @using (this.Html.BeginForm("Signin", "Account", FormMethod.Post))
+    @using (Html.BeginForm("Signin", "Account", FormMethod.Post))
     {
         <h2 class="form-heading">Sign in to ChatJS Admin</h2>
         <p>
-            @Html.TextBoxFor(m => m.UserName, new { placeHolder = "User name", @class = "form-control" })
+            @Html.TextBoxFor(m => m.UserName, new {placeHolder = "User name", @class = "form-control"})
         </p>
         <p>
-            @Html.PasswordFor(m => m.Password, new { placeHolder = "Password", @class = "form-control" })
+            @Html.PasswordFor(m => m.Password, new {placeHolder = "Password", @class = "form-control"})
         </p>
         <label class="checkbox">
             @Html.CheckBoxFor(m => m.RememberMe)

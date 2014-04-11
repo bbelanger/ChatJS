@@ -6,6 +6,18 @@ namespace ChatJs.Lib
 {
     public class GravatarHelper
     {
+        /// <summary>
+        ///     Gravatar image size
+        /// </summary>
+        public enum Size
+        {
+            S16,
+            S24,
+            S32,
+            S64,
+            S128
+        }
+
         public const string AMPERSAND = "&";
         public const string BADGE_SYMBOL = "&#9679;";
 
@@ -34,7 +46,8 @@ namespace ChatJs.Lib
                     throw new Exception("Size not supported");
             }
 
-            return "https://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + GravatarHelper.AMPERSAND + "r=PG&d=mm";
+            return "https://www.gravatar.com/avatar/" + gravatarEMailHash + "?s=" + sizeAsString + AMPERSAND +
+                   "r=PG&d=mm";
         }
 
         // Create an md5 sum string of this string
@@ -47,7 +60,7 @@ namespace ChatJs.Lib
             var md5Hasher = MD5.Create();
 
             // Convert the input string to a byte array and compute the hash.
-            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(email));
+            var data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(email));
 
             // Create a new Stringbuilder to collect the bytes
             // and create a string.
@@ -58,20 +71,7 @@ namespace ChatJs.Lib
             for (var i = 0; i < data.Length; i++)
                 sBuilder.Append(data[i].ToString("x2"));
 
-            return sBuilder.ToString();  // Return the hexadecimal string.
-        }
-
-        /// <summary>
-        /// Gravatar image size
-        /// </summary>
-        public enum Size
-        {
-            S16,
-            S24,
-            S32,
-            S64,
-            S128
+            return sBuilder.ToString(); // Return the hexadecimal string.
         }
     }
-
 }

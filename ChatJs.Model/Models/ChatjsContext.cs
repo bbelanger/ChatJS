@@ -3,7 +3,7 @@ using ChatJs.Model.Models.Mapping;
 
 namespace ChatJs.Model.Models
 {
-    public partial class ChatjsContext : DbContext
+    public class ChatjsContext : DbContext
     {
         static ChatjsContext()
         {

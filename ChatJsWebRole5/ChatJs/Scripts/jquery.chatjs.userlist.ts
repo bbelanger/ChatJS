@@ -23,7 +23,7 @@ class UserList {
         // when the user list changed, this list must be updated
         this.options.adapter.client.onUserListChanged((userListData: ChatUserListChangedInfo) => {
             if ((this.options.roomId && userListData.RoomId == this.options.roomId) ||
-                (this.options.conversationId && this.options.conversationId == userListData.ConversationId))
+            (this.options.conversationId && this.options.conversationId == userListData.ConversationId))
                 this.populateList(userListData.UserList);
         });
 
@@ -78,9 +78,9 @@ class UserList {
 }
 
 
-$.fn.userList = function (options: UserListOptions) {
+$.fn.userList = function(options: UserListOptions) {
     if (this.length) {
-        this.each(function () {
+        this.each(function() {
             var data = new UserList($(this), options);
             $(this).data('userList', data);
         });

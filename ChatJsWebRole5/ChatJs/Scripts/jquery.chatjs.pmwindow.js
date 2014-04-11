@@ -9,6 +9,7 @@ var ChatPmWindow = (function () {
         var _this = this;
         var defaultOptions = new ChatPmWindowOptions();
         defaultOptions.typingText = " is typing...";
+        defaultOptions.isMaximized = true;
         defaultOptions.onCreated = function () {
         };
         defaultOptions.onClose = function () {
@@ -21,6 +22,7 @@ var ChatPmWindow = (function () {
             chatWindowOptions.title = userInfo.Name;
             chatWindowOptions.canClose = true;
             chatWindowOptions.canExpand = false;
+            chatWindowOptions.isMaximized = _this.options.isMaximized;
             chatWindowOptions.onCreated = function (window) {
                 var messageBoardOptions = new MessageBoardOptions();
                 messageBoardOptions.adapter = _this.options.adapter;
@@ -28,7 +30,12 @@ var ChatPmWindow = (function () {
                 messageBoardOptions.otherUserId = _this.options.otherUserId;
                 window.$windowInnerContent.messageBoard(messageBoardOptions);
             };
-
+            chatWindowOptions.onClose = function () {
+                _this.options.onClose(_this);
+            };
+            chatWindowOptions.onMaximizedStateChanged = function (chatPmWindow, isMaximized) {
+                _this.options.onMaximizedStateChanged(_this, isMaximized);
+            };
             _this.chatWindow = $.chatWindow(chatWindowOptions);
             _this.options.onCreated(_this);
         });
@@ -42,6 +49,10 @@ var ChatPmWindow = (function () {
 
     ChatPmWindow.prototype.getWidth = function () {
         return this.chatWindow.getWidth();
+    };
+
+    ChatPmWindow.prototype.isMaximized = function () {
+        return this.chatWindow.isMaximized();
     };
     return ChatPmWindow;
 })();

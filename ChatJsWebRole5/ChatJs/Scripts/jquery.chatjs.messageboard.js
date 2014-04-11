@@ -165,7 +165,10 @@ var MessageBoard = (function () {
     };
 
     MessageBoard.prototype.addMessage = function (message, clientGuid, scroll) {
-        /// <summary>Adds a message to the board. This method is called both when the current user or the other user is sending a message</summary>
+        /// <summary>
+        ///     Adds a message to the board. This method is called both when the current user or the other user is sending a
+        ///     message
+        /// </summary>
         /// <param name="message" type="Object">Message</param>
         /// <param name="clientGuid" type="String">Message client guid</param>
         if (scroll == undefined)

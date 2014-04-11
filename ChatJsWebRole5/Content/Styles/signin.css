@@ -1,18 +1,14 @@
 ﻿body {
-    padding-top: 40px;
     padding-bottom: 40px;
+    padding-top: 40px;
 }
 
 form {
+    margin: 0 auto;
     max-width: 330px;
     padding: 15px;
-    margin: 0 auto;
 }
 
-    form .form-heading, form .checkbox {
-        margin-bottom: 10px;
-    }
+form .form-heading, form .checkbox { margin-bottom: 10px; }
 
-    form .checkbox {
-        font-weight: normal;
-    }
+form .checkbox { font-weight: normal; }

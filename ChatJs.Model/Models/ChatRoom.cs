@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 namespace ChatJs.Model.Models
 {
-    public partial class ChatRoom
+    public class ChatRoom
     {
         public ChatRoom()
         {

@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,8 +8,6 @@ using ChatJs.Model;
 using ChatJs.Model.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
-
-#endregion
 
 namespace ChatJs.Admin.Code.SignalR
 {
@@ -23,12 +19,14 @@ namespace ChatJs.Admin.Code.SignalR
             this.UserManager = new ChatJsUserManager(new ChatJsUserStore(this.Db));
         }
 
-        public ChatJsUserManager UserManager { get; set; }
+        private ChatJsUserManager UserManager { get; set; }
 
-        public ChatjsContext Db { get; set; }
+        private ChatjsContext Db { get; set; }
+
+        #region IChatHub implementation
 
         /// <summary>
-        ///     Returns the message history
+        /// Returns the message history
         /// </summary>
         public List<ChatMessageInfo> GetMessageHistory(int? roomId, int? conversationId, int? otherUserId)
         {
@@ -40,9 +38,13 @@ namespace ChatJs.Admin.Code.SignalR
             else if (conversationId.HasValue)
                 messages = this.Db.ChatMessages.Where(m => m.ConversationId == conversationId.Value);
             else if (otherUserId.HasValue)
-                messages = this.Db.ChatMessages.Where(m => (m.UserTo.Id == myUserId && m.UserFromId == otherUserId) || (m.UserTo.Id == otherUserId && m.UserFromId == myUserId));
+                messages =
+                    this.Db.ChatMessages.Where(
+                        m =>
+                            (m.UserTo.Id == myUserId && m.UserFromId == otherUserId) ||
+                            (m.UserTo.Id == otherUserId && m.UserFromId == myUserId));
 
-            if(messages == null)
+            if (messages == null)
                 throw new Exception("Could not get messages");
 
             var messagesList = messages.OrderByDescending(m => m.DateTime).Take(30).ToList();
@@ -74,7 +76,6 @@ namespace ChatJs.Admin.Code.SignalR
             throw new NotImplementedException("Conversations are not supported yet");
         }
 
-        #region IChatHub
 
         /// <summary>
         ///     Sends a message to a particular user
@@ -118,7 +119,7 @@ namespace ChatJs.Admin.Code.SignalR
                     RoomId = roomId,
                     ConversationId = conversationId,
                     UserToId = userToId,
-                    UserFrom = GetUserInfo(myUserId)
+                    UserFrom = this.GetUserInfo(myUserId)
                 });
         }
 
@@ -126,7 +127,7 @@ namespace ChatJs.Admin.Code.SignalR
         {
             var myUserId = this.GetMyUserId();
             ChatHubCache.AddUserToRoom(myUserId, roomId);
-            this.BroadcastUserList(roomId, new[] { myUserId });
+            this.BroadcastUserList(roomId, new[] {myUserId});
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace ChatJs.Admin.Code.SignalR
             var roomsId = new int[0];
             if (disconnectedUserId.HasValue)
             {
-                if (!ChatHubCache.GetUsersConnections(new[] { disconnectedUserId.Value }).Any())
+                if (!ChatHubCache.GetUsersConnections(new[] {disconnectedUserId.Value}).Any())
                 {
                     // in this case, the user DID NOT connect back after the disconnect.
                     // This user now should be removed from all rooms and conversations he/she is in
@@ -176,7 +177,7 @@ namespace ChatJs.Admin.Code.SignalR
                     Task.Run(() =>
                     {
                         Thread.Sleep(2000);
-                        if (!ChatHubCache.GetUsersConnections(new[] { disconnectedUserId.Value }).Any())
+                        if (!ChatHubCache.GetUsersConnections(new[] {disconnectedUserId.Value}).Any())
                         {
                             foreach (var roomId in roomsId)
                                 this.BroadcastUserList(roomId);
@@ -187,8 +188,6 @@ namespace ChatJs.Admin.Code.SignalR
             return base.OnDisconnected();
         }
 
-        #endregion
-
         /// <summary>
         ///     If the specified user is connected, return information about the user
         /// </summary>
@@ -197,6 +196,8 @@ namespace ChatJs.Admin.Code.SignalR
             var user = this.UserManager.FindById(id);
             return user == null ? null : this.GetUserInfo(user, ChatUserInfo.StatusType.Online);
         }
+
+        #endregion
 
         private ChatUserInfo GetUserInfo(User user, ChatUserInfo.StatusType status)
         {
@@ -257,7 +258,7 @@ namespace ChatJs.Admin.Code.SignalR
             var connectionsToNotify = ChatHubCache.GetRoomConnections(roomId, exceptUsers);
             var usersInRoom = this.GetUserList(roomId, null);
             foreach (var connectionId in connectionsToNotify)
-                this.Clients.Client(connectionId).userListChanged(new ChatUserListChangedInfo()
+                this.Clients.Client(connectionId).userListChanged(new ChatUserListChangedInfo
                 {
                     RoomId = roomId,
                     ConversationId = null,

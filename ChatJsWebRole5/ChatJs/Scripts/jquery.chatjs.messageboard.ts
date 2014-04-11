@@ -33,7 +33,7 @@ class MessageBoard {
         var defaultOptions = new MessageBoardOptions();
         defaultOptions.typingText = " is typing...";
         defaultOptions.playSound = true;
-        defaultOptions.newMessage = (message: ChatMessageInfo) => { };
+        defaultOptions.newMessage = (message: ChatMessageInfo) => {};
 
         this.options = $.extend({}, defaultOptions, options);
 
@@ -186,10 +186,12 @@ class MessageBoard {
     }
 
     addMessage(message: ChatMessageInfo, clientGuid?: string, scroll?: boolean) {
-        /// <summary>Adds a message to the board. This method is called both when the current user or the other user is sending a message</summary>
+        /// <summary>
+        ///     Adds a message to the board. This method is called both when the current user or the other user is sending a
+        ///     message
+        /// </summary>
         /// <param name="message" type="Object">Message</param>
         /// <param name="clientGuid" type="String">Message client guid</param>
-
         if (scroll == undefined)
             scroll = true;
 
@@ -268,8 +270,7 @@ class MessageBoard {
             if ($lastMessage.length && $lastMessage.attr("data-val-user-from") == message.UserFromId.toString()) {
                 // we can just append text then
                 $messageP.appendTo($(".chat-text-wrapper", $lastMessage));
-            }
-            else {
+            } else {
                 // in this case we need to create a whole new message
                 var $chatMessage = $("<div/>").addClass("chat-message").attr("data-val-user-from", message.UserFromId);
                 $chatMessage.appendTo(this.$messagesWrapper);
@@ -301,9 +302,9 @@ class MessageBoard {
     sendTypingSignalTimeout: number;
 }
 
-$.fn.messageBoard = function (options: MessageBoardOptions) {
+$.fn.messageBoard = function(options: MessageBoardOptions) {
     if (this.length) {
-        this.each(function () {
+        this.each(function() {
             var data = new MessageBoard($(this), options);
             $(this).data('messageBoard', data);
         });

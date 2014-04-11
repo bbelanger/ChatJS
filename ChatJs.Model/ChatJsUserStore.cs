@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChatJs.Model.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 #endregion
 
@@ -42,18 +41,6 @@ namespace ChatJs.Model
             return task;
         }
 
-        public Task<string> GetSecurityStampAsync(User user)
-        {
-            var task = this._defaultUserStore.GetSecurityStampAsync(user);
-            return task;
-        }
-
-        public Task SetSecurityStampAsync(User user, string stamp)
-        {
-            var task = this._defaultUserStore.SetSecurityStampAsync(user, stamp);
-            return task;
-        }
-
         public Task CreateAsync(User user)
         {
             this._dbContext.Users.Add(user);
@@ -67,7 +54,7 @@ namespace ChatJs.Model
             this._dbContext.Configuration.ValidateOnSaveEnabled = false;
             return this._dbContext.SaveChangesAsync();
         }
-        
+
         public Task<User> FindByIdAsync(int userId)
         {
             return this._dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
@@ -91,6 +78,18 @@ namespace ChatJs.Model
         public void Dispose()
         {
             this._defaultUserStore.Dispose();
+        }
+
+        public Task<string> GetSecurityStampAsync(User user)
+        {
+            var task = this._defaultUserStore.GetSecurityStampAsync(user);
+            return task;
+        }
+
+        public Task SetSecurityStampAsync(User user, string stamp)
+        {
+            var task = this._defaultUserStore.SetSecurityStampAsync(user, stamp);
+            return task;
         }
     }
 }

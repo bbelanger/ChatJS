@@ -28,7 +28,7 @@ namespace ChatJs.Admin.Controllers
             }
             else
                 viewModel = new RoomViewModel();
-            
+
             return this.View(viewModel);
         }
 
@@ -70,6 +70,5 @@ namespace ChatJs.Admin.Controllers
 
             return this.View(viewModel);
         }
-
     }
 }
