@@ -57,6 +57,8 @@ namespace ChatJs.Admin.Code.SignalR
         {
             var myUserId = this.GetMyUserId();
             ChatHubCache.RemoveUserFromRoom(myUserId, roomId);
+            this.BroadcastUserList(roomId, new[] { myUserId });
+            this.BroadcastRoomList();
         }
 
         /// <summary>
@@ -128,6 +130,7 @@ namespace ChatJs.Admin.Code.SignalR
             var myUserId = this.GetMyUserId();
             ChatHubCache.AddUserToRoom(myUserId, roomId);
             this.BroadcastUserList(roomId, new[] {myUserId});
+            this.BroadcastRoomList();
         }
 
         /// <summary>
@@ -181,6 +184,7 @@ namespace ChatJs.Admin.Code.SignalR
                         {
                             foreach (var roomId in roomsId)
                                 this.BroadcastUserList(roomId);
+                            this.BroadcastRoomList();
                         }
                     });
             }
@@ -234,7 +238,7 @@ namespace ChatJs.Admin.Code.SignalR
             {
                 Id = chatRoom.Id,
                 Name = chatRoom.Name,
-                UsersOnline = 0
+                UsersOnline = ChatHubCache.GetRoomUsers(chatRoom.Id).Count()
             };
         }
 
@@ -264,6 +268,21 @@ namespace ChatJs.Admin.Code.SignalR
                     ConversationId = null,
                     UserList = usersInRoom
                 });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void BroadcastRoomList()
+        {
+            var connectionsToNotify = ChatHubCache.GetAllConnections();
+            foreach (var connectionId in connectionsToNotify)
+            {
+                this.Clients.Client(connectionId).roomListChanged(new ChatRoomListChangedInfo
+                {
+                    Rooms = this.GetRoomsList()
+                });
+            }
         }
     }
 }

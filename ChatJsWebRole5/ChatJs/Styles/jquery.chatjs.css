@@ -21,7 +21,10 @@
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
-    background-color: #FFFFFF;
+    background-color: white;
+    background-image: url("/chatjs/images/users.png");
+    background-position: 8px center;
+    background-repeat: no-repeat;
     border-color: rgba(0, 0, 0, 0.3);
     border-image: none;
     border-style: solid;
@@ -34,6 +37,12 @@
     position: fixed;
     width: 40px;
     z-index: 10001;
+}
+
+.chat-window-tray.minimized {
+    background-color: #EEEEEE;
+    border-width: 1px 1px 0;
+    height: 29px;
 }
 
 .chat-window {
@@ -120,7 +129,15 @@ textarea.chat-window-text-box {
     width: 100%;
 }
 
-.user-list-item {
+.user-list {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.user-list .user-list-item {
     background-position: 2px center;
     background-repeat: no-repeat;
     cursor: pointer;
@@ -128,14 +145,14 @@ textarea.chat-window-text-box {
     overflow: hidden;
 }
 
-.user-list-item .profile-picture {
+.user-list .user-list-item .profile-picture {
     display: block;
     float: left;
     height: 22px;
     width: 22px;
 }
 
-.user-list-item .profile-status {
+.user-list .user-list-item .profile-status {
     display: block;
     float: right;
     height: 7px;
@@ -143,29 +160,40 @@ textarea.chat-window-text-box {
     width: 7px;
 }
 
-.user-list-item .profile-status.online {
+.user-list .user-list-item .profile-status.online {
     background-image: url("/ChatJs/images/chat-online.png");
     background-repeat: no-repeat;
 }
 
-.user-list-item .profile-status.offline {
+.user-list .user-list-item .profile-status.offline {
     background-image: url("/ChatJs/images/chat-offline.png");
     background-repeat: no-repeat;
 }
 
-.user-list-item .content { margin: 4px 22px 0 30px; }
+.user-list .user-list-item .content { margin: 4px 22px 0 30px; }
 
-.user-list-item.offline { background-image: url("/ChatJs/images/chat-offline.png"); }
+.user-list .user-list-item.offline { background-image: url("/ChatJs/images/chat-offline.png"); }
 
-.user-list-item.online { background-image: url("/ChatJs/images/chat-online.png"); }
+.user-list .user-list-item.online { background-image: url("/ChatJs/images/chat-online.png"); }
 
-.user-list-empty {
+.user-list .user-list-empty {
     background-position: 2px center;
     background-repeat: no-repeat;
     padding: 10px;
 }
 
-.chat-window-text-box-wrapper { padding: 2px; }
+.message-board .chat-window-text-box-wrapper {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    padding: 2px;
+}
+.message-board .chat-window-text-box-wrapper .chat-window-text-box {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    height: 16px;
+}
 
 .chat-message {
     margin: 0 5px;
@@ -264,25 +292,21 @@ ul.horizontal-tab {
     padding: 0 8px;
 }
 
-ul.horizontal-tab li .text {
-    
-}
+ul.horizontal-tab li .text { }
 
 ul.horizontal-tab li .close {
-    display: none;
     background-image: url("/ChatJs/Images/clear.png");
+    display: none;
     float: right;
     height: 16px;
-    opacity: 0.7;
-    width: 16px;
     margin-left: 2px;
     margin-right: -4px;
     margin-top: -1px;
+    opacity: 0.7;
+    width: 16px;
 }
 
-ul.horizontal-tab li.selected .close {
-    display: inline;
-}
+ul.horizontal-tab li.selected .close { display: inline; }
 
 ul.horizontal-tab .event-mark {
     background-color: #C63636;
@@ -301,6 +325,10 @@ ul.horizontal-tab li {
     margin: 0 6px;
     position: relative;
     top: 1px;
+}
+
+.tab-content .rooms-list {
+    overflow-y: auto;
 }
 
 ul.horizontal-tab li.selected {
@@ -340,26 +368,34 @@ ul.horizontal-tab li.selected {
 .tab-content .left-panel {
     border-right: 1px solid #E8E8E8;
     margin-right: 162px;
-    min-height: 200px;
 }
 
-.tab-content .left-panel .messages-wrapper {
+.message-board .messages-wrapper {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
     overflow-x: hidden;
-    overflow-y: auto;
-}
-
-.messages-wrapper {
     overflow-y: auto;
     padding: 2px 0;
 }
 
-.messages-wrapper .profile-picture {
+.message-board .messages-wrapper .profile-picture {
     height: 22px;
     width: 22px;
 }
 
 .tab-content .right-panel {
     float: right;
-    height: 20px;
     width: 160px;
+}
+
+.message-board {
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    overflow: hidden;
+}
+
+.message-board.pm-window {
+    margin-bottom: 3px;
 }

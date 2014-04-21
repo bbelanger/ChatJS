@@ -7,22 +7,18 @@ class MessageBoardOptions {
 
     // current user id
     userId: number;
-
     // in case this is a PM board, this is the other user id
     otherUserId: number;
-
     // in case this is a room board, this is the room id
     roomId: number;
-
     // in case this is a conversation board, this is the conversation id
     conversationId: number;
-
     // text displayed while the other user is typing
     typingText: string;
-
     // whether to play sound when message arrives
     playSound: boolean;
 
+    height: number;
     newMessage: (message: ChatMessageInfo) => void;
 }
 
@@ -33,21 +29,30 @@ class MessageBoard {
         var defaultOptions = new MessageBoardOptions();
         defaultOptions.typingText = " is typing...";
         defaultOptions.playSound = true;
+        defaultOptions.height = 100;
         defaultOptions.newMessage = (message: ChatMessageInfo) => {};
 
         this.options = $.extend({}, defaultOptions, options);
+
+        this.$el.addClass("message-board");
+
+        ChatJsUtils.setOuterHeight(this.$el, this.options.height);
 
         this.$messagesWrapper = $("<div/>").addClass("messages-wrapper").appendTo(this.$el);
 
         // sets up the text
         var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(this.$el);
+
         this.$textBox = $("<textarea />").attr("rows", "1").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+
         this.$textBox.autosize({
             callback: ta => {
-                var messagesHeight = 231 - $(ta).outerHeight();
-                this.$messagesWrapper.height(messagesHeight);
+                var messagesHeight = this.options.height - $(ta).outerHeight() - 2;
+                ChatJsUtils.setOuterHeight(this.$messagesWrapper, messagesHeight);
             }
         });
+
+        this.$textBox.val(this.$textBox.val());
 
         this.options.adapter.client.onTypingSignalReceived((typingSignal: ChatTypingSignalInfo) => {
 

@@ -2,6 +2,7 @@
     sendMessage: (message: ChatMessageInfo) => void;
     sendTypingSignal: (typingSignal: ChatTypingSignalInfo) => void;
     userListChanged: (userListChangedInfo: ChatUserListChangedInfo) => void
+    roomListChanged: (roomListChangedInfo: ChatRoomListChangedInfo) => void
 }
 
 interface IChatJsHubProxyServer {
@@ -100,6 +101,7 @@ class SignalRClientAdapter implements IClientAdapter {
         this.messagesChangedHandlers = [];
         this.typingSignalReceivedHandlers = [];
         this.userListChangedHandlers = [];
+        this.roomListChangedHandlers = [];
         this.hubClient = chatHubClient;
 
         this.hubClient.sendMessage = (message: ChatMessageInfo) => {
@@ -115,6 +117,11 @@ class SignalRClientAdapter implements IClientAdapter {
         this.hubClient.userListChanged = (userListChangedInfo: ChatUserListChangedInfo) => {
             for (var i = 0; i < this.userListChangedHandlers.length; i++)
                 this.userListChangedHandlers[i](userListChangedInfo);
+        };
+
+        this.hubClient.roomListChanged = (roomListChangedInfo: ChatRoomListChangedInfo) => {
+            for (var i = 0; i < this.roomListChangedHandlers.length; i++)
+                this.roomListChangedHandlers[i](roomListChangedInfo);
         };
     }
 
@@ -133,10 +140,16 @@ class SignalRClientAdapter implements IClientAdapter {
         this.userListChangedHandlers.push(handler);
     }
 
+    onRoomListChanged(handler: (roomListData: ChatRoomListChangedInfo) => void): void {
+        this.roomListChangedHandlers.push(handler);
+    }
+
     messagesChangedHandlers: Array<(message: ChatMessageInfo) => void>;
     typingSignalReceivedHandlers: Array<(typingSignal: ChatTypingSignalInfo) => void>;
     userListChangedHandlers: Array<(userListData: ChatUserListChangedInfo) => void>;
+    roomListChangedHandlers: Array<(roomListData: ChatRoomListChangedInfo) => void>;
     hubClient: IChatJsHubProxyClient;
+    
 }
 
 class SignalRAdapterOptions {

@@ -98,6 +98,10 @@ var HorizontalTabs = (function () {
 
     // returns the current tab, if any. Undefined if there's no tabs
     HorizontalTabs.prototype.hasTab = function (tabId) {
+        return !!this.tabs[tabId];
+    };
+
+    HorizontalTabs.prototype.getTab = function (tabId) {
         return this.tabs[tabId];
     };
 

@@ -12,22 +12,31 @@ var MessageBoard = (function () {
         var defaultOptions = new MessageBoardOptions();
         defaultOptions.typingText = " is typing...";
         defaultOptions.playSound = true;
+        defaultOptions.height = 100;
         defaultOptions.newMessage = function (message) {
         };
 
         this.options = $.extend({}, defaultOptions, options);
 
+        this.$el.addClass("message-board");
+
+        ChatJsUtils.setOuterHeight(this.$el, this.options.height);
+
         this.$messagesWrapper = $("<div/>").addClass("messages-wrapper").appendTo(this.$el);
 
         // sets up the text
         var $windowTextBoxWrapper = $("<div/>").addClass("chat-window-text-box-wrapper").appendTo(this.$el);
+
         this.$textBox = $("<textarea />").attr("rows", "1").addClass("chat-window-text-box").appendTo($windowTextBoxWrapper);
+
         this.$textBox.autosize({
             callback: function (ta) {
-                var messagesHeight = 231 - $(ta).outerHeight();
-                _this.$messagesWrapper.height(messagesHeight);
+                var messagesHeight = _this.options.height - $(ta).outerHeight() - 2;
+                ChatJsUtils.setOuterHeight(_this.$messagesWrapper, messagesHeight);
             }
         });
+
+        this.$textBox.val(this.$textBox.val());
 
         this.options.adapter.client.onTypingSignalReceived(function (typingSignal) {
             var shouldProcessTypingSignal = false;

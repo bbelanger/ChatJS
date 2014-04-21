@@ -7,6 +7,7 @@ class UserListOptions {
     conversationId: number;
     roomId: number;
     emptyListText: string;
+    height: number;
     userClicked: (userId: number) => void;
 }
 
@@ -16,9 +17,14 @@ class UserList {
 
         var defaultOptions = new UserListOptions();
         defaultOptions.emptyListText = "No users";
-        defaultOptions.userClicked = (userId: number) => {};
+        defaultOptions.height = 100;
+        defaultOptions.userClicked = () => {};
 
         this.options = $.extend({}, defaultOptions, options);
+
+        this.$el.addClass("user-list");
+
+        ChatJsUtils.setOuterHeight(this.$el, this.options.height);
 
         // when the user list changed, this list must be updated
         this.options.adapter.client.onUserListChanged((userListData: ChatUserListChangedInfo) => {

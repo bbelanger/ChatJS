@@ -66,6 +66,9 @@ class ChatController {
 
         // getting the adapter started. You cannot call the adapter BEFORE this is done.
         this.options.adapter.init(() => {
+
+            var state = this.getState();
+
             // the controller must have a listener to the "messages-changed" event because it has to create
             // new PM windows when the user receives it
             this.options.adapter.client.onMessagesChanged((message: ChatMessageInfo) => {
@@ -78,7 +81,8 @@ class ChatController {
             chatRoomOptions.adapter = this.options.adapter;
             chatRoomOptions.userId = this.options.userId;
             chatRoomOptions.offsetRight = this.options.offsetRight;
-            chatRoomOptions.stateChanged = () => {
+            chatRoomOptions.isMaximized = state ? state.rooms.isMaximized : true;
+            chatRoomOptions.onStateChanged = () => {
                 this.saveState();
             }
             chatRoomOptions.userClicked = userId => {
@@ -91,9 +95,11 @@ class ChatController {
                         this.createPmWindow(userId, true, true);
                 }
             };
+
+
             this.chatRooms = $.chatRooms(chatRoomOptions);
 
-            this.loadState();
+            this.loadState(state);
         });
 
         // for debugging only
@@ -118,6 +124,7 @@ class ChatController {
                 if (this.pmWindows[i].otherUserId == otherUserId) {
                     this.pmWindows.splice(i, 1);
                     this.saveState();
+                    this.organizePmWindows();
                     break;
                 }
         };
@@ -137,7 +144,7 @@ class ChatController {
     }
 
     // saves the windows states
-    saveState(): void {
+    saveState(): ChatJsState {
         var state = new ChatJsState();
         // persist pm windows state
         for (var i = 0; i < this.pmWindows.length; i++) {
@@ -159,23 +166,29 @@ class ChatController {
         default:
             throw "Invalid persistence mode. Available modes are: cookie and server";
         }
+        return state;
+    }
+
+    getState(): ChatJsState {
+        var state: ChatJsState;
+        switch (this.options.persistenceMode) {
+            case "cookie":
+                state = this.readCookie(this.options.persistenceCookieName);
+                break;
+            case "server":
+                throw "Server persistence is not supported yet";
+            default:
+                throw "Invalid persistence mode. Available modes are: cookie and server";
+        }
+        return state;
     }
 
     // loads the windows states
-    loadState() {
-        var state: ChatJsState;
+    loadState(state: ChatJsState = null) {
 
-        switch (this.options.persistenceMode) {
-        case "cookie":
-            state = this.readCookie(this.options.persistenceCookieName);
-            break;
-        case "server":
-            throw "Server persistence is not supported yet";
-        default:
-            throw "Invalid persistence mode. Available modes are: cookie and server";
-        }
-
-        // if there's no state, there's nothing to load
+        // if a state hasn't been passed in, gets the state. If it continues to be null/undefined, then there's nothing to be done.
+        if (!state)
+            state = this.getState();
         if (!state)
             return;
 
@@ -196,6 +209,7 @@ class ChatController {
             if (shouldCreatePmWindow)
                 this.createPmWindow(state.pmWindows[i].otherUserId, state.pmWindows[i].isMaximized, false);
         }
+
         this.chatRooms.setState(state.rooms);
     }
 

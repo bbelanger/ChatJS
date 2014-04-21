@@ -36,8 +36,10 @@ class ChatPmWindow {
                 var messageBoardOptions = new MessageBoardOptions();
                 messageBoardOptions.adapter = this.options.adapter;
                 messageBoardOptions.userId = this.options.userId;
+                messageBoardOptions.height = 235;
                 messageBoardOptions.otherUserId = this.options.otherUserId;
                 window.$windowInnerContent.messageBoard(messageBoardOptions);
+                window.$windowInnerContent.addClass("pm-window");
             };
             chatWindowOptions.onClose = () => {
                 this.options.onClose(this);

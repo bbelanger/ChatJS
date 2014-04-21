@@ -43,6 +43,8 @@ var ChatController = (function () {
 
         // getting the adapter started. You cannot call the adapter BEFORE this is done.
         this.options.adapter.init(function () {
+            var state = _this.getState();
+
             // the controller must have a listener to the "messages-changed" event because it has to create
             // new PM windows when the user receives it
             _this.options.adapter.client.onMessagesChanged(function (message) {
@@ -55,7 +57,8 @@ var ChatController = (function () {
             chatRoomOptions.adapter = _this.options.adapter;
             chatRoomOptions.userId = _this.options.userId;
             chatRoomOptions.offsetRight = _this.options.offsetRight;
-            chatRoomOptions.stateChanged = function () {
+            chatRoomOptions.isMaximized = state ? state.rooms.isMaximized : true;
+            chatRoomOptions.onStateChanged = function () {
                 _this.saveState();
             };
             chatRoomOptions.userClicked = function (userId) {
@@ -68,9 +71,10 @@ var ChatController = (function () {
                         _this.createPmWindow(userId, true, true);
                 }
             };
+
             _this.chatRooms = $.chatRooms(chatRoomOptions);
 
-            _this.loadState();
+            _this.loadState(state);
         });
 
         // for debugging only
@@ -95,6 +99,7 @@ var ChatController = (function () {
                 if (_this.pmWindows[i].otherUserId == otherUserId) {
                     _this.pmWindows.splice(i, 1);
                     _this.saveState();
+                    _this.organizePmWindows();
                     break;
                 }
         };
@@ -137,12 +142,11 @@ var ChatController = (function () {
             default:
                 throw "Invalid persistence mode. Available modes are: cookie and server";
         }
+        return state;
     };
 
-    // loads the windows states
-    ChatController.prototype.loadState = function () {
+    ChatController.prototype.getState = function () {
         var state;
-
         switch (this.options.persistenceMode) {
             case "cookie":
                 state = this.readCookie(this.options.persistenceCookieName);
@@ -152,8 +156,15 @@ var ChatController = (function () {
             default:
                 throw "Invalid persistence mode. Available modes are: cookie and server";
         }
+        return state;
+    };
 
-        // if there's no state, there's nothing to load
+    // loads the windows states
+    ChatController.prototype.loadState = function (state) {
+        if (typeof state === "undefined") { state = null; }
+        // if a state hasn't been passed in, gets the state. If it continues to be null/undefined, then there's nothing to be done.
+        if (!state)
+            state = this.getState();
         if (!state)
             return;
 
@@ -173,6 +184,7 @@ var ChatController = (function () {
             if (shouldCreatePmWindow)
                 this.createPmWindow(state.pmWindows[i].otherUserId, state.pmWindows[i].isMaximized, false);
         }
+
         this.chatRooms.setState(state.rooms);
     };
 

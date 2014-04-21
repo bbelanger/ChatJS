@@ -18,11 +18,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav pull-right">
                     <li class="active"><a href="#"><i class="fa fa-tachometer"></i>Dashboard</a></li>
-                    <li><a href="#"><i class="fa fa-folder-o"></i>Rooms</a></li>
-                    <li><a href="#"><i class="fa fa-user"></i>Users</a></li>
                     @if (currentUser != null)
                     {
-                        <li><a href="#"><img class="user-icon" src="@currentUser.ProfilePictureUrl" alt="@currentUser.EMail" />@currentUser.DisplayName</a></li>
+                        <li><a><img class="user-icon" src="@currentUser.ProfilePictureUrl" alt="@currentUser.EMail" />@currentUser.DisplayName</a></li>
                     }
 
                 </ul>

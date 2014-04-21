@@ -8,9 +8,11 @@ class ChatRoomsOptions {
     noRoomsText: string;
     userClicked: (userId: number) => void;
     // called whenever the rooms state changed (e.g, user entered a different room or focused a different room)
-    stateChanged: () => void;
+    onStateChanged: () => void;
     userId: number;
     offsetRight: number;
+    contentHeight: number;
+    isMaximized: boolean;
 }
 
 // represents the current state of the ChatRooms.
@@ -30,8 +32,10 @@ class ChatRooms {
         defaultOptions.titleText = "Rooms";
         defaultOptions.noRoomsText = "There's no rooms";
         defaultOptions.userClicked = () => {};
-        defaultOptions.stateChanged = () => {};
+        defaultOptions.onStateChanged = () => {};
         defaultOptions.offsetRight = 10;
+        defaultOptions.contentHeight = 235;
+        defaultOptions.isMaximized = true;
 
         this.options = $.extend({}, defaultOptions, options);
 
@@ -41,63 +45,86 @@ class ChatRooms {
         chatWindowOptions.canExpand = true;
         chatWindowOptions.width = 400;
         chatWindowOptions.height = 300;
+        chatWindowOptions.isMaximized = this.options.isMaximized;
+        chatWindowOptions.onMaximizedStateChanged = () => {
+            this.options.onStateChanged();
+        };
+
+        // function to build the available rooms content
+        var availableRoomsTabBuilder = (roomList: Array<ChatRoomInfo>, $content) => {
+            $content.html('');
+            var $roomListWrapper = $("<div/>").addClass("rooms-list").appendTo($content);
+            ChatJsUtils.setOuterHeight($roomListWrapper, this.options.contentHeight);
+            if (roomList.length == 0) {
+                $("<div/>").addClass("user-list-empty").text(this.options.noRoomsText).appendTo($roomListWrapper);
+            } else {
+                for (var i = 0; i < roomList.length; i++) {
+                    var $roomListItem = $("<div/>")
+                        .addClass("rooms-list-item")
+                        .attr("data-val-id", roomList[i].Id)
+                        .appendTo($roomListWrapper);
+
+                    $roomListItem.hover(function() {
+                        $(this).addClass("hover");
+                    }, function() {
+                        $(this).removeClass("hover");
+                    });
+
+                    $("<span/>")
+                        .addClass("room-name")
+                        .text(roomList[i].Name)
+                        .appendTo($roomListItem);
+
+                    $("<span/>")
+                        .addClass("users-online")
+                        .text(roomList[i].UsersOnline + " online")
+                        .appendTo($roomListItem);
+
+                    $roomListItem.hover(function() {
+                        $(this).addClass("hover");
+                    }, function() {
+                        $(this).removeClass("hover");
+                    });
+
+                    (roomIndex => {
+                        $roomListItem.click(() => {
+                            if (this.tabs.hasTab(roomList[roomIndex].Id))
+                                this.tabs.focusTab(roomList[roomIndex].Id);
+                            else
+                                this.enterRoom(roomList[roomIndex].Id, roomList[roomIndex].Name);
+                            this.options.onStateChanged();
+                        });
+                    })(i);
+
+                }
+            }
+        };
+
         chatWindowOptions.onCreated = window => {
             var $ul = $("<ul/>").appendTo(window.$windowInnerContent);
-            this.tabs = $ul.horizontalTabs().data("horizontalTabs");
+
+            var horizontalTabOptions = new HorizontalTabsOptions();
+            horizontalTabOptions.onTabClosed = (id: number) => {
+                this.options.adapter.server.leaveRoom(id, () => {});
+            }
+
+            this.tabs = $ul.horizontalTabs(horizontalTabOptions).data("horizontalTabs");
 
             // adds the available rooms tab
             this.tabs.addTab(0, "Available rooms", true, false, ($content) => {
-                this.options.adapter.server.getRoomsList((roomsList) => {
-                    $content.html('');
-                    if (roomsList.length == 0) {
-                        $("<div/>").addClass("user-list-empty").text(this.options.noRoomsText).appendTo($content);
-                    } else {
-                        for (var i = 0; i < roomsList.length; i++) {
-                            var $roomListItem = $("<div/>")
-                                .addClass("rooms-list-item")
-                                .attr("data-val-id", roomsList[i].Id)
-                                .appendTo($content);
-
-                            $roomListItem.hover(function() {
-                                $(this).addClass("hover");
-                            }, function() {
-                                $(this).removeClass("hover");
-                            });
-
-                            $("<span/>")
-                                .addClass("room-name")
-                                .text(roomsList[i].Name)
-                                .appendTo($roomListItem);
-
-                            $("<span/>")
-                                .addClass("users-online")
-                                .text(roomsList[i].UsersOnline + " online")
-                                .appendTo($roomListItem);
-
-                            $roomListItem.hover(function() {
-                                $(this).addClass("hover");
-                            }, function() {
-                                $(this).removeClass("hover");
-                            });
-
-                            (roomIndex => {
-                                $roomListItem.click(() => {
-                                    if (this.tabs.hasTab(roomsList[roomIndex].Id))
-                                        this.tabs.focusTab(roomsList[roomIndex].Id);
-                                    else
-                                        this.enterRoom(roomsList[roomIndex].Id, roomsList[roomIndex].Name);
-                                    this.options.stateChanged();
-                                });
-                            })(i);
-
-                        }
-                    }
+                this.options.adapter.server.getRoomsList((roomList: Array<ChatRoomInfo>) => {
+                    availableRoomsTabBuilder(roomList, $content);
                 });
             }, () => {
-                this.options.stateChanged();
+                this.options.onStateChanged();
             }, true, false);
         };
 
+        // when the rooms change, the available rooms must be updated
+        this.options.adapter.client.onRoomListChanged((roomList: ChatRoomListChangedInfo) => {
+            var availableRoomsTab = this.tabs.getTab(0);
+            availableRoomsTabBuilder(roomList.Rooms, availableRoomsTab.$content);
+        });
 
         // will create user list chat container
         this.chatWindow = $.chatWindow(chatWindowOptions);
@@ -117,6 +144,7 @@ class ChatRooms {
             var messageBoardOptions = new MessageBoardOptions();
             messageBoardOptions.adapter = this.options.adapter;
             messageBoardOptions.userId = this.options.userId;
+            messageBoardOptions.height = this.options.contentHeight;
             messageBoardOptions.roomId = roomId;
 
             messageBoardOptions.newMessage = (message) => {
@@ -132,6 +160,7 @@ class ChatRooms {
                 var userListOptions = new UserListOptions();
                 userListOptions.adapter = this.options.adapter;
                 userListOptions.roomId = roomId;
+                userListOptions.height = this.options.contentHeight;
                 userListOptions.userClicked = this.options.userClicked;
 
                 $users.userList(userListOptions);
@@ -145,14 +174,14 @@ class ChatRooms {
             var focusedTabId = this.tabs.getFucusedTabId();
             if (focusedTabId)
                 this.tabs.clearEventMarks(focusedTabId);
-            this.options.stateChanged();
+            this.options.onStateChanged();
         }, saveState, saveState);
     }
 
     // returns the current Rooms state
     getState(): ChatRoomsState {
         var state = new ChatRoomsState();
-        state.isMaximized = true; // TODO: fix it
+        state.isMaximized = this.chatWindow.isMaximized();
         state.activeRoom = this.tabs.getFucusedTabId();
         state.openedRooms = this.tabs.getTabIds();
         return state;
@@ -161,7 +190,6 @@ class ChatRooms {
     // loads the given state
     setState(state: ChatRoomsState) {
         this.options.adapter.server.getRoomsList((roomsList: ChatRoomInfo[]) => {
-
             // for each of the rooms in the given state, we're gonna see if there's actually the given room in the server.
             // if such room exists and it's not opened already, we're gonna enter it.
             for (var i = 0; i < state.openedRooms.length; i++)
@@ -177,7 +205,8 @@ class ChatRooms {
             // focus the room as stated in the state
             this.tabs.focusTab(state.activeRoom, false);
 
-            //TODO: take the isMaximized into account
+            // sets the maximized state
+            this.chatWindow.setMaximized(state.isMaximized);
         });
     }
 

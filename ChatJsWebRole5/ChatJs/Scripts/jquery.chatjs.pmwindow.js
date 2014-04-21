@@ -27,8 +27,10 @@ var ChatPmWindow = (function () {
                 var messageBoardOptions = new MessageBoardOptions();
                 messageBoardOptions.adapter = _this.options.adapter;
                 messageBoardOptions.userId = _this.options.userId;
+                messageBoardOptions.height = 235;
                 messageBoardOptions.otherUserId = _this.options.otherUserId;
                 window.$windowInnerContent.messageBoard(messageBoardOptions);
+                window.$windowInnerContent.addClass("pm-window");
             };
             chatWindowOptions.onClose = function () {
                 _this.options.onClose(_this);

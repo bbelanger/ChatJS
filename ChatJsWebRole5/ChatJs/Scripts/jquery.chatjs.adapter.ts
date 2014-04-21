@@ -34,6 +34,9 @@ interface IClientAdapter {
 
     // called by the server when the user list changed
     onUserListChanged(handler: (userListData: ChatUserListChangedInfo) => void): void;
+
+    // called by the server when the room list changed
+    onRoomListChanged(handler: (roomListData: ChatRoomListChangedInfo) => void): void;
 }
 
 interface IAdapter {

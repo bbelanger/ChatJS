@@ -104,3 +104,9 @@ class ChatUserListChangedInfo {
     // list of users
     UserList: Array<ChatUserInfo>;
 }
+
+class ChatRoomListChangedInfo {
+
+    // room list
+    Rooms: Array<ChatRoomInfo>;
+}

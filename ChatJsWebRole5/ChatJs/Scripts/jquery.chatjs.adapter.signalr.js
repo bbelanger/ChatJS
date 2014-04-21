@@ -66,6 +66,7 @@ var SignalRClientAdapter = (function () {
         this.messagesChangedHandlers = [];
         this.typingSignalReceivedHandlers = [];
         this.userListChangedHandlers = [];
+        this.roomListChangedHandlers = [];
         this.hubClient = chatHubClient;
 
         this.hubClient.sendMessage = function (message) {
@@ -82,6 +83,11 @@ var SignalRClientAdapter = (function () {
             for (var i = 0; i < _this.userListChangedHandlers.length; i++)
                 _this.userListChangedHandlers[i](userListChangedInfo);
         };
+
+        this.hubClient.roomListChanged = function (roomListChangedInfo) {
+            for (var i = 0; i < _this.roomListChangedHandlers.length; i++)
+                _this.roomListChangedHandlers[i](roomListChangedInfo);
+        };
     }
     // called by the server when a new message has arrived
     SignalRClientAdapter.prototype.onMessagesChanged = function (handler) {
@@ -96,6 +102,10 @@ var SignalRClientAdapter = (function () {
     // called by the server when the user list changed
     SignalRClientAdapter.prototype.onUserListChanged = function (handler) {
         this.userListChangedHandlers.push(handler);
+    };
+
+    SignalRClientAdapter.prototype.onRoomListChanged = function (handler) {
+        this.roomListChangedHandlers.push(handler);
     };
     return SignalRClientAdapter;
 })();

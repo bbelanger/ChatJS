@@ -1,0 +1,2 @@
+:: This will require UglifyJS to be installed. Please visit https://github.com/mishoo/UglifyJS2
+uglifyjs jquery.autosize.js jquery.chatjs.utils.js jquery.chatjs.adapter.servertypes.js jquery.chatjs.adapter.js jquery.chatjs.adapter.signalr.js jquery.chatjs.horizontaltabs.js jquery.chatjs.window.js jquery.chatjs.messageboard.js jquery.chatjs.userlist.js jquery.chatjs.rooms.js jquery.chatjs.pmwindow.js jquery.chatjs.controller.js --output jquery.chatjs-2.0.0.min.js

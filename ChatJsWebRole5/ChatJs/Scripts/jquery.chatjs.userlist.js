@@ -11,10 +11,15 @@ var UserList = (function () {
 
         var defaultOptions = new UserListOptions();
         defaultOptions.emptyListText = "No users";
-        defaultOptions.userClicked = function (userId) {
+        defaultOptions.height = 100;
+        defaultOptions.userClicked = function () {
         };
 
         this.options = $.extend({}, defaultOptions, options);
+
+        this.$el.addClass("user-list");
+
+        ChatJsUtils.setOuterHeight(this.$el, this.options.height);
 
         // when the user list changed, this list must be updated
         this.options.adapter.client.onUserListChanged(function (userListData) {

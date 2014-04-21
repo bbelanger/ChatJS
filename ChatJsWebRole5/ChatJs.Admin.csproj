@@ -208,7 +208,6 @@
     <Content Include="Bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Bootstrap\js\bootstrap.js" />
     <Content Include="Bootstrap\js\bootstrap.min.js" />
-    <Content Include="ChatJs\Images\ajax-loader.gif" />
     <Content Include="ChatJs\Images\chat-offline.png" />
     <Content Include="ChatJs\Images\chat-online.png" />
     <Content Include="ChatJs\Images\clear.png" />
@@ -218,6 +217,7 @@
     <Content Include="ChatJs\Images\Emoticons\smile-4.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-5.png" />
     <Content Include="ChatJs\Images\Emoticons\smile-6.png" />
+    <Content Include="ChatJs\Images\users.png" />
     <Content Include="ChatJs\Scripts\jquery.autosize.js" />
     <Content Include="ChatJs\Scripts\jquery.autosize.min.js" />
     <Content Include="ChatJs\Sounds\chat.mp3" />
@@ -286,6 +286,7 @@
     <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.pmwindow.ts" />
     <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.rooms.ts" />
     <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.userlist.ts" />
+    <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.utils.ts" />
     <TypeScriptCompile Include="ChatJs\Scripts\jquery.chatjs.window.ts" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

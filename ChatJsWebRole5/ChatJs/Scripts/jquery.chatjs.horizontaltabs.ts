@@ -1,5 +1,5 @@
 ﻿interface JQuery {
-    horizontalTabs(): JQuery;
+    horizontalTabs(options: HorizontalTabsOptions): JQuery;
 }
 
 class HorizontalTabsOptions {
@@ -59,7 +59,7 @@ class HorizontalTabs {
         if (selected && focusTab)
             this.focusTab(id, triggerOnFocus);
     }
-
+    
     removeTab(id: number) {
         var $li = $("li[data-val-id=" + id + "]", this.$el);
         this.options.onTabClosed(id);
@@ -93,7 +93,11 @@ class HorizontalTabs {
     }
 
     // returns the current tab, if any. Undefined if there's no tabs
-    hasTab(tabId: number) {
+    hasTab(tabId: number) : boolean {
+        return !!this.tabs[tabId];
+    }
+
+    getTab(tabId: number) : HorizontalTab {
         return this.tabs[tabId];
     }
 

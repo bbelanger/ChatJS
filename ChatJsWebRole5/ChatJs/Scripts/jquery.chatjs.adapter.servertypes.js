@@ -37,4 +37,10 @@ var ChatUserListChangedInfo = (function () {
     }
     return ChatUserListChangedInfo;
 })();
+
+var ChatRoomListChangedInfo = (function () {
+    function ChatRoomListChangedInfo() {
+    }
+    return ChatRoomListChangedInfo;
+})();
 //# sourceMappingURL=jquery.chatjs.adapter.servertypes.js.map

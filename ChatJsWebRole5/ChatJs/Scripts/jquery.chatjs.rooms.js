@@ -19,9 +19,11 @@ var ChatRooms = (function () {
         defaultOptions.noRoomsText = "There's no rooms";
         defaultOptions.userClicked = function () {
         };
-        defaultOptions.stateChanged = function () {
+        defaultOptions.onStateChanged = function () {
         };
         defaultOptions.offsetRight = 10;
+        defaultOptions.contentHeight = 235;
+        defaultOptions.isMaximized = true;
 
         this.options = $.extend({}, defaultOptions, options);
 
@@ -31,52 +33,77 @@ var ChatRooms = (function () {
         chatWindowOptions.canExpand = true;
         chatWindowOptions.width = 400;
         chatWindowOptions.height = 300;
+        chatWindowOptions.isMaximized = this.options.isMaximized;
+        chatWindowOptions.onMaximizedStateChanged = function () {
+            _this.options.onStateChanged();
+        };
+
+        // function to build the available rooms content
+        var availableRoomsTabBuilder = function (roomList, $content) {
+            $content.html('');
+            var $roomListWrapper = $("<div/>").addClass("rooms-list").appendTo($content);
+            ChatJsUtils.setOuterHeight($roomListWrapper, _this.options.contentHeight);
+            if (roomList.length == 0) {
+                $("<div/>").addClass("user-list-empty").text(_this.options.noRoomsText).appendTo($roomListWrapper);
+            } else {
+                for (var i = 0; i < roomList.length; i++) {
+                    var $roomListItem = $("<div/>").addClass("rooms-list-item").attr("data-val-id", roomList[i].Id).appendTo($roomListWrapper);
+
+                    $roomListItem.hover(function () {
+                        $(this).addClass("hover");
+                    }, function () {
+                        $(this).removeClass("hover");
+                    });
+
+                    $("<span/>").addClass("room-name").text(roomList[i].Name).appendTo($roomListItem);
+
+                    $("<span/>").addClass("users-online").text(roomList[i].UsersOnline + " online").appendTo($roomListItem);
+
+                    $roomListItem.hover(function () {
+                        $(this).addClass("hover");
+                    }, function () {
+                        $(this).removeClass("hover");
+                    });
+
+                    (function (roomIndex) {
+                        $roomListItem.click(function () {
+                            if (_this.tabs.hasTab(roomList[roomIndex].Id))
+                                _this.tabs.focusTab(roomList[roomIndex].Id);
+                            else
+                                _this.enterRoom(roomList[roomIndex].Id, roomList[roomIndex].Name);
+                            _this.options.onStateChanged();
+                        });
+                    })(i);
+                }
+            }
+        };
+
         chatWindowOptions.onCreated = function (window) {
             var $ul = $("<ul/>").appendTo(window.$windowInnerContent);
-            _this.tabs = $ul.horizontalTabs().data("horizontalTabs");
+
+            var horizontalTabOptions = new HorizontalTabsOptions();
+            horizontalTabOptions.onTabClosed = function (id) {
+                _this.options.adapter.server.leaveRoom(id, function () {
+                });
+            };
+
+            _this.tabs = $ul.horizontalTabs(horizontalTabOptions).data("horizontalTabs");
 
             // adds the available rooms tab
             _this.tabs.addTab(0, "Available rooms", true, false, function ($content) {
-                _this.options.adapter.server.getRoomsList(function (roomsList) {
-                    $content.html('');
-                    if (roomsList.length == 0) {
-                        $("<div/>").addClass("user-list-empty").text(_this.options.noRoomsText).appendTo($content);
-                    } else {
-                        for (var i = 0; i < roomsList.length; i++) {
-                            var $roomListItem = $("<div/>").addClass("rooms-list-item").attr("data-val-id", roomsList[i].Id).appendTo($content);
-
-                            $roomListItem.hover(function () {
-                                $(this).addClass("hover");
-                            }, function () {
-                                $(this).removeClass("hover");
-                            });
-
-                            $("<span/>").addClass("room-name").text(roomsList[i].Name).appendTo($roomListItem);
-
-                            $("<span/>").addClass("users-online").text(roomsList[i].UsersOnline + " online").appendTo($roomListItem);
-
-                            $roomListItem.hover(function () {
-                                $(this).addClass("hover");
-                            }, function () {
-                                $(this).removeClass("hover");
-                            });
-
-                            (function (roomIndex) {
-                                $roomListItem.click(function () {
-                                    if (_this.tabs.hasTab(roomsList[roomIndex].Id))
-                                        _this.tabs.focusTab(roomsList[roomIndex].Id);
-                                    else
-                                        _this.enterRoom(roomsList[roomIndex].Id, roomsList[roomIndex].Name);
-                                    _this.options.stateChanged();
-                                });
-                            })(i);
-                        }
-                    }
+                _this.options.adapter.server.getRoomsList(function (roomList) {
+                    availableRoomsTabBuilder(roomList, $content);
                 });
             }, function () {
-                _this.options.stateChanged();
+                _this.options.onStateChanged();
             }, true, false);
         };
+
+        // when the rooms change, the available rooms must be updated
+        this.options.adapter.client.onRoomListChanged(function (roomList) {
+            var availableRoomsTab = _this.tabs.getTab(0);
+            availableRoomsTabBuilder(roomList.Rooms, availableRoomsTab.$content);
+        });
 
         // will create user list chat container
         this.chatWindow = $.chatWindow(chatWindowOptions);
@@ -96,6 +123,7 @@ var ChatRooms = (function () {
             var messageBoardOptions = new MessageBoardOptions();
             messageBoardOptions.adapter = _this.options.adapter;
             messageBoardOptions.userId = _this.options.userId;
+            messageBoardOptions.height = _this.options.contentHeight;
             messageBoardOptions.roomId = roomId;
 
             messageBoardOptions.newMessage = function (message) {
@@ -110,6 +138,7 @@ var ChatRooms = (function () {
                 var userListOptions = new UserListOptions();
                 userListOptions.adapter = _this.options.adapter;
                 userListOptions.roomId = roomId;
+                userListOptions.height = _this.options.contentHeight;
                 userListOptions.userClicked = _this.options.userClicked;
 
                 $users.userList(userListOptions);
@@ -121,14 +150,14 @@ var ChatRooms = (function () {
             var focusedTabId = _this.tabs.getFucusedTabId();
             if (focusedTabId)
                 _this.tabs.clearEventMarks(focusedTabId);
-            _this.options.stateChanged();
+            _this.options.onStateChanged();
         }, saveState, saveState);
     };
 
     // returns the current Rooms state
     ChatRooms.prototype.getState = function () {
         var state = new ChatRoomsState();
-        state.isMaximized = true; // TODO: fix it
+        state.isMaximized = this.chatWindow.isMaximized();
         state.activeRoom = this.tabs.getFucusedTabId();
         state.openedRooms = this.tabs.getTabIds();
         return state;
@@ -150,7 +179,9 @@ var ChatRooms = (function () {
 
             // focus the room as stated in the state
             _this.tabs.focusTab(state.activeRoom, false);
-            //TODO: take the isMaximized into account
+
+            // sets the maximized state
+            _this.chatWindow.setMaximized(state.isMaximized);
         });
     };
 

@@ -151,6 +151,18 @@ namespace ChatJs.Lib
         }
 
         /// <summary>
+        /// Returns all connections to all users
+        /// </summary>
+        /// <returns></returns>
+        public static string[] GetAllConnections()
+        {
+            lock (connectionsLockObject)
+            {
+                return connectionToUser.Keys.Distinct().ToArray();
+            }
+        }
+
+        /// <summary>
         ///     Makes it easier to get all connections to the given target.
         ///     Only one of the arguments can be populated at once.
         /// </summary>
