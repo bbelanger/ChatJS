@@ -20,6 +20,7 @@ namespace ChatJs.Model.Models
         }
 
         public string DisplayName { get; set; }
+
         public ICollection<ChatUserConversation> ChatUserConversations { get; set; }
 
         public ICollection<ChatRoomUser> ChatRoomUsers { get; set; }

@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Lib", "ChatJs.Net\ChatJs.Lib.csproj", "{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Admin", "ChatJsWebRole5\ChatJs.Admin.csproj", "{5865DB2F-9B58-4772-AF98-B260DD982C89}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Model", "ChatJs.Model\ChatJs.Model.csproj", "{354854C8-753A-4C86-9B88-63151A50A9F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Admin", "ChatJs.Admin\ChatJs.Admin.csproj", "{5865DB2F-9B58-4772-AF98-B260DD982C89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatJs.Lib", "ChatJs.Lib\ChatJs.Lib.csproj", "{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Release|Any CPU.Build.0 = Release|Any CPU
 		{354854C8-753A-4C86-9B88-63151A50A9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{354854C8-753A-4C86-9B88-63151A50A9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{354854C8-753A-4C86-9B88-63151A50A9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{354854C8-753A-4C86-9B88-63151A50A9F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5865DB2F-9B58-4772-AF98-B260DD982C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FDCDBD5-F02C-40DE-B6AA-B00C5E473B5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

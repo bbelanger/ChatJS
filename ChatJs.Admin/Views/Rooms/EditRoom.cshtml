@@ -1,0 +1,28 @@
+﻿@model ChatJs.Admin.Models.RoomViewModel
+
+@{
+    Layout = "../_Layout.cshtml";
+}
+
+@section Header
+{
+    <link rel="stylesheet" type="text/css" href="/Content/Styles/signin.css" />
+}
+
+<div class="container">
+    @using (Html.BeginForm("EditRoom", "Rooms", FormMethod.Post))
+    {
+        <h2 class="form-heading">@(Model != null && Model.Id.HasValue ? "Edit room" : "Create room")</h2>
+
+        <p>
+            @Html.TextBoxFor(m => m.RoomName, new {placeHolder = "Name", @class = "form-control"})
+        </p>
+        <p>
+            @Html.TextAreaFor(m => m.Description, new {placeHolder = "Description", @class = "form-control"})
+        </p>
+
+        @Html.ValidationSummary(false)
+
+        <button class="btn btn-large btn-primary btn-block" type="submit"><i class="fa fa-floppy-o"></i>Save</button>
+    }
+</div>

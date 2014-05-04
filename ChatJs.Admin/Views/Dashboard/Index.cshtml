@@ -1,0 +1,113 @@
+﻿@using ChatJs.Admin.Models
+@model ChatJs.Admin.Models.IndexViewModel
+@{
+    Layout = "../_Layout.cshtml";
+    var currentUser = ViewBag.User as UserViewModel;
+}
+
+<div class="container">
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">ChatJS</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav pull-right">
+                    <li class="active"><a href="#"><i class="fa fa-tachometer"></i>Dashboard</a></li>
+                    @if (currentUser != null)
+                    {
+                        <li><a><img class="user-icon" src="@currentUser.ProfilePictureUrl" alt="@currentUser.EMail" />@currentUser.DisplayName</a></li>
+                    }
+
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+    <h3>Users</h3>
+    @if (Model.Users.Any())
+    {
+        <table class="table">
+            <thead>
+                <th>
+                    Display Name
+                </th>
+                <th>
+                    E-Mail
+                </th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td><img class="table-icon" src="@user.ProfilePictureUrl" alt="@user.EMail" />@user.DisplayName</td>
+                        <td>@user.EMail</td>
+                        <td><a href="@Url.Action("EditUser", "Users", new {id = user.Id})"><i class="fa fa-pencil-square-o"></i>Edit</a></td>
+                        <td><a href="#"><i class="fa fa-eraser"></i>Delete</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="list-empty">Empty</div>
+    }
+
+    <p>
+        <a class="btn btn-default" href="@Url.Action("EditUser", "Users")"><i class="fa fa-plus"></i>Create user</a>
+    </p>
+
+    <h3>Rooms</h3>
+    <p>Make sure you created the users first. You need to assign existing users to rooms</p>
+    @if (Model.Rooms.Any())
+    {
+        <table class="table">
+            <thead>
+                <th>
+                    id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Users in room
+                </th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                @foreach (var room in Model.Rooms)
+                {
+                    <tr>
+                        <td>@room.Id</td>
+                        <td>@room.RoomName</td>
+                        <td>@room.Description</td>
+                        <td>@room.RoomUsersCount</td>
+                        <td><a href="@Url.Action("EditRoom", "Rooms", new {id = room.Id})"><i class="fa fa-pencil-square-o"></i>Edit</a></td>
+                        <td><a href="#"><i class="fa fa-eraser"></i>Delete</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="list-empty">Empty</div>
+    }
+
+    <p>
+        <a class="btn btn-default" href="@Url.Action("EditRoom", "Rooms")"><i class="fa fa-plus"></i>Create room</a>
+    </p>
+
+
+</div>

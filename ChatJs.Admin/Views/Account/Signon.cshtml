@@ -1,0 +1,40 @@
+﻿@model ChatJs.Admin.Models.UserViewModel
+
+@{
+    Layout = "../_Layout.cshtml";
+}
+
+@section Header
+{
+    <link rel="stylesheet" type="text/css" href="/Content/Styles/signin.css" />
+}
+
+<div class="container">
+    @using (Html.BeginForm("Signon", "Account", FormMethod.Post))
+    {
+        <h2 class="form-heading">@(Model != null && Model.Id.HasValue ? "Edit user" : "Create user")</h2>
+
+        @Html.HiddenFor(m => m.Id)
+        <p>
+            @Html.TextBoxFor(m => m.UserName, new {placeHolder = "User name", @class = "form-control"})
+        </p>
+        <p>
+            @Html.TextBoxFor(m => m.EMail, new {placeHolder = "E-Mail", @class = "form-control"})
+        </p>
+        <p>
+            @Html.TextBoxFor(m => m.DisplayName, new {placeHolder = "Display name", @class = "form-control"})
+        </p>
+        if (Model == null || !Model.Id.HasValue)
+        {
+            <p>
+                @Html.PasswordFor(m => m.Password, new {placeHolder = "Password", @class = "form-control"})
+            </p>
+            <p>
+                @Html.PasswordFor(m => m.ConfirmPassword, new {placeHolder = "Confirm password", @class = "form-control"})
+            </p>
+        }
+
+        @Html.ValidationSummary(false)
+        <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-floppy-o"></i>Save</button>
+    }
+</div>

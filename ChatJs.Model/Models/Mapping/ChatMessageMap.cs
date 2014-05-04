@@ -22,11 +22,11 @@ namespace ChatJs.Model.Models.Mapping
             this.Property(t => t.DateTime).HasColumnName("DateTime");
 
             // Relationships
-            this.HasRequired(t => t.ChatRoom)
+            this.HasOptional(t => t.ChatRoom)
                 .WithMany(t => t.ChatMessages)
                 .HasForeignKey(d => d.RoomId);
 
-            this.HasRequired(t => t.UserTo)
+            this.HasOptional(t => t.UserTo)
                 .WithMany(t => t.ChatMessagesImUserTo)
                 .HasForeignKey(d => d.UserToId);
 
