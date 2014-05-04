@@ -7,13 +7,13 @@ namespace ChatJs.Model.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-beta1-30206")]
-    public sealed partial class test : IMigrationMetadata
+    public sealed partial class Fix : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(test));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Fix));
         
         string IMigrationMetadata.Id
         {
-            get { return "201403151651369_test"; }
+            get { return "201405042150594_Fix"; }
         }
         
         string IMigrationMetadata.Source
