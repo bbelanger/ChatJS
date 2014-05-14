@@ -183,6 +183,7 @@
     <Compile Include="Code\Filters\CanonicalUrlFilter.cs" />
     <Compile Include="Code\SignalR\ChatHub.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ChatJsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
