@@ -1,0 +1,56 @@
+﻿@using ChatJs.Admin.Models
+@{
+    var currentUser = ViewBag.User as UserViewModel;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ChatJS - Facebook style chat for your Web App</title>
+        <!--Scripts-->
+        <script src="/Scripts/jquery-2.1.0.min.js" type="text/javascript"></script>
+        <script src="/Bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+        <script src="/Scripts/jquery.signalR-2.0.2.min.js"></script>
+        <script src="/signalr/hubs" type="text/javascript"></script>
+
+        <!-- ChatJS and dependencies -->
+        <script src="/ChatJs/js/jquery.chatjs.min.js" type="text/javascript"></script>
+
+        <script src="/Scripts/scripts.js" type="text/javascript"></script>
+        <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+        <!--Styles-->
+        <link rel="stylesheet" type="text/css" href="/ChatJs/css/jquery.chatjs.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/Styles/styles.css" />
+        <link rel="stylesheet" type="text/css" href="/Bootstrap/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/Bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="/Bootstrap/css/jumbotron-narrow.css" />
+
+        <link href="/Content/font-awesome-4.0.3/css/font-awesome.min.css" rel="stylesheet" />
+
+        @RenderSection("Header", false)
+
+        @if (currentUser != null)
+        {
+            <script type="text/javascript">
+                $(function() {
+                    $.chat({
+                        // your user information
+                        userId: @currentUser.Id,
+                        // text displayed when the other user is typing
+                        typingText: ' is typing...',
+                        // the title for the user's list window
+                        titleText: 'Chat',
+                        // text displayed when there's no other users in the room
+                        emptyRoomText: "There's no one around here. You can still open a session in another browser and chat with yourself :)",
+                        // the adapter you are using
+                        adapter: new SignalRAdapter()
+                    });
+                });
+            </script>
+        }
+    </head>
+    <body>
+        @RenderBody()
+        <footer><a href="http://www.chatjs.net">ChatJS</a> - &copy;2014 All rights reserved.</footer>
+    </body>
+</html>

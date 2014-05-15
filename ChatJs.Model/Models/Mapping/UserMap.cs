@@ -24,8 +24,7 @@ namespace ChatJs.Model.Models.Mapping
             this.Property(t => t.PasswordHash)
                 .IsRequired()
                 .HasMaxLength(200);
-
-
+            
             // Table & Column Mappings
             this.ToTable("User");
             this.Property(t => t.Id).HasColumnName("Id");
