@@ -126,8 +126,13 @@ class MessageBoard {
                     }
                 }
             });
-
         });
+
+        // initializes the autocomplete for adding people to the conversation
+        // UNCOMMENT TO TEST THE AUTOCOMPLETE
+        //var autocompleteOptions = new ChatJsAutocompleteOptions();
+        //autocompleteOptions.autoShow = true;
+        //this.$el.chatjsAutocomplete(autocompleteOptions);
     }
 
     showTypingSignal(user: ChatUserInfo) {

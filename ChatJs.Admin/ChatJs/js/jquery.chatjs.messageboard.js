@@ -106,6 +106,11 @@ var MessageBoard = (function () {
                 }
             });
         });
+        // initializes the autocomplete for adding people to the conversation
+        // UNCOMMENT TO TEST THE AUTOCOMPLETE
+        //var autocompleteOptions = new ChatJsAutocompleteOptions();
+        //autocompleteOptions.autoShow = true;
+        //this.$el.chatjsAutocomplete(autocompleteOptions);
     }
     MessageBoard.prototype.showTypingSignal = function (user) {
         var _this = this;

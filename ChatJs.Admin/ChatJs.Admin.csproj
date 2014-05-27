@@ -212,6 +212,7 @@
     <Content Include="Bootstrap\js\bootstrap.js" />
     <Content Include="Bootstrap\js\bootstrap.min.js" />
     <Content Include="ChatJs\css\jquery.chatjs.css" />
+    <Content Include="ChatJs\images\add.png" />
     <Content Include="ChatJs\images\chat-offline.png" />
     <Content Include="ChatJs\images\chat-online.png" />
     <Content Include="ChatJs\images\clear.png" />
@@ -272,6 +273,7 @@
     <Content Include="Content\font-awesome-4.0.3\scss\_stacked.scss" />
     <Content Include="Content\font-awesome-4.0.3\scss\_variables.scss" />
     <Content Include="Content\font-awesome-4.0.3\scss\font-awesome.scss" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.autocomplete.ts" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
