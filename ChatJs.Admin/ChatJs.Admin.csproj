@@ -41,10 +41,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ChatJs.Lib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ChatJS.2.0.15\lib\net45\ChatJs.Lib.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -216,6 +212,7 @@
     <Content Include="Bootstrap\js\bootstrap.js" />
     <Content Include="Bootstrap\js\bootstrap.min.js" />
     <Content Include="ChatJs\css\jquery.chatjs.css" />
+    <Content Include="ChatJs\images\add.png" />
     <Content Include="ChatJs\images\chat-offline.png" />
     <Content Include="ChatJs\images\chat-online.png" />
     <Content Include="ChatJs\images\clear.png" />
@@ -226,7 +223,7 @@
     <Content Include="ChatJs\images\Emoticons\smile-5.png" />
     <Content Include="ChatJs\images\Emoticons\smile-6.png" />
     <Content Include="ChatJs\images\users.png" />
-    <Content Include="ChatJs\js\jquery.chatjs.min.js" />
+    <Content Include="ChatJs\js\jquery.autosize.js" />
     <Content Include="ChatJs\sounds\chat.mp3" />
     <Content Include="ChatJs\sounds\chat.ogg" />
     <Content Include="ChatJs\sounds\chat.wav" />
@@ -276,6 +273,7 @@
     <Content Include="Content\font-awesome-4.0.3\scss\_stacked.scss" />
     <Content Include="Content\font-awesome-4.0.3\scss\_variables.scss" />
     <Content Include="Content\font-awesome-4.0.3\scss\font-awesome.scss" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.autocomplete.ts" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
@@ -306,6 +304,17 @@
     <Content Include="Scripts\jquery-2.1.0.min.map" />
     <Content Include="Views\Account\Signin.cshtml" />
     <Content Include="Views\Account\Signon.cshtml" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.adapter.servertypes.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.adapter.signalr.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.adapter.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.controller.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.horizontaltabs.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.messageboard.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.pmwindow.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.rooms.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.userlist.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.utils.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.window.ts" />
     <TypeScriptCompile Include="Scripts\Typings\signalr\signalr.d.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +328,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChatJs.Lib\ChatJs.Lib.csproj">
+      <Project>{6fdcdbd5-f02c-40de-b6aa-b00c5e473b5b}</Project>
+      <Name>ChatJs.Lib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ChatJs.Model\ChatJs.Model.csproj">
       <Project>{354854C8-753A-4C86-9B88-63151A50A9F9}</Project>
       <Name>ChatJs.Model</Name>

@@ -1,4 +1,7 @@
-﻿var ChatControllerOptions = (function () {
+﻿// Documentation: http://www.chatjs.net/Docs/options/jquery.chatjs.controller.html
+
+
+var ChatControllerOptions = (function () {
     function ChatControllerOptions() {
     }
     return ChatControllerOptions;
@@ -36,7 +39,7 @@ var ChatController = (function () {
         defaultOptions.enableSound = true;
         defaultOptions.persistenceMode = "cookie";
         defaultOptions.persistenceCookieName = "chatjs";
-        defaultOptions.chatJsContentPath = "/content/chatjs/";
+        defaultOptions.chatJsContentPath = "/chatjs/";
 
         this.options = $.extend({}, defaultOptions, options);
 
