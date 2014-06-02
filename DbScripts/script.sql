@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[__MigrationHistory]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[__MigrationHistory]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16,7 +16,7 @@ CREATE TABLE [dbo].[__MigrationHistory](
 )
 
 GO
-/****** Object:  Table [dbo].[ChatConversation]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[ChatConversation]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -32,7 +32,7 @@ CREATE TABLE [dbo].[ChatConversation](
 )
 
 GO
-/****** Object:  Table [dbo].[ChatMessage]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[ChatMessage]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -52,7 +52,7 @@ CREATE TABLE [dbo].[ChatMessage](
 )
 
 GO
-/****** Object:  Table [dbo].[ChatRoom]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[ChatRoom]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -68,7 +68,7 @@ CREATE TABLE [dbo].[ChatRoom](
 )
 
 GO
-/****** Object:  Table [dbo].[ChatRoomUsers]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[ChatRoomUsers]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -84,7 +84,7 @@ CREATE TABLE [dbo].[ChatRoomUsers](
 )
 
 GO
-/****** Object:  Table [dbo].[ChatUserConversations]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[ChatUserConversations]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -100,7 +100,7 @@ CREATE TABLE [dbo].[ChatUserConversations](
 )
 
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -123,7 +123,7 @@ CREATE TABLE [dbo].[User](
 )
 
 GO
-/****** Object:  Table [dbo].[UserClaims]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[UserClaims]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -140,7 +140,7 @@ CREATE TABLE [dbo].[UserClaims](
 )
 
 GO
-/****** Object:  Table [dbo].[UserLogins]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[UserLogins]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -157,7 +157,7 @@ CREATE TABLE [dbo].[UserLogins](
 )
 
 GO
-/****** Object:  Table [dbo].[UserRoles]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Table [dbo].[UserRoles]    Script Date: 02/06/2014 00:00:49 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -181,67 +181,67 @@ SET IDENTITY_INSERT [dbo].[User] ON
 
 INSERT [dbo].[User] ([Id], [DisplayName], [Email], [EmailConfirmed], [PasswordHash], [SecurityStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [UserName]) VALUES (3, N'Admin', N'admin@admin.com', 0, N'ABhzFztPnHGn5iC6NLiLlVr5kzSIhQ3HaeYGY6xL+ZOvt49M3u20yaUf9qbAtSkFbg==', N'fedc6ae1-9085-4851-995c-9a97647585a4', NULL, 0, 0, N'admin')
 SET IDENTITY_INSERT [dbo].[User] OFF
-/****** Object:  Index [IX_RoomId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_RoomId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_RoomId] ON [dbo].[ChatConversation]
 (
 	[RoomId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_RoomId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_RoomId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_RoomId] ON [dbo].[ChatMessage]
 (
 	[RoomId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserFromId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserFromId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserFromId] ON [dbo].[ChatMessage]
 (
 	[UserFromId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserToId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserToId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserToId] ON [dbo].[ChatMessage]
 (
 	[UserToId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_RoomId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_RoomId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_RoomId] ON [dbo].[ChatRoomUsers]
 (
 	[RoomId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[ChatRoomUsers]
 (
 	[UserId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_ConversationId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_ConversationId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_ConversationId] ON [dbo].[ChatUserConversations]
 (
 	[ConversationId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[ChatUserConversations]
 (
 	[UserId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[UserClaims]
 (
 	[UserId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[UserLogins]
 (
 	[UserId] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
 GO
-/****** Object:  Index [IX_UserId]    Script Date: 11/05/2014 20:51:42 ******/
+/****** Object:  Index [IX_UserId]    Script Date: 02/06/2014 00:00:49 ******/
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[UserRoles]
 (
 	[UserId] ASC
