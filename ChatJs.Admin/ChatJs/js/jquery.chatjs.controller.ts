@@ -94,7 +94,7 @@ class ChatController {
             chatRoomOptions.adapter = this.options.adapter;
             chatRoomOptions.userId = this.options.userId;
             chatRoomOptions.offsetRight = this.options.offsetRight;
-            chatRoomOptions.roomsTitleText = this.options.roomsTitleText;
+            chatRoomOptions.titleText = this.options.roomsTitleText;
             chatRoomOptions.availableRoomsText = this.options.availableRoomsText;
             chatRoomOptions.isMaximized = state ? state.rooms.isMaximized : true;
             chatRoomOptions.onStateChanged = () => {

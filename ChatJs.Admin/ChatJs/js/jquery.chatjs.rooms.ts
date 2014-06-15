@@ -3,20 +3,21 @@
 }
 
 class ChatRoomsOptions {
+    // rooms window title
     titleText: string;
     adapter: IAdapter;
     noRoomsText: string;
     // available rooms title text
     availableRoomsText: string;
     userClicked: (userId: number) => void;
-    // called whenever the rooms state changed (e.g, user entered a different room or focused a different room)
+    // called whenever the room list window state changed (e.g, user entered a different room or focused a different room)
     onStateChanged: () => void;
     userId: number;
     offsetRight: number;
     contentHeight: number;
     isMaximized: boolean;
     chatJsContentPath: string;
-
+    
 }
 
 // represents the current state of the ChatRooms.

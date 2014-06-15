@@ -11,27 +11,34 @@ var ChatFriendsWindow = (function () {
     function ChatFriendsWindow(options) {
         var _this = this;
         var defaultOptions = new ChatFriendsWindowOptions();
+        defaultOptions.friendListTitleText = "Friends";
+        defaultOptions.isMaximized = true;
 
         this.options = $.extend({}, defaultOptions, options);
 
         var chatWindowOptions = new ChatWindowOptions();
-        chatWindowOptions.title = this.options.titleText;
+        chatWindowOptions.title = this.options.friendListTitleText;
         chatWindowOptions.canClose = false;
         chatWindowOptions.canExpand = true;
         chatWindowOptions.width = 400;
         chatWindowOptions.height = 300;
         chatWindowOptions.isMaximized = this.options.isMaximized;
-        chatWindowOptions.onMaximizedStateChanged = function () {
-            _this.options.onStateChanged();
+
+        chatWindowOptions.onMaximizedStateChanged = function (chatWindow, isMaximized) {
+            _this.options.onMaximizedStateChanged(isMaximized);
         };
 
-        var userListOptions = new UserListOptions();
-        userListOptions.adapter = this.options.adapter;
-        userListOptions.roomId = this.options.roomId;
-        userListOptions.height = this.options.contentHeight;
-        userListOptions.userClicked = this.options.userClicked;
+        chatWindowOptions.onCreated = function (window) {
+            var userListOptions = new UserListOptions();
+            userListOptions.adapter = _this.options.adapter;
+            userListOptions.roomId = _this.options.roomId;
+            userListOptions.height = _this.options.contentHeight;
+            userListOptions.userClicked = _this.options.userClicked;
 
-        $users.userList(userListOptions);
+            window.$windowInnerContent.userList(userListOptions);
+        };
+
+        this.chatWindow = $.chatWindow(chatWindowOptions);
     }
     ChatFriendsWindow.prototype.focus = function () {
     };

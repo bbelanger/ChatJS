@@ -11,6 +11,7 @@ class ChatWindowOptions {
     isMaximized: boolean;
     onCreated: (chatWindow: ChatWindow) => void;
     onClose: (chatWindow: ChatWindow) => void;
+    // called when the user minimizes or maximizes the window
     onMaximizedStateChanged: (chatWindow: ChatWindow, isMaximized: boolean) => void;
 }
 

@@ -4,12 +4,18 @@
 
 class ChatFriendsWindowOptions {
     adapter: IAdapter;
+    // the title for the friend list
+    friendListTitleText: string;
     // room id
     roomId: number;
     // content height
     contentHeight: number;
     // what happens when the user clicks a friend
     userClicked: (userId: number) => void;
+    // whether or not this window is maximized
+    isMaximized: boolean;
+    // called when the user minimizes or maximizes the window
+    onMaximizedStateChanged: (isMaximized: boolean) => void;
 }
 
 // window that contains a list of friends. This component is used as opposed to "jquery.chatjs.rooms". The "rooms" component
@@ -19,27 +25,35 @@ class ChatFriendsWindow {
     constructor(options: ChatPmWindowOptions) {
 
         var defaultOptions = new ChatFriendsWindowOptions();
+        defaultOptions.friendListTitleText = "Friends";
+        defaultOptions.isMaximized = true;
 
         this.options = $.extend({}, defaultOptions, options);
 
         var chatWindowOptions = new ChatWindowOptions();
-        chatWindowOptions.title = this.options.titleText;
+        chatWindowOptions.title = this.options.friendListTitleText;
         chatWindowOptions.canClose = false;
         chatWindowOptions.canExpand = true;
         chatWindowOptions.width = 400;
         chatWindowOptions.height = 300;
         chatWindowOptions.isMaximized = this.options.isMaximized;
-        chatWindowOptions.onMaximizedStateChanged = () => {
-            this.options.onStateChanged();
+
+        chatWindowOptions.onMaximizedStateChanged = (chatWindow: ChatWindow, isMaximized: boolean) => {
+            this.options.onMaximizedStateChanged(isMaximized);
         };
 
-        var userListOptions = new UserListOptions();
-        userListOptions.adapter = this.options.adapter;
-        userListOptions.roomId = this.options.roomId;
-        userListOptions.height = this.options.contentHeight;
-        userListOptions.userClicked = this.options.userClicked;
+        chatWindowOptions.onCreated = window => {
+            var userListOptions = new UserListOptions();
+            userListOptions.adapter = this.options.adapter;
+            userListOptions.roomId = this.options.roomId;
+            userListOptions.height = this.options.contentHeight;
+            userListOptions.userClicked = this.options.userClicked;
 
-        $users.userList(userListOptions);
+            window.$windowInnerContent.userList(userListOptions);
+        };
+
+        this.chatWindow = $.chatWindow(chatWindowOptions);
+
     }
 
     focus() {
