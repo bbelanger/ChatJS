@@ -14,7 +14,12 @@ interface Window {
 class ChatControllerOptions {
     userId: number;
     adapter: IAdapter;
+    // empty room text
     emptyRoomText: string;
+    // available rooms text
+    availableRoomsText: string;
+    // rooms window title
+    roomsTitleText: string;
     typingText: string;
     allowRoomSelection: boolean;
     roomId: number;
@@ -56,7 +61,9 @@ class ChatController {
     constructor(options: ChatControllerOptions) {
 
         var defaultOptions = new ChatControllerOptions();
+        defaultOptions.roomsTitleText = "Rooms";
         defaultOptions.emptyRoomText = "There's no other users";
+        defaultOptions.availableRoomsText = "Available rooms";
         defaultOptions.typingText = " is typing...";
         defaultOptions.allowRoomSelection = true;
         defaultOptions.offsetRight = 10;
@@ -87,6 +94,8 @@ class ChatController {
             chatRoomOptions.adapter = this.options.adapter;
             chatRoomOptions.userId = this.options.userId;
             chatRoomOptions.offsetRight = this.options.offsetRight;
+            chatRoomOptions.roomsTitleText = this.options.roomsTitleText;
+            chatRoomOptions.availableRoomsText = this.options.availableRoomsText;
             chatRoomOptions.isMaximized = state ? state.rooms.isMaximized : true;
             chatRoomOptions.onStateChanged = () => {
                 this.saveState();

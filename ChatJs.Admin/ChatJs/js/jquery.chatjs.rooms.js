@@ -11,12 +11,14 @@ var ChatRoomsState = (function () {
     return ChatRoomsState;
 })();
 
+// window that shows the rooms
 var ChatRooms = (function () {
     function ChatRooms(options) {
         var _this = this;
         var defaultOptions = new ChatRoomsOptions();
         defaultOptions.titleText = "Rooms";
         defaultOptions.noRoomsText = "There's no rooms";
+        defaultOptions.availableRoomsText = "Available rooms";
         defaultOptions.userClicked = function () {
         };
         defaultOptions.onStateChanged = function () {
@@ -92,7 +94,7 @@ var ChatRooms = (function () {
             _this.tabs = $ul.horizontalTabs(horizontalTabOptions).data("horizontalTabs");
 
             // adds the available rooms tab
-            _this.tabs.addTab(0, "Available rooms", true, false, function ($content) {
+            _this.tabs.addTab(0, _this.options.availableRoomsText, true, false, function ($content) {
                 _this.options.adapter.server.getRoomsList(function (roomList) {
                     availableRoomsTabBuilder(roomList, $content);
                 });
