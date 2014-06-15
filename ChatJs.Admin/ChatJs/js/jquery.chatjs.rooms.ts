@@ -89,6 +89,7 @@ class ChatRooms {
                     });
 
                     (roomIndex => {
+                        // this is what happens when you click a room
                         $roomListItem.click(() => {
                             if (this.tabs.hasTab(roomList[roomIndex].Id))
                                 this.tabs.focusTab(roomList[roomIndex].Id);
@@ -133,6 +134,7 @@ class ChatRooms {
         this.chatWindow.setRightOffset(this.options.offsetRight);
     }
 
+    // enters the given room
     enterRoom(roomId: number, roomName: string, saveState: boolean = true): void {
 
         var $messageBoard;

@@ -4,6 +4,7 @@
     return ChatWindowOptions;
 })();
 
+// a generic window that shows in the bottom right corner. It can have any content in it.
 var ChatWindow = (function () {
     function ChatWindow(options) {
         var _this = this;

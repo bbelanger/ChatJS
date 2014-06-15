@@ -21,7 +21,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TypeScriptToolsVersion>0.9</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -274,6 +274,7 @@
     <Content Include="Content\font-awesome-4.0.3\scss\_variables.scss" />
     <Content Include="Content\font-awesome-4.0.3\scss\font-awesome.scss" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.autocomplete.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.friendswindow.ts" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />

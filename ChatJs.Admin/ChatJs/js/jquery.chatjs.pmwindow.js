@@ -4,6 +4,7 @@
     return ChatPmWindowOptions;
 })();
 
+// window that contains a conversation between users
 var ChatPmWindow = (function () {
     function ChatPmWindow(options) {
         var _this = this;
@@ -14,7 +15,7 @@ var ChatPmWindow = (function () {
         };
         defaultOptions.onClose = function () {
         };
-        defaultOptions.chatJsContentPath = "/content/chatjs/";
+        defaultOptions.chatJsContentPath = "/chatjs/";
 
         this.options = $.extend({}, defaultOptions, options);
 

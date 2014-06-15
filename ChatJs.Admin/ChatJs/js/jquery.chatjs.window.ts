@@ -14,6 +14,7 @@ class ChatWindowOptions {
     onMaximizedStateChanged: (chatWindow: ChatWindow, isMaximized: boolean) => void;
 }
 
+// a generic window that shows in the bottom right corner. It can have any content in it.
 class ChatWindow {
     constructor(options: ChatWindowOptions) {
 

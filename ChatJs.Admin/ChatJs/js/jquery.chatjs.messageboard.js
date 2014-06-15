@@ -1,4 +1,6 @@
-﻿var MessageBoardOptions = (function () {
+﻿// <reference path="/Scripts/Typings/jquery/jquery.d.ts"/>
+
+var MessageBoardOptions = (function () {
     function MessageBoardOptions() {
     }
     return MessageBoardOptions;
@@ -13,7 +15,7 @@ var MessageBoard = (function () {
         defaultOptions.typingText = " is typing...";
         defaultOptions.playSound = true;
         defaultOptions.height = 100;
-        defaultOptions.chatJsContentPath = "/content/chatjs/";
+        defaultOptions.chatJsContentPath = "/chatjs/";
         defaultOptions.newMessage = function (message) {
         };
 

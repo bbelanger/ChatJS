@@ -67,6 +67,7 @@ var ChatRooms = (function () {
                     });
 
                     (function (roomIndex) {
+                        // this is what happens when you click a room
                         $roomListItem.click(function () {
                             if (_this.tabs.hasTab(roomList[roomIndex].Id))
                                 _this.tabs.focusTab(roomList[roomIndex].Id);
@@ -110,6 +111,7 @@ var ChatRooms = (function () {
         this.chatWindow = $.chatWindow(chatWindowOptions);
         this.chatWindow.setRightOffset(this.options.offsetRight);
     }
+    // enters the given room
     ChatRooms.prototype.enterRoom = function (roomId, roomName, saveState) {
         var _this = this;
         if (typeof saveState === "undefined") { saveState = true; }

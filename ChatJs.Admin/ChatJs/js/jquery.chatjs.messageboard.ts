@@ -1,4 +1,6 @@
-﻿interface JQuery {
+﻿// <reference path="/Scripts/Typings/jquery/jquery.d.ts"/>
+
+interface JQuery {
     messageBoard: (options: MessageBoardOptions) => JQuery;
 }
 
@@ -31,7 +33,7 @@ class MessageBoard {
         defaultOptions.typingText = " is typing...";
         defaultOptions.playSound = true;
         defaultOptions.height = 100;
-        defaultOptions.chatJsContentPath = "/content/chatjs/";
+        defaultOptions.chatJsContentPath = "/chatjs/";
         defaultOptions.newMessage = (message: ChatMessageInfo) => {};
 
         this.options = $.extend({}, defaultOptions, options);

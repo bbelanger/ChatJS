@@ -15,6 +15,7 @@ class ChatPmWindowOptions {
     chatJsContentPath: string;
 }
 
+// window that contains a conversation between users
 class ChatPmWindow {
     constructor(options: ChatPmWindowOptions) {
 
@@ -23,7 +24,7 @@ class ChatPmWindow {
         defaultOptions.isMaximized = true;
         defaultOptions.onCreated = () => {};
         defaultOptions.onClose = () => { };
-        defaultOptions.chatJsContentPath = "/content/chatjs/";
+        defaultOptions.chatJsContentPath = "/chatjs/";
 
         this.options = $.extend({}, defaultOptions, options);
 
