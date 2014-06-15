@@ -6,6 +6,8 @@ class ChatRoomsOptions {
     titleText: string;
     adapter: IAdapter;
     noRoomsText: string;
+    // available rooms title text
+    availableRoomsText: string;
     userClicked: (userId: number) => void;
     // called whenever the rooms state changed (e.g, user entered a different room or focused a different room)
     onStateChanged: () => void;
@@ -14,6 +16,7 @@ class ChatRoomsOptions {
     contentHeight: number;
     isMaximized: boolean;
     chatJsContentPath: string;
+
 }
 
 // represents the current state of the ChatRooms.
@@ -26,12 +29,14 @@ class ChatRoomsState {
     activeRoom: number;
 }
 
+// window that shows the rooms
 class ChatRooms {
     constructor(options: ChatRoomsOptions) {
 
         var defaultOptions = new ChatRoomsOptions();
         defaultOptions.titleText = "Rooms";
         defaultOptions.noRoomsText = "There's no rooms";
+        defaultOptions.availableRoomsText = "Available rooms";
         defaultOptions.userClicked = () => {};
         defaultOptions.onStateChanged = () => {};
         defaultOptions.offsetRight = 10;
@@ -113,7 +118,7 @@ class ChatRooms {
             this.tabs = $ul.horizontalTabs(horizontalTabOptions).data("horizontalTabs");
 
             // adds the available rooms tab
-            this.tabs.addTab(0, "Available rooms", true, false, ($content) => {
+            this.tabs.addTab(0, this.options.availableRoomsText, true, false, ($content) => {
                 this.options.adapter.server.getRoomsList((roomList: Array<ChatRoomInfo>) => {
                     availableRoomsTabBuilder(roomList, $content);
                 });

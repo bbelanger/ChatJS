@@ -31,7 +31,9 @@ var ChatController = (function () {
     function ChatController(options) {
         var _this = this;
         var defaultOptions = new ChatControllerOptions();
+        defaultOptions.roomsTitleText = "Rooms";
         defaultOptions.emptyRoomText = "There's no other users";
+        defaultOptions.availableRoomsText = "Available rooms";
         defaultOptions.typingText = " is typing...";
         defaultOptions.allowRoomSelection = true;
         defaultOptions.offsetRight = 10;
@@ -61,6 +63,8 @@ var ChatController = (function () {
             chatRoomOptions.adapter = _this.options.adapter;
             chatRoomOptions.userId = _this.options.userId;
             chatRoomOptions.offsetRight = _this.options.offsetRight;
+            chatRoomOptions.roomsTitleText = _this.options.roomsTitleText;
+            chatRoomOptions.availableRoomsText = _this.options.availableRoomsText;
             chatRoomOptions.isMaximized = state ? state.rooms.isMaximized : true;
             chatRoomOptions.onStateChanged = function () {
                 _this.saveState();
