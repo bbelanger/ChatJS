@@ -1,4 +1,16 @@
-﻿var ChatPmWindowOptions = (function () {
+﻿var PmWindowInfo = (function () {
+    function PmWindowInfo() {
+    }
+    return PmWindowInfo;
+})();
+
+var PmWindowState = (function () {
+    function PmWindowState() {
+    }
+    return PmWindowState;
+})();
+
+var ChatPmWindowOptions = (function () {
     function ChatPmWindowOptions() {
     }
     return ChatPmWindowOptions;
@@ -56,8 +68,16 @@ var ChatPmWindow = (function () {
         return this.chatWindow.getWidth();
     };
 
-    ChatPmWindow.prototype.isMaximized = function () {
-        return this.chatWindow.isMaximized();
+    ChatPmWindow.prototype.getState = function () {
+        var state = new PmWindowState();
+        state.isMaximized = this.chatWindow.getState();
+        state.otherUserId = this.options.otherUserId;
+        return state;
+    };
+
+    ChatPmWindow.prototype.setState = function (state) {
+        // PmWindow ignores the otherUserId option while setting state
+        this.chatWindow.setState(state.isMaximized);
     };
     return ChatPmWindow;
 })();

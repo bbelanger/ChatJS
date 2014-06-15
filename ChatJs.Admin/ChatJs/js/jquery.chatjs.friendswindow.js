@@ -1,4 +1,10 @@
-﻿var ChatFriendsWindowOptions = (function () {
+﻿var ChatFriendsWindowState = (function () {
+    function ChatFriendsWindowState() {
+    }
+    return ChatFriendsWindowState;
+})();
+
+var ChatFriendsWindowOptions = (function () {
     function ChatFriendsWindowOptions() {
     }
     return ChatFriendsWindowOptions;
@@ -51,8 +57,14 @@ var ChatFriendsWindow = (function () {
         return this.chatWindow.getWidth();
     };
 
-    ChatFriendsWindow.prototype.isMaximized = function () {
-        return this.chatWindow.isMaximized();
+    ChatFriendsWindow.prototype.getState = function () {
+        var state = new ChatFriendsWindowState();
+        state.isMaximized = this.chatWindow.getState();
+        return state;
+    };
+
+    ChatFriendsWindow.prototype.setState = function (state) {
+        this.chatWindow.setState(state.isMaximized);
     };
     return ChatFriendsWindow;
 })();

@@ -310,9 +310,10 @@
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.adapter.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.controller.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.horizontaltabs.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.interfaces.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.messageboard.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.pmwindow.ts" />
-    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.rooms.ts" />
+    <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.roomswindow.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.userlist.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.utils.ts" />
     <TypeScriptCompile Include="ChatJs\js\jquery.chatjs.window.ts" />

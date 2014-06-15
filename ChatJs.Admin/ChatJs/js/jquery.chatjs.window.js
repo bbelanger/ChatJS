@@ -62,7 +62,7 @@ var ChatWindow = (function () {
             _this.toggleMaximizedState();
         });
 
-        this.setMaximized(this.options.isMaximized, false);
+        this.setState(this.options.isMaximized, false);
 
         this.options.onCreated(this);
     }
@@ -88,15 +88,15 @@ var ChatWindow = (function () {
     };
 
     // returns whether the window is maximized
-    ChatWindow.prototype.isMaximized = function () {
+    ChatWindow.prototype.getState = function () {
         return !this.$window.hasClass("minimized");
     };
 
-    ChatWindow.prototype.setMaximized = function (isMaximized, triggerMaximizedStateEvent) {
+    ChatWindow.prototype.setState = function (state, triggerMaximizedStateEvent) {
         if (typeof triggerMaximizedStateEvent === "undefined") { triggerMaximizedStateEvent = true; }
         // windows are maximized if the this.$windowContent is visible
         if (!this.options.canExpand) {
-            if (isMaximized) {
+            if (state) {
                 // if it can't expand and is maximized
                 this.$window.removeClass("minimized");
                 this.$windowContent.show();
@@ -106,7 +106,7 @@ var ChatWindow = (function () {
                 this.$windowContent.hide();
             }
         } else {
-            if (isMaximized) {
+            if (state) {
                 // if it can expand and is maximized
                 this.$window.show();
                 this.$window.removeClass("minimized");
@@ -119,11 +119,11 @@ var ChatWindow = (function () {
             }
         }
         if (triggerMaximizedStateEvent)
-            this.options.onMaximizedStateChanged(this, isMaximized);
+            this.options.onMaximizedStateChanged(this, state);
     };
 
     ChatWindow.prototype.toggleMaximizedState = function () {
-        this.setMaximized(this.$window.hasClass("minimized"));
+        this.setState(this.$window.hasClass("minimized"));
     };
     return ChatWindow;
 })();

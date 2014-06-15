@@ -1,5 +1,5 @@
 ﻿interface JQueryStatic {
-    chatRooms: (options: ChatRoomsOptions) => ChatRooms;
+    chatRooms: (options: ChatRoomsOptions) => ChatRoomsWindow;
 }
 
 class ChatRoomsOptions {
@@ -21,7 +21,7 @@ class ChatRoomsOptions {
 }
 
 // represents the current state of the ChatRooms.
-class ChatRoomsState {
+class ChatRoomsWindowState {
     // whether or not the rooms window is maximized
     isMaximized: boolean;
     // the ids of the currently opened rooms
@@ -31,7 +31,7 @@ class ChatRoomsState {
 }
 
 // window that shows the rooms
-class ChatRooms {
+class ChatRoomsWindow implements IStateObject<ChatRoomsWindowState> {
     constructor(options: ChatRoomsOptions) {
 
         var defaultOptions = new ChatRoomsOptions();
@@ -189,17 +189,21 @@ class ChatRooms {
         }, saveState, saveState);
     }
 
-    // returns the current Rooms state
-    getState(): ChatRoomsState {
-        var state = new ChatRoomsState();
-        state.isMaximized = this.chatWindow.isMaximized();
+    getWidth(): number {
+        return this.chatWindow.getWidth();
+    }
+
+    // populates the current state in the passed 'state' object
+    getState(): ChatRoomsWindowState {
+        var state = new ChatRoomsWindowState();
+        state.isMaximized = this.chatWindow.getState();
         state.activeRoom = this.tabs.getFucusedTabId();
         state.openedRooms = this.tabs.getTabIds();
         return state;
     }
 
-    // loads the given state
-    setState(state: ChatRoomsState) {
+    // sets the current state using the passed 'state' object
+    setState(state: ChatRoomsWindowState): void {
         this.options.adapter.server.getRoomsList((roomsList: ChatRoomInfo[]) => {
             // for each of the rooms in the given state, we're gonna see if there's actually the given room in the server.
             // if such room exists and it's not opened already, we're gonna enter it.
@@ -217,12 +221,8 @@ class ChatRooms {
             this.tabs.focusTab(state.activeRoom, false);
 
             // sets the maximized state
-            this.chatWindow.setMaximized(state.isMaximized);
+            this.chatWindow.setState(state.isMaximized);
         });
-    }
-
-    getWidth(): number {
-        return this.chatWindow.getWidth();
     }
 
     options: ChatRoomsOptions;
@@ -232,6 +232,6 @@ class ChatRooms {
 
 // The actual plugin
 $.chatRooms = options => {
-    var chatRooms = new ChatRooms(options);
+    var chatRooms = new ChatRoomsWindow(options);
     return chatRooms;
 };

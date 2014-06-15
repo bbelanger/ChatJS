@@ -2,6 +2,10 @@
     chatFriendsWindow: (options: ChatPmWindowOptions) => ChatPmWindow;
 }
 
+class ChatFriendsWindowState {
+    isMaximized: boolean;
+}
+
 class ChatFriendsWindowOptions {
     adapter: IAdapter;
     // the title for the friend list
@@ -21,7 +25,7 @@ class ChatFriendsWindowOptions {
 // window that contains a list of friends. This component is used as opposed to "jquery.chatjs.rooms". The "rooms" component
 // should be used when the user has the ability to select rooms and broadcast them. The "friends window" is used when you want a 
 // Facebook style friends list.
-class ChatFriendsWindow {
+class ChatFriendsWindow implements IWindow<ChatFriendsWindowState> {
     constructor(options: ChatPmWindowOptions) {
 
         var defaultOptions = new ChatFriendsWindowOptions();
@@ -67,8 +71,14 @@ class ChatFriendsWindow {
         return this.chatWindow.getWidth();
     }
 
-    isMaximized(): boolean {
-        return this.chatWindow.isMaximized();
+    getState(): ChatFriendsWindowState {
+        var state = new ChatFriendsWindowState();
+        state.isMaximized = this.chatWindow.getState();
+        return state;
+    }
+
+    setState(state: ChatFriendsWindowState) {
+        this.chatWindow.setState(state.isMaximized);
     }
 
     options: ChatFriendsWindowOptions;

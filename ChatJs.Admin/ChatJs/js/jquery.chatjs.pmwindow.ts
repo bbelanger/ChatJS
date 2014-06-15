@@ -2,6 +2,19 @@
     chatPmWindow: (options: ChatPmWindowOptions) => ChatPmWindow;
 }
 
+class PmWindowInfo {
+    otherUserId: number;
+    conversationId: number;
+    pmWindow: ChatPmWindow;
+}
+
+class PmWindowState {
+    otherUserId: number;
+    conversationId: number;
+    isMaximized: boolean;
+}
+
+
 class ChatPmWindowOptions {
     userId: number;
     otherUserId: number;
@@ -16,7 +29,7 @@ class ChatPmWindowOptions {
 }
 
 // window that contains a conversation between users
-class ChatPmWindow {
+class ChatPmWindow implements IWindow<PmWindowState> {
     constructor(options: ChatPmWindowOptions) {
 
         var defaultOptions = new ChatPmWindowOptions();
@@ -67,8 +80,16 @@ class ChatPmWindow {
         return this.chatWindow.getWidth();
     }
 
-    isMaximized(): boolean {
-        return this.chatWindow.isMaximized();
+    getState(): PmWindowState {
+        var state = new PmWindowState();
+        state.isMaximized = this.chatWindow.getState();
+        state.otherUserId = this.options.otherUserId;
+        return state;
+    }
+
+    setState(state: PmWindowState) {
+        // PmWindow ignores the otherUserId option while setting state
+        this.chatWindow.setState(state.isMaximized);
     }
 
     options: ChatPmWindowOptions;

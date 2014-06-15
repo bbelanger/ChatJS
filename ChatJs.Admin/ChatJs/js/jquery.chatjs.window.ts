@@ -16,7 +16,7 @@ class ChatWindowOptions {
 }
 
 // a generic window that shows in the bottom right corner. It can have any content in it.
-class ChatWindow {
+class ChatWindow implements IWindow<boolean> {
     constructor(options: ChatWindowOptions) {
 
         var defaultOptions = new ChatWindowOptions();
@@ -68,7 +68,7 @@ class ChatWindow {
             this.toggleMaximizedState();
         });
 
-        this.setMaximized(this.options.isMaximized, false);
+        this.setState(this.options.isMaximized, false);
 
         this.options.onCreated(this);
     }
@@ -95,14 +95,14 @@ class ChatWindow {
     }
 
     // returns whether the window is maximized
-    isMaximized(): boolean {
+    getState(): boolean {
         return !this.$window.hasClass("minimized");
     }
 
-    setMaximized(isMaximized: boolean, triggerMaximizedStateEvent = true): void {
+    setState(state: boolean, triggerMaximizedStateEvent = true): void {
         // windows are maximized if the this.$windowContent is visible
         if (!this.options.canExpand) {
-            if (isMaximized) {
+            if (state) {
                 // if it can't expand and is maximized
                 this.$window.removeClass("minimized");
                 this.$windowContent.show();
@@ -112,7 +112,7 @@ class ChatWindow {
                 this.$windowContent.hide();
             }
         } else {
-            if (isMaximized) {
+        if (state) {
                 // if it can expand and is maximized
                 this.$window.show();
                 this.$window.removeClass("minimized");
@@ -126,11 +126,11 @@ class ChatWindow {
             }
         }
         if (triggerMaximizedStateEvent)
-            this.options.onMaximizedStateChanged(this, isMaximized);
+            this.options.onMaximizedStateChanged(this, state);
     }
 
     toggleMaximizedState(): void {
-        this.setMaximized(this.$window.hasClass("minimized"));
+        this.setState(this.$window.hasClass("minimized"));
     }
 
     defaults: ChatWindowOptions;

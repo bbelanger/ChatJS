@@ -14,14 +14,15 @@ interface Window {
 class ChatControllerOptions {
     userId: number;
     adapter: IAdapter;
-    // empty room text
+    // empty room text.
     emptyRoomText: string;
-    // available rooms text
+    // available rooms text.
     availableRoomsText: string;
-    // rooms window title
+    // rooms window title.
     roomsTitleText: string;
     typingText: string;
     allowRoomSelection: boolean;
+    // the id of the current room. This option is only valid if 'allowRoomSelection' is false.
     roomId: number;
     enableSound: boolean;
     // offset in the right for all windows in pixels. All windows will start at this offset from the right.
@@ -35,32 +36,23 @@ class ChatControllerOptions {
     chatJsContentPath: string;
 }
 
-class PmWindowInfo {
-    otherUserId: number;
-    conversationId: number;
-    pmWindow: ChatPmWindow;
-}
-
-class PmWindowState {
-    otherUserId: number;
-    conversationId: number;
-    isMaximized: boolean;
-}
 
 class ChatJsState {
     constructor() {
         this.pmWindows = [];
-        this.rooms = new ChatRoomsState();
+        this.mainWindowState = new ChatRoomsWindowState();
     }
 
     pmWindows: Array<PmWindowState>;
-    rooms: ChatRoomsState;
+    // the state of the main window. This is either a ChatFriendsWindowState or a ChatRoomsWindowState
+    mainWindowState: any;
 }
 
-class ChatController {
+class ChatController implements IStateObject<ChatJsState> {
     constructor(options: ChatControllerOptions) {
 
         var defaultOptions = new ChatControllerOptions();
+        defaultOptions.roomId = null;
         defaultOptions.roomsTitleText = "Rooms";
         defaultOptions.emptyRoomText = "There's no other users";
         defaultOptions.availableRoomsText = "Available rooms";
@@ -90,31 +82,37 @@ class ChatController {
                 }
             });
 
-            var chatRoomOptions = new ChatRoomsOptions();
-            chatRoomOptions.adapter = this.options.adapter;
-            chatRoomOptions.userId = this.options.userId;
-            chatRoomOptions.offsetRight = this.options.offsetRight;
-            chatRoomOptions.titleText = this.options.roomsTitleText;
-            chatRoomOptions.availableRoomsText = this.options.availableRoomsText;
-            chatRoomOptions.isMaximized = state ? state.rooms.isMaximized : true;
-            chatRoomOptions.onStateChanged = () => {
-                this.saveState();
+            if (this.options.allowRoomSelection) {
+                // if the user is able to select rooms
+                var chatRoomOptions = new ChatRoomsOptions();
+                chatRoomOptions.adapter = this.options.adapter;
+                chatRoomOptions.userId = this.options.userId;
+                chatRoomOptions.offsetRight = this.options.offsetRight;
+                chatRoomOptions.titleText = this.options.roomsTitleText;
+                chatRoomOptions.availableRoomsText = this.options.availableRoomsText;
+                chatRoomOptions.isMaximized = state ? state.mainWindowState.isMaximized : true;
+                chatRoomOptions.onStateChanged = () => {
+                    this.saveState();
+                };
+                chatRoomOptions.userClicked = userId => {
+                    if (userId != this.options.userId) {
+                        // verify whether there's already a PM window for this user
+                        var existingPmWindow = this.findPmWindowByOtherUserId(userId);
+                        if (existingPmWindow)
+                            existingPmWindow.focus();
+                        else
+                            this.createPmWindow(userId, true, true);
+                    }
+                };
+
+
+                this.mainWindow = $.chatRooms(chatRoomOptions);
+            } else {
+                // if the user is not allowed to select rooms
+                throw "Not implemented exception";
             }
-            chatRoomOptions.userClicked = userId => {
-                if (userId != this.options.userId) {
-                    // verify whether there's already a PM window for this user
-                    var existingPmWindow = this.findPmWindowByOtherUserId(userId);
-                    if (existingPmWindow)
-                        existingPmWindow.focus();
-                    else
-                        this.createPmWindow(userId, true, true);
-                }
-            };
 
-
-            this.chatRooms = $.chatRooms(chatRoomOptions);
-
-            this.loadState(state);
+            this.setState(state);
         });
 
         // for debugging only
@@ -146,9 +144,8 @@ class ChatController {
         };
         chatPmOptions.onMaximizedStateChanged = () => {
             this.saveState();
-        }
-
-        var pmWindow = $.chatPmWindow(chatPmOptions); 
+        };
+        var pmWindow = $.chatPmWindow(chatPmOptions);
 
         this.pmWindows.push({
             otherUserId: otherUserId,
@@ -167,11 +164,11 @@ class ChatController {
             state.pmWindows.push({
                 otherUserId: this.pmWindows[i].otherUserId,
                 conversationId: null,
-                isMaximized: this.pmWindows[i].pmWindow.isMaximized()
+                isMaximized: this.pmWindows[i].pmWindow.getState().isMaximized
             });
         }
         // persist rooms state
-        state.rooms = this.chatRooms.getState();
+        state.mainWindowState = this.mainWindow.getState();
 
         switch (this.options.persistenceMode) {
         case "cookie":
@@ -188,19 +185,19 @@ class ChatController {
     getState(): ChatJsState {
         var state: ChatJsState;
         switch (this.options.persistenceMode) {
-            case "cookie":
-                state = this.readCookie(this.options.persistenceCookieName);
-                break;
-            case "server":
-                throw "Server persistence is not supported yet";
-            default:
-                throw "Invalid persistence mode. Available modes are: cookie and server";
+        case "cookie":
+            state = this.readCookie(this.options.persistenceCookieName);
+            break;
+        case "server":
+            throw "Server persistence is not supported yet";
+        default:
+            throw "Invalid persistence mode. Available modes are: cookie and server";
         }
         return state;
     }
-
+    
     // loads the windows states
-    loadState(state: ChatJsState = null) {
+    setState(state: ChatJsState = null) {
 
         // if a state hasn't been passed in, gets the state. If it continues to be null/undefined, then there's nothing to be done.
         if (!state)
@@ -226,7 +223,7 @@ class ChatController {
                 this.createPmWindow(state.pmWindows[i].otherUserId, state.pmWindows[i].isMaximized, false);
         }
 
-        this.chatRooms.setState(state.rooms);
+        this.mainWindow.setState(state.mainWindowState, false);
     }
 
     private eraseCookie(name: string): void {
@@ -283,7 +280,7 @@ class ChatController {
 
     private organizePmWindows() {
         // this is the initial right offset
-        var rightOffset = + this.options.offsetRight + this.chatRooms.getWidth() + this.options.windowsSpacing;
+        var rightOffset = + this.options.offsetRight + this.mainWindow.getWidth() + this.options.windowsSpacing;
         for (var i = 0; i < this.pmWindows.length; i++) {
             this.pmWindows[i].pmWindow.setRightOffset(rightOffset);
             rightOffset += this.pmWindows[i].pmWindow.getWidth() + this.options.windowsSpacing;
@@ -291,7 +288,9 @@ class ChatController {
     }
 
     options: ChatControllerOptions;
-    chatRooms: ChatRooms;
+
+    // contains a ChatRoomsWindow or a ChatFriendsWindow component. This property is only set if the 'allowRoomsSelection' option is true
+    mainWindow: IWindow<any>;
     pmWindows: Array<PmWindowInfo>;
 }
 
